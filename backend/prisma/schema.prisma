@@ -1,13 +1,131 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  BIBLIOTECARIO
+}
+
+enum EstadoSocio {
+  ACTIVO
+  SUSPENDIDO
+  MOROSO
+}
+
+enum EstadoMaterial {
+  DISPONIBLE
+  PRESTADO
+  EN_REPARACION
+  DADO_DE_BAJA
+}
+
+enum EstadoPrestamo {
+  ACTIVO
+  DEVUELTO
+  MORA
+}
+
+enum TipoMaterial {
+  LIBRO
+  REVISTA
+  DVD
+  PERIODICO
+  OTRO
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  nombre    String   @db.VarChar(100)
+  email     String   @unique @db.VarChar(150)
+  password  String   @db.VarChar(255)
+  role      Role     @default(BIBLIOTECARIO)
+  activo    Boolean  @default(true)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+model Socio {
+  id          Int         @id @default(autoincrement())
+  nombre      String      @db.VarChar(100)
+  apellido    String      @db.VarChar(100)
+  dni         String      @unique @db.VarChar(20)
+  email       String?     @unique @db.VarChar(150)
+  telefono    String?     @db.VarChar(20)
+  direccion   String?     @db.VarChar(255)
+  fechaNac    DateTime?   @map("fecha_nac") @db.Date
+  estado      EstadoSocio @default(ACTIVO)
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
+  prestamos   Prestamo[]
+
+  @@map("socios")
+}
+
+model Autor {
+  id          Int        @id @default(autoincrement())
+  nombre      String     @db.VarChar(100)
+  apellido    String     @db.VarChar(100)
+  nacionalidad String?   @db.VarChar(80)
+  biografia   String?    @db.Text
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime   @updatedAt @map("updated_at")
+  materiales  Material[]
+
+  @@map("autores")
+}
+
+model Categoria {
+  id          Int        @id @default(autoincrement())
+  nombre      String     @unique @db.VarChar(100)
+  descripcion String?    @db.Text
+  createdAt   DateTime   @default(now()) @map("created_at")
+  materiales  Material[]
+
+  @@map("categorias")
+}
+
+model Material {
+  id          Int            @id @default(autoincrement())
+  titulo      String         @db.VarChar(255)
+  isbn        String?        @unique @db.VarChar(30)
+  tipo        TipoMaterial   @default(LIBRO)
+  anioPubl    Int?           @map("anio_publ")
+  editorial   String?        @db.VarChar(150)
+  descripcion String?        @db.Text
+  stock       Int            @default(1)
+  estado      EstadoMaterial @default(DISPONIBLE)
+  autorId     Int            @map("autor_id")
+  categoriaId Int            @map("categoria_id")
+  createdAt   DateTime       @default(now()) @map("created_at")
+  updatedAt   DateTime       @updatedAt @map("updated_at")
+  autor       Autor          @relation(fields: [autorId], references: [id])
+  categoria   Categoria      @relation(fields: [categoriaId], references: [id])
+  prestamos   Prestamo[]
+
+  @@map("materiales")
+}
+
+model Prestamo {
+  id             Int            @id @default(autoincrement())
+  socioId        Int            @map("socio_id")
+  materialId     Int            @map("material_id")
+  fechaPrestamo  DateTime       @default(now()) @map("fecha_prestamo")
+  fechaDevolucion DateTime     @map("fecha_devolucion")
+  fechaDevReal   DateTime?     @map("fecha_dev_real")
+  estado         EstadoPrestamo @default(ACTIVO)
+  observaciones  String?        @db.Text
+  createdAt      DateTime       @default(now()) @map("created_at")
+  updatedAt      DateTime       @updatedAt @map("updated_at")
+  socio          Socio          @relation(fields: [socioId], references: [id])
+  material       Material       @relation(fields: [materialId], references: [id])
+
+  @@map("prestamos")
 }
