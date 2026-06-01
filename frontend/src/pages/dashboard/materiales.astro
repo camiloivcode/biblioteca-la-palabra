@@ -1,0 +1,164 @@
+---
+import DashboardLayout from '../../layouts/DashboardLayout.astro';
+---
+<DashboardLayout pageTitle="Gestión de Materiales" breadcrumb="Materiales">
+
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h5 class="mb-1">Catálogo de Materiales</h5>
+      <p class="text-muted mb-0" style="font-size:13px;">Libros, revistas, DVDs y más</p>
+    </div>
+    <button class="btn btn-primary" id="btn-nuevo-material">
+      <i class="bi bi-plus-circle me-2"></i>Nuevo Material
+    </button>
+  </div>
+
+  <!-- Filtros -->
+  <div class="card mb-4">
+    <div class="card-body py-3">
+      <div class="row g-3 align-items-end">
+        <div class="col-md-4">
+          <label class="form-label">Buscar</label>
+          <input type="text" class="form-control" id="filtro-search-mat" placeholder="Título, ISBN, editorial..." />
+        </div>
+        <div class="col-md-2">
+          <label class="form-label">Tipo</label>
+          <select class="form-select" id="filtro-tipo-mat">
+            <option value="">Todos</option>
+            <option value="LIBRO">Libro</option>
+            <option value="REVISTA">Revista</option>
+            <option value="DVD">DVD</option>
+            <option value="PERIODICO">Periódico</option>
+            <option value="OTRO">Otro</option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <label class="form-label">Estado</label>
+          <select class="form-select" id="filtro-estado-mat">
+            <option value="">Todos</option>
+            <option value="DISPONIBLE">Disponible</option>
+            <option value="PRESTADO">Prestado</option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <button class="btn btn-outline-primary w-100" id="btn-filtrar-mat">
+            <i class="bi bi-search me-1"></i>Filtrar
+          </button>
+        </div>
+        <div class="col-md-2">
+          <button class="btn btn-outline-secondary w-100" id="btn-limpiar-mat">Limpiar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabla -->
+  <div class="card">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Título</th>
+              <th>Tipo</th>
+              <th>Autor</th>
+              <th>Categoría</th>
+              <th>ISBN</th>
+              <th>Stock</th>
+              <th>Estado</th>
+              <th class="text-center">Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-materiales">
+            <tr>
+              <td colspan="9" class="text-center py-5">
+                <div class="spinner-border text-primary spinner-border-sm me-2"></div>
+                Cargando materiales...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="d-flex justify-content-between mt-3" id="pag-materiales">
+    <div id="pag-mat-info" style="font-size:13px;color:var(--color-text-muted);"></div>
+    <div id="pag-mat-btns" class="d-flex gap-2"></div>
+  </div>
+</DashboardLayout>
+
+<!-- Modal Material -->
+<div class="modal fade" id="modalMaterial" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title fw-semibold" id="modal-title-material">
+          <i class="bi bi-book me-2"></i>Nuevo Material
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="form-material" novalidate>
+          <input type="hidden" id="material-id" />
+          <div class="row g-3">
+            <div class="col-12">
+              <label class="form-label">Título <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="mat-titulo" placeholder="Título del material" required />
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Tipo <span class="text-danger">*</span></label>
+              <select class="form-select" id="mat-tipo" required>
+                <option value="LIBRO">Libro</option>
+                <option value="REVISTA">Revista</option>
+                <option value="DVD">DVD</option>
+                <option value="PERIODICO">Periódico</option>
+                <option value="OTRO">Otro</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">ISBN</label>
+              <input type="text" class="form-control" id="mat-isbn" placeholder="978-..." />
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Año Publicación</label>
+              <input type="number" class="form-control" id="mat-anio" placeholder="2024" min="1000" max="2025" />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Autor <span class="text-danger">*</span></label>
+              <select class="form-select" id="mat-autor" required>
+                <option value="">Selecciona un autor...</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Categoría <span class="text-danger">*</span></label>
+              <select class="form-select" id="mat-categoria" required>
+                <option value="">Selecciona una categoría...</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Editorial</label>
+              <input type="text" class="form-control" id="mat-editorial" placeholder="Nombre de la editorial" />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Stock</label>
+              <input type="number" class="form-control" id="mat-stock" value="1" min="1" />
+            </div>
+            <div class="col-12">
+              <label class="form-label">Descripción</label>
+              <textarea class="form-control" id="mat-desc" rows="3" placeholder="Breve descripción del material..."></textarea>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" id="btn-guardar-material">
+          <i class="bi bi-check-circle me-2"></i>Guardar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../../scripts/materiales.js"></script>

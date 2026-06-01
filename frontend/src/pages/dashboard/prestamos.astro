@@ -1,0 +1,121 @@
+---
+import DashboardLayout from '../../layouts/DashboardLayout.astro';
+---
+<DashboardLayout pageTitle="Gestión de Préstamos" breadcrumb="Préstamos">
+
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h5 class="mb-1">Préstamos</h5>
+      <p class="text-muted mb-0" style="font-size:13px;">Registra y gestiona los préstamos de materiales</p>
+    </div>
+    <button class="btn btn-primary" id="btn-nuevo-prestamo">
+      <i class="bi bi-plus-circle me-2"></i>Nuevo Préstamo
+    </button>
+  </div>
+
+  <!-- Filtros -->
+  <div class="card mb-4">
+    <div class="card-body py-3">
+      <div class="row g-3 align-items-end">
+        <div class="col-md-4">
+          <label class="form-label">Estado</label>
+          <select class="form-select" id="filtro-estado-prestamo">
+            <option value="">Todos</option>
+            <option value="ACTIVO">Activo</option>
+            <option value="MORA">En Mora</option>
+            <option value="DEVUELTO">Devuelto</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <button class="btn btn-outline-primary w-100" id="btn-filtrar-prestamo">
+            <i class="bi bi-search me-1"></i>Filtrar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabla -->
+  <div class="card">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Socio</th>
+              <th>Material</th>
+              <th>Préstamo</th>
+              <th>Vencimiento</th>
+              <th>Estado</th>
+              <th class="text-center">Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-prestamos-full">
+            <tr>
+              <td colspan="7" class="text-center py-5">
+                <div class="spinner-border text-primary spinner-border-sm me-2"></div>
+                Cargando préstamos...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Paginación -->
+  <div class="d-flex justify-content-between align-items-center mt-3" id="pag-prestamos">
+    <div id="pag-prestamos-info" style="font-size:13px; color:var(--color-text-muted);"></div>
+    <div id="pag-prestamos-btns" class="d-flex gap-2"></div>
+  </div>
+</DashboardLayout>
+
+<!-- Modal Préstamo -->
+<div class="modal fade" id="modalPrestamo" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title fw-semibold">
+          <i class="bi bi-plus-circle me-2"></i>Registrar Préstamo
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-info d-flex gap-2" style="font-size:13px;">
+          <i class="bi bi-info-circle-fill flex-shrink-0 mt-1"></i>
+          <div>
+            Un socio puede tener máximo <strong>3 préstamos activos</strong>.
+            El plazo de devolución es de <strong>30 días</strong>.
+          </div>
+        </div>
+        <form id="form-prestamo" novalidate>
+          <div class="mb-3">
+            <label class="form-label">Socio <span class="text-danger">*</span></label>
+            <select class="form-select" id="prestamo-socio" required>
+              <option value="">Selecciona un socio...</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Material <span class="text-danger">*</span></label>
+            <select class="form-select" id="prestamo-material" required>
+              <option value="">Selecciona un material disponible...</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Observaciones</label>
+            <textarea class="form-control" id="prestamo-obs" rows="2" placeholder="Notas adicionales..."></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" id="btn-guardar-prestamo">
+          <i class="bi bi-check-circle me-2"></i>Registrar Préstamo
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../../scripts/prestamos.js"></script>

@@ -1,0 +1,102 @@
+---
+const currentPath = Astro.url.pathname;
+
+const navItems = [
+  {
+    section: 'Principal',
+    links: [
+      { href: '/dashboard', icon: 'bi-grid-1x2', label: 'Dashboard' },
+    ]
+  },
+  {
+    section: 'Gestión',
+    links: [
+      { href: '/dashboard/socios', icon: 'bi-people', label: 'Socios' },
+      { href: '/dashboard/materiales', icon: 'bi-book', label: 'Materiales' },
+      { href: '/dashboard/prestamos', icon: 'bi-arrow-left-right', label: 'Préstamos' },
+      { href: '/dashboard/autores', icon: 'bi-person-badge', label: 'Autores' },
+      { href: '/dashboard/categorias', icon: 'bi-tags', label: 'Categorías' },
+    ]
+  },
+  {
+    section: 'Administración',
+    links: [
+      { href: '/dashboard/usuarios', icon: 'bi-person-gear', label: 'Usuarios', adminOnly: true },
+      { href: '/dashboard/reportes', icon: 'bi-bar-chart-line', label: 'Reportes' },
+    ]
+  }
+];
+---
+
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <a href="/dashboard" class="brand-logo">
+      <div class="brand-icon">📚</div>
+      <div>
+        <div class="brand-name">La Palabra</div>
+        <div class="brand-subtitle">Sistema Bibliotecario</div>
+      </div>
+    </a>
+  </div>
+
+  <nav class="sidebar-nav">
+    {navItems.map(section => (
+      <div>
+        <div class="sidebar-section-title">{section.section}</div>
+        {section.links.map(link => (
+          
+            href={link.href}
+            class={`sidebar-link ${currentPath === link.href || currentPath.startsWith(link.href + '/') ? 'active' : ''}`}
+            data-admin={link.adminOnly ? 'true' : null}
+          >
+            <span class={`link-icon bi ${link.icon}`}></span>
+            <span>{link.label}</span>
+          </a>
+        ))}
+      </div>
+    ))}
+  </nav>
+
+  <div style="padding: 16px 20px; border-top: 1px solid rgba(255,255,255,.07);">
+    <button
+      id="btn-logout"
+      class="sidebar-link w-100 border-0 bg-transparent text-start"
+      style="color: var(--sidebar-text); cursor: pointer;"
+    >
+      <span class="link-icon bi bi-box-arrow-left"></span>
+      <span>Cerrar Sesión</span>
+    </button>
+  </div>
+</aside>
+
+<script is:inline>
+  // Ocultar links de admin si no es admin
+  document.addEventListener('DOMContentLoaded', function() {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    if (user.role !== 'ADMIN') {
+      document.querySelectorAll('[data-admin="true"]').forEach(el => {
+        el.style.display = 'none';
+      });
+    }
+
+    document.getElementById('btn-logout')?.addEventListener('click', function() {
+      Swal.fire({
+        title: '¿Cerrar sesión?',
+        text: 'Se cerrará tu sesión actual.',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#1a3a5c',
+        cancelButtonColor: '#6b7280',
+        confirmButtonText: 'Sí, salir',
+        cancelButtonText: 'Cancelar',
+      }).then(result => {
+        if (result.isConfirmed) {
+          localStorage.removeItem('accessToken');
+          localStorage.removeItem('refreshToken');
+          localStorage.removeItem('user');
+          window.location.href = '/login';
+        }
+      });
+    });
+  });
+</script>

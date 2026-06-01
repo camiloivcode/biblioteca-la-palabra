@@ -1,0 +1,36 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Sidebar from '../components/ui/Sidebar.astro';
+import Navbar from '../components/ui/Navbar.astro';
+import Loader from '../components/ui/Loader.astro';
+
+export interface Props {
+  title?: string;
+  pageTitle?: string;
+  breadcrumb?: string;
+}
+
+const { title, pageTitle = 'Dashboard', breadcrumb = 'Inicio' } = Astro.props;
+---
+<BaseLayout title={title || pageTitle}>
+  <Loader />
+  <div class="d-flex">
+    <Sidebar />
+    <div class="main-wrapper w-100">
+      <Navbar pageTitle={pageTitle} breadcrumb={breadcrumb} />
+      <main class="page-content">
+        <slot />
+      </main>
+    </div>
+  </div>
+
+  <script is:inline>
+    // Verificar autenticación en todas las páginas del dashboard
+    (function() {
+      const token = localStorage.getItem('accessToken');
+      if (!token) {
+        window.location.href = '/login';
+      }
+    })();
+  </script>
+</BaseLayout>

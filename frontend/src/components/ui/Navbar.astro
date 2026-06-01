@@ -1,0 +1,92 @@
+---
+export interface Props {
+  pageTitle?: string;
+  breadcrumb?: string;
+}
+const { pageTitle = 'Dashboard', breadcrumb = 'Inicio' } = Astro.props;
+---
+
+<header class="topbar">
+  <div class="topbar-left">
+    <button
+      class="btn btn-link d-lg-none p-0"
+      id="sidebar-toggle"
+      style="color: var(--color-text-muted); font-size: 20px;"
+    >
+      <i class="bi bi-list"></i>
+    </button>
+    <div>
+      <div class="page-title">{pageTitle}</div>
+      <div class="page-breadcrumb">
+        <i class="bi bi-house" style="font-size: 10px;"></i>
+        <span>{breadcrumb}</span>
+        {pageTitle !== breadcrumb && (
+          <>
+            <i class="bi bi-chevron-right" style="font-size: 9px;"></i>
+            <span>{pageTitle}</span>
+          </>
+        )}
+      </div>
+    </div>
+  </div>
+
+  <div class="topbar-right">
+    <!-- Botón actualizar mora -->
+    <button
+      id="btn-actualizar-mora"
+      class="btn btn-sm"
+      style="background: var(--color-accent-light); color: var(--color-accent); border: 1px solid var(--color-accent); border-radius: 6px;"
+      title="Actualizar estados de mora"
+    >
+      <i class="bi bi-arrow-clockwise"></i>
+      <span class="d-none d-md-inline">Actualizar Mora</span>
+    </button>
+
+    <!-- Usuario -->
+    <div class="user-menu dropdown" id="user-dropdown">
+      <div class="user-avatar" id="user-avatar-initial">A</div>
+      <div class="user-info d-none d-md-block">
+        <div class="user-name" id="user-display-name">Cargando...</div>
+        <div class="user-role" id="user-display-role">—</div>
+      </div>
+      <i class="bi bi-chevron-down" style="font-size: 11px; color: var(--color-text-muted);"></i>
+    </div>
+  </div>
+</header>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Mostrar datos del usuario
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    if (user.nombre) {
+      const el = document.getElementById('user-display-name');
+      const role = document.getElementById('user-display-role');
+      const avatar = document.getElementById('user-avatar-initial');
+      if (el) el.textContent = user.nombre;
+      if (role) role.textContent = user.role === 'ADMIN' ? 'Administrador' : 'Bibliotecario';
+      if (avatar) avatar.textContent = user.nombre.charAt(0).toUpperCase();
+    }
+
+    // Toggle sidebar en móvil
+    document.getElementById('sidebar-toggle')?.addEventListener('click', function() {
+      document.getElementById('sidebar')?.classList.toggle('open');
+    });
+
+    // Actualizar mora
+    document.getElementById('btn-actualizar-mora')?.addEventListener('click', async function() {
+      try {
+        const token = localStorage.getItem('accessToken');
+        const res = await fetch(`${window.API_URL || 'http://localhost:4000/api'}/prestamos/actualizar-mora`, {
+          method: 'PATCH',
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const data = await res.json();
+        if (data.success) {
+          Swal.fire({ icon: 'success', title: 'Mora actualizada', text: data.data.message, timer: 2000, showConfirmButton: false });
+        }
+      } catch {
+        Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo actualizar la mora' });
+      }
+    });
+  });
+</script>

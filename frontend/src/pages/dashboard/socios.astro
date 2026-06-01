@@ -1,0 +1,139 @@
+---
+import DashboardLayout from '../../layouts/DashboardLayout.astro';
+---
+<DashboardLayout pageTitle="Gestión de Socios" breadcrumb="Socios">
+
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h5 class="mb-1">Socios Registrados</h5>
+      <p class="text-muted mb-0" style="font-size:13px;">Administra los socios de la biblioteca</p>
+    </div>
+    <button class="btn btn-primary" id="btn-nuevo-socio">
+      <i class="bi bi-person-plus me-2"></i>Nuevo Socio
+    </button>
+  </div>
+
+  <!-- Filtros -->
+  <div class="card mb-4">
+    <div class="card-body py-3">
+      <div class="row g-3 align-items-end">
+        <div class="col-md-5">
+          <label class="form-label">Buscar</label>
+          <input type="text" class="form-control" id="filtro-search" placeholder="Nombre, apellido, DNI o email..." />
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Estado</label>
+          <select class="form-select" id="filtro-estado">
+            <option value="">Todos los estados</option>
+            <option value="ACTIVO">Activo</option>
+            <option value="MOROSO">Moroso</option>
+            <option value="SUSPENDIDO">Suspendido</option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <button class="btn btn-outline-primary w-100" id="btn-filtrar">
+            <i class="bi bi-search me-1"></i>Filtrar
+          </button>
+        </div>
+        <div class="col-md-2">
+          <button class="btn btn-outline-secondary w-100" id="btn-limpiar-filtros">
+            <i class="bi bi-x-circle me-1"></i>Limpiar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabla -->
+  <div class="card">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover mb-0" id="tabla-socios">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Socio</th>
+              <th>DNI</th>
+              <th>Contacto</th>
+              <th>Estado</th>
+              <th>Préstamos</th>
+              <th>Registrado</th>
+              <th class="text-center">Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-socios">
+            <tr>
+              <td colspan="8" class="text-center py-5">
+                <div class="spinner-border text-primary spinner-border-sm me-2"></div>
+                Cargando socios...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Paginación -->
+  <div class="d-flex justify-content-between align-items-center mt-3" id="paginacion-container" style="display:none!important;">
+    <div id="paginacion-info" style="font-size:13px; color:var(--color-text-muted);"></div>
+    <div id="paginacion-btns" class="d-flex gap-2"></div>
+  </div>
+</DashboardLayout>
+
+<!-- Modal Socio -->
+<div class="modal fade" id="modalSocio" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title fw-semibold" id="modal-title-socio">
+          <i class="bi bi-person-plus me-2"></i>Nuevo Socio
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="form-socio" novalidate>
+          <input type="hidden" id="socio-id" />
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Nombre <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="socio-nombre" placeholder="Ej: María" required />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Apellido <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="socio-apellido" placeholder="Ej: González" required />
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">DNI <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="socio-dni" placeholder="Ej: 12345678" required />
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Email</label>
+              <input type="email" class="form-control" id="socio-email" placeholder="ejemplo@email.com" />
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Teléfono</label>
+              <input type="tel" class="form-control" id="socio-telefono" placeholder="Ej: 555-0001" />
+            </div>
+            <div class="col-12">
+              <label class="form-label">Dirección</label>
+              <input type="text" class="form-control" id="socio-direccion" placeholder="Calle, número, ciudad..." />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Fecha de Nacimiento</label>
+              <input type="date" class="form-control" id="socio-fechanac" />
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" id="btn-guardar-socio">
+          <i class="bi bi-check-circle me-2"></i>Guardar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../../scripts/socios.js"></script>
