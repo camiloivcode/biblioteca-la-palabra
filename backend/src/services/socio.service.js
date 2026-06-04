@@ -49,12 +49,23 @@ class SocioService {
     return socio;
   }
 
-  async create(data) {
-    const exists = await prisma.socio.findUnique({ where: { dni: data.dni } });
-    if (exists) throw new AppError('Ya existe un socio con ese DNI', 409);
+async create(data) {
+  const exists = await prisma.socio.findUnique({
+    where: { dni: data.dni }
+  });
 
-    return await prisma.socio.create({ data });
+  if (exists) {
+    throw new AppError('Ya existe un socio con ese DNI', 409);
   }
+
+  if (data.fechaNac) {
+    data.fechaNac = new Date(data.fechaNac);
+  }
+
+  return await prisma.socio.create({
+    data
+  });
+}
 
   async update(id, data) {
     await this.findById(id);
