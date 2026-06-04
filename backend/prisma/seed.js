@@ -10,6 +10,7 @@ async function main() {
   const adminPassword = await bcrypt.hash('Admin2024!', 12);
   const bibl1Password = await bcrypt.hash('Biblio2024!', 12);
 
+  //usuario admin
   await prisma.user.upsert({
     where: { email: 'admin@biblioteca.com' },
     update: {},
@@ -21,6 +22,7 @@ async function main() {
     },
   });
 
+  //usuario bibliotecario
   await prisma.user.upsert({
     where: { email: 'bibliotecario@biblioteca.com' },
     update: {},
