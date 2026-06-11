@@ -59,153 +59,61 @@ import DashboardLayout from '../../layouts/DashboardLayout.astro';
 </DashboardLayout>
 
 <script is:inline>
-const API = 'http://localhost:4000/api';
-
-function getToken() { return localStorage.getItem('accessToken'); }
-function headers() { return { 'Content-Type': 'application/json', Authorization: `Bearer ${getToken()}` }; }
-
 async function loadDashboard() {
   try {
-    const res = await fetch(`${API}/reportes/dashboard`, { headers: headers() });
-    const data = await res.json();
-    if (!data.success) return;
-
+    const data = await api.get('/reportes/dashboard');
     const { socios, materiales, prestamos } = data.data;
-
     document.getElementById('stats-container').innerHTML = `
       <div class="col-xl-2 col-md-4 col-6">
-        <div class="stat-card">
-          <div class="stat-icon blue"><i class="bi bi-people"></i></div>
-          <div>
-            <div class="stat-label">Total Socios</div>
-            <div class="stat-value">${socios.total}</div>
-            <div class="stat-change"><span style="color:var(--color-danger)">${socios.morosos} en mora</span></div>
-          </div>
-        </div>
+        <div class="stat-card"><div class="stat-icon blue"><i class="bi bi-people"></i></div><div><div class="stat-label">Total Socios</div><div class="stat-value">${socios.total}</div><div class="stat-change negative">${socios.morosos} en mora</div></div></div>
       </div>
       <div class="col-xl-2 col-md-4 col-6">
-        <div class="stat-card">
-          <div class="stat-icon green"><i class="bi bi-person-check"></i></div>
-          <div>
-            <div class="stat-label">Socios Activos</div>
-            <div class="stat-value">${socios.activos}</div>
-          </div>
-        </div>
+        <div class="stat-card"><div class="stat-icon green"><i class="bi bi-person-check"></i></div><div><div class="stat-label">Socios Activos</div><div class="stat-value">${socios.activos}</div></div></div>
       </div>
       <div class="col-xl-2 col-md-4 col-6">
-        <div class="stat-card">
-          <div class="stat-icon amber"><i class="bi bi-book"></i></div>
-          <div>
-            <div class="stat-label">Total Materiales</div>
-            <div class="stat-value">${materiales.total}</div>
-          </div>
-        </div>
+        <div class="stat-card"><div class="stat-icon amber"><i class="bi bi-book"></i></div><div><div class="stat-label">Total Materiales</div><div class="stat-value">${materiales.total}</div></div></div>
       </div>
       <div class="col-xl-2 col-md-4 col-6">
-        <div class="stat-card">
-          <div class="stat-icon teal"><i class="bi bi-book-fill"></i></div>
-          <div>
-            <div class="stat-label">Disponibles</div>
-            <div class="stat-value">${materiales.disponibles}</div>
-          </div>
-        </div>
+        <div class="stat-card"><div class="stat-icon teal"><i class="bi bi-book-fill"></i></div><div><div class="stat-label">Disponibles</div><div class="stat-value">${materiales.disponibles}</div></div></div>
       </div>
       <div class="col-xl-2 col-md-4 col-6">
-        <div class="stat-card">
-          <div class="stat-icon purple"><i class="bi bi-arrow-left-right"></i></div>
-          <div>
-            <div class="stat-label">Préstamos Activos</div>
-            <div class="stat-value">${prestamos.activos}</div>
-          </div>
-        </div>
+        <div class="stat-card"><div class="stat-icon purple"><i class="bi bi-arrow-left-right"></i></div><div><div class="stat-label">Préstamos Activos</div><div class="stat-value">${prestamos.activos}</div></div></div>
       </div>
       <div class="col-xl-2 col-md-4 col-6">
-        <div class="stat-card">
-          <div class="stat-icon red"><i class="bi bi-clock-history"></i></div>
-          <div>
-            <div class="stat-label">Devol. Hoy</div>
-            <div class="stat-value">${prestamos.devoluccionesHoy}</div>
-          </div>
-        </div>
+        <div class="stat-card"><div class="stat-icon red"><i class="bi bi-clock-history"></i></div><div><div class="stat-label">Devol. Hoy</div><div class="stat-value">${prestamos.devoluccionesHoy}</div></div></div>
       </div>
     `;
-  } catch (e) {
-    console.error('Error cargando dashboard:', e);
-  }
+  } catch (e) { console.error('Error cargando dashboard:', e); }
 }
 
 async function loadPrestamosActivos() {
   try {
-    const res = await fetch(`${API}/reportes/prestamos-activos`, { headers: headers() });
-    const data = await res.json();
-    if (!data.success) return;
-
+    const data = await api.get('/reportes/prestamos-activos');
     const tbody = document.getElementById('tbody-prestamos');
-    if (!data.data.length) {
-      tbody.innerHTML = '<tr><td colspan="4" class="text-center py-4 text-muted">No hay préstamos activos</td></tr>';
-      return;
-    }
-
+    if (!data.data.length) { tbody.innerHTML = '<tr><td colspan="4" class="text-center py-4 text-muted">No hay préstamos activos</td></tr>'; return; }
+    const hoy = new Date();
     tbody.innerHTML = data.data.slice(0, 8).map(p => {
       const vence = new Date(p.fechaDevolucion);
-      const hoy = new Date();
-      const diasRestantes = Math.ceil((vence - hoy) / (1000 * 60 * 60 * 24));
-      const badgeClass = p.estado === 'MORA' ? 'badge-mora' : diasRestantes <= 3 ? 'badge-mora' : 'badge-activo';
-
-      return `
-        <tr>
-          <td>
-            <div class="fw-semibold">${p.socio.apellido}, ${p.socio.nombre}</div>
-            <div class="text-muted-sm">DNI: ${p.socio.dni}</div>
-          </td>
-          <td>
-            <div>${p.material.titulo}</div>
-            <div class="text-muted-sm">${p.material.tipo}</div>
-          </td>
-          <td>
-            <div>${vence.toLocaleDateString('es-CO')}</div>
-            <div class="text-muted-sm">${diasRestantes > 0 ? diasRestantes + ' días restantes' : 'Vencido'}</div>
-          </td>
-          <td><span class="status-badge ${badgeClass}">${p.estado}</span></td>
-        </tr>
-      `;
+      const dias = Math.ceil((vence - hoy) / (1000 * 60 * 60 * 24));
+      const badge = p.estado === 'MORA' || dias <= 3 ? 'badge-mora' : 'badge-activo';
+      return `<tr><td><div class="fw-semibold">${p.socio.apellido}, ${p.socio.nombre}</div><div class="text-muted-sm">DNI: ${p.socio.dni}</div></td><td><div>${p.material.titulo}</div><div class="text-muted-sm">${p.material.tipo}</div></td><td><div>${formatDate(p.fechaDevolucion)}</div><div class="text-muted-sm">${dias > 0 ? dias + ' días restantes' : 'Vencido'}</div></td><td>${estadoBadge(p.estado)}</td></tr>`;
     }).join('');
-  } catch (e) {
-    console.error('Error cargando préstamos:', e);
-  }
+  } catch (e) { console.error('Error cargando préstamos:', e); }
 }
 
 async function loadMorosos() {
   try {
-    const res = await fetch(`${API}/reportes/socios-morosos`, { headers: headers() });
-    const data = await res.json();
-    if (!data.success) return;
-
+    const data = await api.get('/reportes/socios-morosos');
     const container = document.getElementById('lista-morosos');
-    if (!data.data.length) {
-      container.innerHTML = '<div class="p-3 text-center text-muted" style="font-size:13px;">No hay socios en mora ✓</div>';
-      return;
-    }
-
+    if (!data.data.length) { container.innerHTML = '<div class="p-3 text-center" style="font-size:13px;color:var(--color-success);">✓ No hay socios en mora</div>'; return; }
     container.innerHTML = data.data.map(s => `
       <div class="d-flex align-items-center gap-3 px-3 py-2" style="border-bottom:1px solid var(--color-border);">
-        <div class="user-avatar" style="background:var(--color-danger); font-size:12px; width:32px; height:32px;">
-          ${s.apellido.charAt(0)}
-        </div>
-        <div class="flex-grow-1">
-          <div class="fw-semibold" style="font-size:13px;">${s.apellido}, ${s.nombre}</div>
-          <div class="text-muted-sm">DNI: ${s.dni} · ${s.prestamos.length} en mora</div>
-        </div>
+        <div class="user-avatar" style="background:var(--color-danger);font-size:12px;width:32px;height:32px;">${s.apellido.charAt(0)}</div>
+        <div class="flex-grow-1"><div class="fw-semibold" style="font-size:13px;">${s.apellido}, ${s.nombre}</div><div class="text-muted-sm">DNI: ${s.dni} · ${s.prestamos.length} en mora</div></div>
       </div>
     `).join('');
-  } catch (e) {
-    console.error('Error cargando morosos:', e);
-  }
+  } catch (e) { console.error('Error cargando morosos:', e); }
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-  loadDashboard();
-  loadPrestamosActivos();
-  loadMorosos();
-});
+document.addEventListener('DOMContentLoaded', function() { loadDashboard(); loadPrestamosActivos(); loadMorosos(); });
 </script>

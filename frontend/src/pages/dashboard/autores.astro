@@ -78,98 +78,63 @@ import DashboardLayout from '../../layouts/DashboardLayout.astro';
 </div>
 
 <script is:inline>
-const API = 'http://localhost:4000/api';
 let editingAutorId = null;
 let modalAutor;
 
-function headersAutor() {
-  return { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('accessToken')}` };
-}
-
 async function cargarAutores() {
   try {
-    const res = await fetch(`${API}/autores`, { headers: headersAutor() });
-    const data = await res.json();
+    const data = await api.get('/autores');
     const tbody = document.getElementById('tbody-autores');
-
-    if (!data.success || !data.data.length) {
-      tbody.innerHTML = '<tr><td colspan="5" class="text-center py-5 text-muted">No hay autores registrados</td></tr>';
-      return;
-    }
-
+    if (!data.data.length) { tbody.innerHTML = '<tr><td colspan="5" class="text-center py-5 text-muted"><i class="bi bi-person-badge fs-3 d-block mb-2"></i>No hay autores registrados</td></tr>'; return; }
     tbody.innerHTML = data.data.map((a, i) => `
       <tr>
         <td class="text-muted-sm">${i + 1}</td>
-        <td>
-          <div class="fw-semibold">${a.apellido}, ${a.nombre}</div>
-        </td>
+        <td class="fw-semibold">${a.apellido}, ${a.nombre}</td>
         <td>${a.nacionalidad || '—'}</td>
-        <td>
-          <span class="badge bg-primary bg-opacity-10 text-primary fw-semibold">${a._count?.materiales ?? 0} materiales</span>
-        </td>
-        <td>
-          <div class="d-flex gap-1 justify-content-center">
-            <button class="btn btn-icon btn-sm btn-outline-primary" onclick="editarAutor(${a.id})" title="Editar">
-              <i class="bi bi-pencil"></i>
-            </button>
-            <button class="btn btn-icon btn-sm btn-outline-danger" onclick="eliminarAutor(${a.id}, '${a.apellido}, ${a.nombre}')" title="Eliminar">
-              <i class="bi bi-trash"></i>
-            </button>
-          </div>
-        </td>
+        <td><span class="badge bg-primary bg-opacity-10 text-primary fw-semibold">${a._count?.materiales ?? 0} materiales</span></td>
+        <td><div class="d-flex gap-1 justify-content-center">
+          <button class="btn btn-icon btn-sm btn-outline-primary" onclick="editarAutor(${a.id})" title="Editar"><i class="bi bi-pencil"></i></button>
+          <button class="btn btn-icon btn-sm btn-outline-danger" onclick="eliminarAutor(${a.id}, '${a.apellido}, ${a.nombre}')" title="Eliminar"><i class="bi bi-trash"></i></button>
+        </div></td>
       </tr>
     `).join('');
-
-  } catch (err) {
-    console.error(err);
-  }
+  } catch (err) { console.error(err); }
 }
 
 async function editarAutor(id) {
   showLoader();
-  const res = await fetch(`${API}/autores/${id}`, { headers: headersAutor() });
-  const data = await res.json();
-  hideLoader();
-
-  if (!data.success) return Swal.fire({ icon: 'error', title: 'Error', text: data.message });
-
-  const a = data.data;
-  editingAutorId = id;
-  document.getElementById('autor-id').value = a.id;
-  document.getElementById('autor-nombre').value = a.nombre;
-  document.getElementById('autor-apellido').value = a.apellido;
-  document.getElementById('autor-nacionalidad').value = a.nacionalidad || '';
-  document.getElementById('autor-bio').value = a.biografia || '';
-  document.getElementById('modal-title-autor').innerHTML = '<i class="bi bi-pencil me-2"></i>Editar Autor';
-  modalAutor.show();
+  try {
+    const res = await fetch(`${window.API_URL}/autores/${id}`, { headers: getHeaders() });
+    const d = await res.json();
+    if (!d.success) throw new Error(d.message);
+    const a = d.data;
+    editingAutorId = id;
+    document.getElementById('autor-id').value = a.id;
+    document.getElementById('autor-nombre').value = a.nombre;
+    document.getElementById('autor-apellido').value = a.apellido;
+    document.getElementById('autor-nacionalidad').value = a.nacionalidad || '';
+    document.getElementById('autor-bio').value = a.biografia || '';
+    document.getElementById('modal-title-autor').innerHTML = '<i class="bi bi-pencil me-2"></i>Editar Autor';
+    modalAutor.show();
+  } catch (err) { showToast('error', err.message); }
+  finally { hideLoader(); }
 }
 
 async function eliminarAutor(id, nombre) {
-  const result = await Swal.fire({
-    title: '¿Eliminar autor?',
-    html: `Se eliminará a <strong>${nombre}</strong>.`,
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#c02d2d',
-    confirmButtonText: 'Sí, eliminar',
-    cancelButtonText: 'Cancelar',
-  });
+  const result = await Swal.fire({ title: '¿Eliminar autor?', html: `Se eliminará a <strong>${nombre}</strong>.`, icon: 'warning', showCancelButton: true, confirmButtonColor: '#ef4444', confirmButtonText: 'Sí, eliminar', cancelButtonText: 'Cancelar' });
   if (!result.isConfirmed) return;
-
   showLoader();
-  const res = await fetch(`${API}/autores/${id}`, { method: 'DELETE', headers: headersAutor() });
-  const data = await res.json();
-  hideLoader();
-
-  if (!data.success) return Swal.fire({ icon: 'error', title: 'No se puede eliminar', text: data.message });
-  Swal.fire({ icon: 'success', title: 'Autor eliminado', timer: 1500, showConfirmButton: false });
-  cargarAutores();
+  try {
+    await api.del(`/autores/${id}`);
+    showToast('success', 'Autor eliminado');
+    cargarAutores();
+  } catch (err) { showToast('error', err.message); }
+  finally { hideLoader(); }
 }
 
 document.addEventListener('DOMContentLoaded', function () {
   modalAutor = new bootstrap.Modal(document.getElementById('modalAutor'));
   cargarAutores();
-
   document.getElementById('btn-nuevo-autor')?.addEventListener('click', function () {
     editingAutorId = null;
     document.getElementById('form-autor').reset();
@@ -177,35 +142,20 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('modal-title-autor').innerHTML = '<i class="bi bi-person-badge me-2"></i>Nuevo Autor';
     modalAutor.show();
   });
-
   document.getElementById('btn-guardar-autor')?.addEventListener('click', async function () {
-    const body = {
-      nombre: document.getElementById('autor-nombre').value.trim(),
-      apellido: document.getElementById('autor-apellido').value.trim(),
-      nacionalidad: document.getElementById('autor-nacionalidad').value.trim() || null,
-      biografia: document.getElementById('autor-bio').value.trim() || null,
-    };
-
-    if (!body.nombre || !body.apellido) {
-      return Swal.fire({ icon: 'warning', title: 'Campos requeridos', text: 'Nombre y apellido son obligatorios.' });
-    }
-
+    const body = { nombre: document.getElementById('autor-nombre').value.trim(), apellido: document.getElementById('autor-apellido').value.trim(), nacionalidad: document.getElementById('autor-nacionalidad').value.trim() || null, biografia: document.getElementById('autor-bio').value.trim() || null };
+    if (!body.nombre || !body.apellido) return Swal.fire({ icon: 'warning', title: 'Campos requeridos', text: 'Nombre y apellido son obligatorios.' });
     showLoader();
-    const isEdit = !!editingAutorId;
-    const url = isEdit ? `${API}/autores/${editingAutorId}` : `${API}/autores`;
-    const method = isEdit ? 'PUT' : 'POST';
-
-    const res = await fetch(url, { method, headers: headersAutor(), body: JSON.stringify(body) });
-    const data = await res.json();
-    hideLoader();
-
-    if (!data.success) return Swal.fire({ icon: 'error', title: 'Error', text: data.message });
-    modalAutor.hide();
-    Swal.fire({ icon: 'success', title: isEdit ? 'Autor actualizado' : 'Autor registrado', timer: 1500, showConfirmButton: false });
-    cargarAutores();
+    try {
+      const isEdit = !!editingAutorId;
+      isEdit ? await api.put(`/autores/${editingAutorId}`, body) : await api.post('/autores', body);
+      modalAutor.hide();
+      showToast('success', isEdit ? 'Autor actualizado' : 'Autor registrado');
+      cargarAutores();
+    } catch (err) { showToast('error', err.message); }
+    finally { hideLoader(); }
   });
 });
-
 window.editarAutor = editarAutor;
 window.eliminarAutor = eliminarAutor;
 </script>

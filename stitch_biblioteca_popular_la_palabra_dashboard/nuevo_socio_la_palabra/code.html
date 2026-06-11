@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Registro de Socios - La Palabra</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary": "#006229",
+                        "on-secondary-fixed-variant": "#2d486d",
+                        "surface-container-high": "#e6e8ea",
+                        "secondary": "#455f87",
+                        "on-secondary-container": "#3e5980",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "tertiary-fixed-dim": "#4ae176",
+                        "on-primary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "secondary-container": "#b5d0fd",
+                        "tertiary-container": "#007e37",
+                        "outline-variant": "#c3c6d7",
+                        "primary": "#004ac6",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-low": "#f2f4f6",
+                        "surface-container": "#eceef0",
+                        "on-surface": "#191c1e",
+                        "on-error-container": "#93000a",
+                        "on-error": "#ffffff",
+                        "on-background": "#191c1e",
+                        "surface-container-highest": "#e0e3e5",
+                        "secondary-fixed-dim": "#adc8f5",
+                        "secondary-fixed": "#d5e3ff",
+                        "primary-container": "#2563eb",
+                        "on-tertiary-fixed": "#002109",
+                        "surface-container-lowest": "#ffffff",
+                        "outline": "#737686",
+                        "on-secondary-fixed": "#001c3b",
+                        "background": "#f7f9fb",
+                        "surface-variant": "#e0e3e5",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "on-tertiary-fixed-variant": "#005321",
+                        "on-secondary": "#ffffff",
+                        "on-primary-fixed": "#00174b",
+                        "surface-dim": "#d8dadc",
+                        "on-tertiary-container": "#c1ffc5",
+                        "inverse-on-surface": "#eff1f3",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed": "#6bff8f",
+                        "surface": "#f7f9fb",
+                        "inverse-surface": "#2d3133",
+                        "surface-bright": "#f7f9fb",
+                        "surface-tint": "#0053db",
+                        "primary-fixed": "#dbe1ff",
+                        "on-surface-variant": "#434655",
+                        "inverse-primary": "#b4c5ff",
+                        "on-primary-container": "#eeefff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "max-width": "1440px",
+                        "md": "16px",
+                        "xl": "40px",
+                        "2xl": "64px",
+                        "xs": "4px",
+                        "sm": "8px",
+                        "base": "4px",
+                        "margin-mobile": "16px",
+                        "margin-desktop": "32px",
+                        "lg": "24px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "title-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "display": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "label-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "title-lg": ["18px", {"lineHeight": "24px", "fontWeight": "500"}],
+                        "body-md": ["14px", {"lineHeight": "22px", "fontWeight": "400"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "26px", "fontWeight": "400"}],
+                        "display": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                        "label-sm": ["11px", {"lineHeight": "14px", "fontWeight": "500"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        body {
+            background-color: #f7f9fb;
+            font-family: 'Inter', sans-serif;
+            color: #191c1e;
+        }
+        .form-input-focus:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+            outline: none;
+        }
+    </style>
+</head>
+<body class="flex min-h-screen">
+<!-- SideNavBar Shell -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-on-secondary-fixed dark:bg-inverse-surface shadow-md flex flex-col py-md z-50">
+<div class="px-lg mb-xl">
+<h1 class="font-headline-sm text-headline-sm text-surface-bright font-bold">La Palabra</h1>
+<p class="font-label-md text-label-md text-secondary-fixed-dim">Admin System</p>
+</div>
+<nav class="flex-1 flex flex-col gap-1 px-sm">
+<!-- Dashboard -->
+<a class="flex items-center gap-3 px-4 py-3 text-secondary-fixed-dim hover:text-surface-bright hover:bg-on-secondary-fixed-variant transition-colors transition-all duration-200 ease-in-out font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span>Dashboard</span>
+</a>
+<!-- Materiales -->
+<a class="flex items-center gap-3 px-4 py-3 text-secondary-fixed-dim hover:text-surface-bright hover:bg-on-secondary-fixed-variant transition-colors transition-all duration-200 ease-in-out font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">menu_book</span>
+<span>Materiales</span>
+</a>
+<!-- Autores -->
+<a class="flex items-center gap-3 px-4 py-3 text-secondary-fixed-dim hover:text-surface-bright hover:bg-on-secondary-fixed-variant transition-colors transition-all duration-200 ease-in-out font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">person_edit</span>
+<span>Autores</span>
+</a>
+<!-- Categorías -->
+<a class="flex items-center gap-3 px-4 py-3 text-secondary-fixed-dim hover:text-surface-bright hover:bg-on-secondary-fixed-variant transition-colors transition-all duration-200 ease-in-out font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">category</span>
+<span>Categorías</span>
+</a>
+<!-- Socios (Active) -->
+<a class="flex items-center gap-3 px-4 py-3 bg-primary text-on-primary rounded-lg border-l-4 border-primary-fixed transition-all duration-200 ease-in-out font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">group</span>
+<span>Socios</span>
+</a>
+<!-- Préstamos -->
+<a class="flex items-center gap-3 px-4 py-3 text-secondary-fixed-dim hover:text-surface-bright hover:bg-on-secondary-fixed-variant transition-colors transition-all duration-200 ease-in-out font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">auto_stories</span>
+<span>Préstamos</span>
+</a>
+<!-- Devoluciones -->
+<a class="flex items-center gap-3 px-4 py-3 text-secondary-fixed-dim hover:text-surface-bright hover:bg-on-secondary-fixed-variant transition-colors transition-all duration-200 ease-in-out font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">assignment_return</span>
+<span>Devoluciones</span>
+</a>
+<!-- Reportes -->
+<a class="flex items-center gap-3 px-4 py-3 text-secondary-fixed-dim hover:text-surface-bright hover:bg-on-secondary-fixed-variant transition-colors transition-all duration-200 ease-in-out font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span>Reportes</span>
+</a>
+</nav>
+<div class="px-sm pt-xl">
+<a class="flex items-center gap-3 px-4 py-3 text-secondary-fixed-dim hover:text-surface-bright hover:bg-on-secondary-fixed-variant transition-colors font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span>Ajustes</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 ml-64 min-h-screen flex flex-col">
+<!-- TopNavBar Shell -->
+<header class="h-16 bg-surface dark:bg-on-surface-variant border-b border-outline-variant dark:border-outline shadow-sm flex justify-between items-center px-lg sticky top-0 z-40">
+<div class="flex items-center gap-md">
+<span class="font-headline-md text-headline-md font-bold text-on-secondary-fixed">Biblioteca Popular La Palabra</span>
+</div>
+<div class="flex items-center gap-lg">
+<div class="relative w-64">
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-full py-1.5 px-4 text-body-md form-input-focus transition-all" placeholder="Buscar socios..." type="text"/>
+<span class="material-symbols-outlined absolute right-3 top-2 text-outline">search</span>
+</div>
+<div class="flex items-center gap-sm">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-opacity active:opacity-70">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="flex items-center gap-sm ml-sm">
+<img alt="User Avatar" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB2wrpmw8hYPSGVURNTZVXQD-4r7X7lY6WmbUZulJzp5a92MtWBtMC_AqiSLVbLxlFMCF86r-XOHaILMdjFkDxxLCQRR4bm5qbTEVfbnHlBMPowat-jYLR5P1GB6Nz6aL9MbbH8YjwOkFs52F8agt1pnzQhtRxS-PhLJ-K8B_9cVVfjBEBuGRUVCnVqWMih6ys2p7GE8k-146_aawMV3h2QeEPLDQQJ_07HCNxyCmL51z3Ws4WakhVeGLoJriM_52WqQYNSl4woDy0"/>
+<span class="text-label-md font-bold text-on-surface-variant">Admin</span>
+<span class="material-symbols-outlined text-outline cursor-pointer hover:text-error transition-colors">logout</span>
+</div>
+</div>
+</div>
+</header>
+<!-- Page Content: Registration Form -->
+<section class="flex-1 p-xl flex justify-center items-start">
+<div class="max-w-4xl w-full">
+<!-- Header Section -->
+<div class="mb-lg flex items-center justify-between">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Registrar Nuevo Socio</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mt-1">Complete la información detallada para dar de alta un nuevo miembro en la biblioteca.</p>
+</div>
+<button class="flex items-center gap-2 text-primary font-bold hover:underline">
+<span class="material-symbols-outlined">arrow_back</span>
+<span>Volver al listado</span>
+</button>
+</div>
+<!-- Registration Card -->
+<div class="bg-white border border-[#CBD5E1] rounded-xl shadow-[0px_1px_3px_rgba(0,0,0,0.05)] overflow-hidden">
+<form class="p-xl">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-xl">
+<!-- Left Column: Profile Pic & Membership -->
+<div class="md:col-span-4 flex flex-col items-center gap-lg border-r border-[#CBD5E1] pr-xl">
+<div class="w-full">
+<label class="font-label-md text-label-md text-[#64748B] block mb-sm uppercase tracking-wider">Foto de Perfil</label>
+<div class="relative group cursor-pointer">
+<div class="w-48 h-48 rounded-2xl bg-surface-container-low border-2 border-dashed border-outline-variant flex flex-col items-center justify-center text-outline group-hover:border-primary group-hover:bg-primary-fixed/10 transition-all overflow-hidden">
+<span class="material-symbols-outlined text-4xl mb-2">add_a_photo</span>
+<span class="text-label-sm">Subir Imagen</span>
+<!-- Optional: Preview Image would go here -->
+</div>
+<input class="absolute inset-0 opacity-0 cursor-pointer" type="file"/>
+</div>
+<p class="text-[11px] text-outline mt-sm text-center">Formatos aceptados: JPG, PNG. Máx 2MB.</p>
+</div>
+<div class="w-full mt-lg">
+<label class="font-label-md text-label-md text-[#64748B] block mb-sm uppercase tracking-wider">Tipo de Membresía</label>
+<div class="flex flex-col gap-sm">
+<label class="flex items-center p-3 rounded-lg border border-outline-variant hover:border-primary cursor-pointer transition-all bg-surface-container-lowest">
+<input class="text-primary focus:ring-primary h-4 w-4" name="membership" type="radio" value="student"/>
+<div class="ml-3">
+<span class="block font-bold text-body-md">Estudiante</span>
+<span class="text-label-sm text-outline">Beneficios escolares activos</span>
+</div>
+</label>
+<label class="flex items-center p-3 rounded-lg border border-outline-variant hover:border-primary cursor-pointer transition-all bg-surface-container-lowest">
+<input class="text-primary focus:ring-primary h-4 w-4" name="membership" type="radio" value="teacher"/>
+<div class="ml-3">
+<span class="block font-bold text-body-md">Docente</span>
+<span class="text-label-sm text-outline">Préstamos extendidos</span>
+</div>
+</label>
+<label class="flex items-center p-3 rounded-lg border border-outline-variant hover:border-primary cursor-pointer transition-all bg-surface-container-lowest">
+<input checked="" class="text-primary focus:ring-primary h-4 w-4" name="membership" type="radio" value="general"/>
+<div class="ml-3">
+<span class="block font-bold text-body-md">General</span>
+<span class="text-label-sm text-outline">Acceso estándar</span>
+</div>
+</label>
+</div>
+</div>
+</div>
+<!-- Right Column: Form Fields -->
+<div class="md:col-span-8 flex flex-col gap-lg">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-lg">
+<!-- Full Name -->
+<div class="md:col-span-2">
+<label class="font-label-md text-label-md text-[#64748B] block mb-sm uppercase tracking-wider">Nombre Completo</label>
+<input class="w-full px-4 py-2.5 rounded-lg border border-[#CBD5E1] bg-white text-body-md form-input-focus transition-all" placeholder="Ej: Juan Pérez" type="text"/>
+</div>
+<!-- DNI -->
+<div>
+<label class="font-label-md text-label-md text-[#64748B] block mb-sm uppercase tracking-wider">DNI / ID Número</label>
+<input class="w-full px-4 py-2.5 rounded-lg border border-[#CBD5E1] bg-white text-body-md form-input-focus transition-all" placeholder="00.000.000" type="text"/>
+</div>
+<!-- Email -->
+<div>
+<label class="font-label-md text-label-md text-[#64748B] block mb-sm uppercase tracking-wider">Correo Electrónico</label>
+<input class="w-full px-4 py-2.5 rounded-lg border border-[#CBD5E1] bg-white text-body-md form-input-focus transition-all" placeholder="email@ejemplo.com" type="email"/>
+</div>
+<!-- Phone -->
+<div>
+<label class="font-label-md text-label-md text-[#64748B] block mb-sm uppercase tracking-wider">Teléfono / WhatsApp</label>
+<input class="w-full px-4 py-2.5 rounded-lg border border-[#CBD5E1] bg-white text-body-md form-input-focus transition-all" placeholder="+54 9 ..." type="tel"/>
+</div>
+<!-- Secondary Category (for more detail) -->
+<div>
+<label class="font-label-md text-label-md text-[#64748B] block mb-sm uppercase tracking-wider">Fecha de Nacimiento</label>
+<input class="w-full px-4 py-2.5 rounded-lg border border-[#CBD5E1] bg-white text-body-md form-input-focus transition-all" type="date"/>
+</div>
+<!-- Address -->
+<div class="md:col-span-2">
+<label class="font-label-md text-label-md text-[#64748B] block mb-sm uppercase tracking-wider">Dirección de Domicilio</label>
+<div class="relative">
+<input class="w-full px-4 py-2.5 rounded-lg border border-[#CBD5E1] bg-white text-body-md form-input-focus transition-all pr-10" placeholder="Calle, Número, Departamento, Ciudad" type="text"/>
+<span class="material-symbols-outlined absolute right-3 top-2.5 text-outline">location_on</span>
+</div>
+</div>
+<!-- Observations -->
+<div class="md:col-span-2">
+<label class="font-label-md text-label-md text-[#64748B] block mb-sm uppercase tracking-wider">Notas u Observaciones (Opcional)</label>
+<textarea class="w-full px-4 py-2.5 rounded-lg border border-[#CBD5E1] bg-white text-body-md form-input-focus transition-all resize-none" placeholder="Información adicional relevante sobre el nuevo socio..." rows="3"></textarea>
+</div>
+</div>
+<div class="mt-xl flex items-center justify-end gap-md">
+<button class="px-6 py-2.5 rounded-lg font-bold text-on-surface-variant hover:bg-surface-container-high transition-all text-body-md" type="button">
+                                        Cancelar
+                                    </button>
+<button class="bg-[#2563EB] text-white px-8 py-2.5 rounded-lg font-bold shadow-md hover:shadow-lg active:scale-95 transition-all text-body-md flex items-center gap-2" type="submit">
+<span class="material-symbols-outlined">person_add</span>
+                                        Registrar Socio
+                                    </button>
+</div>
+</div>
+</div>
+</form>
+</div>
+<!-- Descriptive Footer for Form context -->
+<div class="mt-lg grid grid-cols-1 md:grid-cols-3 gap-lg">
+<div class="bg-surface-container-low p-md rounded-lg flex items-start gap-3">
+<span class="material-symbols-outlined text-tertiary">verified_user</span>
+<div>
+<span class="block font-bold text-label-md">Datos Seguros</span>
+<span class="text-label-sm text-on-surface-variant">Cumplimiento con Ley de Protección de Datos Personales.</span>
+</div>
+</div>
+<div class="bg-surface-container-low p-md rounded-lg flex items-start gap-3">
+<span class="material-symbols-outlined text-primary">id_card</span>
+<div>
+<span class="block font-bold text-label-md">Carnet Instantáneo</span>
+<span class="text-label-sm text-on-surface-variant">Al registrar, se genera un código QR de identificación.</span>
+</div>
+</div>
+<div class="bg-surface-container-low p-md rounded-lg flex items-start gap-3">
+<span class="material-symbols-outlined text-on-secondary-container">mail</span>
+<div>
+<span class="block font-bold text-label-md">Notificaciones</span>
+<span class="text-label-sm text-on-surface-variant">El socio recibirá un correo de bienvenida automático.</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer Shell -->
+<footer class="w-[calc(100%-16rem)] ml-auto border-t border-outline-variant py-sm px-lg bg-surface-container-low dark:bg-on-surface-variant flex justify-between items-center z-10">
+<span class="font-label-md text-label-md text-secondary dark:text-secondary-fixed-dim">© 2024 Biblioteca Popular La Palabra. v2.4.0</span>
+<div class="flex gap-lg">
+<a class="font-label-md text-label-md text-on-surface-variant hover:underline transition-all" href="#">Privacidad</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:underline transition-all" href="#">Soporte</a>
+</div>
+</footer>
+</main>
+<!-- Visual Polish: Soft Decorative Gradient -->
+<div class="fixed top-0 right-0 -z-10 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[120px] pointer-events-none translate-x-1/2 -translate-y-1/2"></div>
+<div class="fixed bottom-0 left-64 -z-10 w-[400px] h-[400px] bg-secondary/5 rounded-full blur-[100px] pointer-events-none -translate-x-1/2 translate-y-1/2"></div>
+<script>
+        // Micro-interaction for the profile upload area
+        const dropZone = document.querySelector('.group.cursor-pointer');
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.querySelector('.w-48').classList.add('border-primary', 'bg-primary-fixed/20');
+        });
+        dropZone.addEventListener('dragleave', (e) => {
+            dropZone.querySelector('.w-48').classList.remove('border-primary', 'bg-primary-fixed/20');
+        });
+        
+        // Simple Form Validation Feedback
+        document.querySelector('form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            const originalText = btn.innerHTML;
+            
+            btn.disabled = true;
+            btn.innerHTML = `<span class="material-symbols-outlined animate-spin">sync</span> Guardando...`;
+            
+            setTimeout(() => {
+                btn.classList.replace('bg-[#2563EB]', 'bg-tertiary');
+                btn.innerHTML = `<span class="material-symbols-outlined">check_circle</span> ¡Socio Registrado!`;
+                
+                setTimeout(() => {
+                    btn.disabled = false;
+                    btn.classList.replace('bg-tertiary', 'bg-[#2563EB]');
+                    btn.innerHTML = originalText;
+                }, 3000);
+            }, 1500);
+        });
+    </script>
+</body></html>

@@ -118,114 +118,56 @@ import DashboardLayout from '../../layouts/DashboardLayout.astro';
 </DashboardLayout>
 
 <script is:inline>
-const API = 'http://localhost:4000/api';
-function hRep() {
-  return { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('accessToken')}` };
+function switchTab(tab) {
+  document.querySelectorAll('[data-tab]').forEach(b => b.classList.remove('active'));
+  document.querySelector(`[data-tab="${tab}"]`)?.classList.add('active');
+  document.getElementById('tab-historial').style.display = tab === 'historial' ? '' : 'none';
+  document.getElementById('tab-morosos').style.display = tab === 'morosos' ? '' : 'none';
+  document.getElementById('tab-populares').style.display = tab === 'populares' ? '' : 'none';
+  if (tab === 'morosos') cargarMorosos();
+  if (tab === 'populares') cargarPopulares();
 }
 
-function estadoBadge(e) {
-  const m = { ACTIVO: 'badge-activo', MORA: 'badge-mora', DEVUELTO: 'badge-devuelto' };
-  return `<span class="status-badge ${m[e] || ''}">${e}</span>`;
-}
-
-// Tabs
 document.addEventListener('DOMContentLoaded', function() {
   document.querySelectorAll('[data-tab]').forEach(btn => {
-    btn.addEventListener('click', function() {
-      document.querySelectorAll('[data-tab]').forEach(b => b.classList.remove('active'));
-      this.classList.add('active');
-      const tab = this.dataset.tab;
-      document.getElementById('tab-historial').style.display = tab === 'historial' ? '' : 'none';
-      document.getElementById('tab-morosos').style.display = tab === 'morosos' ? '' : 'none';
-      document.getElementById('tab-populares').style.display = tab === 'populares' ? '' : 'none';
-
-      if (tab === 'morosos') cargarMorosos();
-      if (tab === 'populares') cargarPopulares();
-    });
+    btn.addEventListener('click', () => switchTab(btn.dataset.tab));
   });
 
-  // Generar historial
   document.getElementById('btn-generar-historial')?.addEventListener('click', async function() {
-    const params = new URLSearchParams();
+    const params = {};
     const desde = document.getElementById('rep-desde').value;
     const hasta = document.getElementById('rep-hasta').value;
     const estado = document.getElementById('rep-estado').value;
-    if (desde) params.append('desde', desde);
-    if (hasta) params.append('hasta', hasta);
-    if (estado) params.append('estado', estado);
-
+    if (desde) params.desde = desde;
+    if (hasta) params.hasta = hasta;
+    if (estado) params.estado = estado;
     showLoader();
-    const res = await fetch(`${API}/reportes/historial?${params}`, { headers: hRep() });
-    const data = await res.json();
-    hideLoader();
-
-    const tbody = document.getElementById('tbody-historial');
-    if (!data.success || !data.data.length) {
-      tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-muted">Sin resultados</td></tr>';
-      return;
-    }
-
-    tbody.innerHTML = data.data.map(p => `
-      <tr>
-        <td>${new Date(p.fechaPrestamo).toLocaleDateString('es-CO')}</td>
-        <td><div class="fw-semibold">${p.socio.apellido}, ${p.socio.nombre}</div><div class="text-muted-sm">DNI: ${p.socio.dni}</div></td>
-        <td>${p.material.titulo}</td>
-        <td>${new Date(p.fechaDevolucion).toLocaleDateString('es-CO')}</td>
-        <td>${p.fechaDevReal ? new Date(p.fechaDevReal).toLocaleDateString('es-CO') : '—'}</td>
-        <td>${estadoBadge(p.estado)}</td>
-      </tr>
-    `).join('');
+    try {
+      const data = await api.get('/reportes/historial', params);
+      const tbody = document.getElementById('tbody-historial');
+      if (!data.data.length) { tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-muted">Sin resultados</td></tr>'; return; }
+      tbody.innerHTML = data.data.map(p => `<tr><td>${formatDate(p.fechaPrestamo)}</td><td><div class="fw-semibold">${p.socio.apellido}, ${p.socio.nombre}</div><div class="text-muted-sm">DNI: ${p.socio.dni}</div></td><td>${p.material.titulo}</td><td>${formatDate(p.fechaDevolucion)}</td><td>${p.fechaDevReal ? formatDate(p.fechaDevReal) : '—'}</td><td>${estadoBadge(p.estado)}</td></tr>`).join('');
+    } catch (err) { showToast('error', err.message); }
+    finally { hideLoader(); }
   });
 });
 
 async function cargarMorosos() {
-  const res = await fetch(`${API}/reportes/socios-morosos`, { headers: hRep() });
-  const data = await res.json();
-  const tbody = document.getElementById('tbody-morosos');
-
-  if (!data.success || !data.data.length) {
-    tbody.innerHTML = '<tr><td colspan="4" class="text-center py-4" style="color:var(--color-success);">✓ No hay socios en mora</td></tr>';
-    return;
-  }
-
-  tbody.innerHTML = data.data.map((s, i) => `
-    <tr>
-      <td>${i + 1}</td>
-      <td class="fw-semibold">${s.apellido}, ${s.nombre}</td>
-      <td>${s.dni}</td>
-      <td>
-        ${s.prestamos.map(p => `<div class="text-muted-sm">• ${p.material.titulo}</div>`).join('')}
-        <span class="badge bg-danger bg-opacity-10 text-danger fw-semibold">${s.prestamos.length} en mora</span>
-      </td>
-    </tr>
-  `).join('');
+  try {
+    const data = await api.get('/reportes/socios-morosos');
+    const tbody = document.getElementById('tbody-morosos');
+    if (!data.data.length) { tbody.innerHTML = '<tr><td colspan="4" class="text-center py-4" style="color:var(--color-success);">✓ No hay socios en mora</td></tr>'; return; }
+    tbody.innerHTML = data.data.map((s, i) => `<tr><td>${i + 1}</td><td class="fw-semibold">${s.apellido}, ${s.nombre}</td><td>${s.dni}</td><td>${s.prestamos.map(p => `<div class="text-muted-sm">• ${p.material.titulo}</div>`).join('')}<span class="badge bg-danger bg-opacity-10 text-danger fw-semibold">${s.prestamos.length} en mora</span></td></tr>`).join('');
+  } catch (err) { console.error(err); }
 }
 
 async function cargarPopulares() {
-  const res = await fetch(`${API}/reportes/materiales-populares`, { headers: hRep() });
-  const data = await res.json();
-  const tbody = document.getElementById('tbody-populares');
-
-  if (!data.success || !data.data.length) {
-    tbody.innerHTML = '<tr><td colspan="4" class="text-center py-4 text-muted">Sin datos disponibles</td></tr>';
-    return;
-  }
-
-  const medals = ['🥇', '🥈', '🥉'];
-  tbody.innerHTML = data.data.map((m, i) => `
-    <tr>
-      <td><span style="font-size:20px;">${medals[i] || (i + 1)}</span></td>
-      <td class="fw-semibold">${m.titulo}</td>
-      <td><span class="badge bg-light text-dark">${m.tipo}</span></td>
-      <td>
-        <div class="d-flex align-items-center gap-2">
-          <div class="progress flex-grow-1" style="height:6px;border-radius:3px;max-width:120px;">
-            <div class="progress-bar" style="width:${Math.min(100, m._count.prestamos * 20)}%;background:var(--color-primary);"></div>
-          </div>
-          <span class="fw-semibold">${m._count.prestamos}</span>
-        </div>
-      </td>
-    </tr>
-  `).join('');
+  try {
+    const data = await api.get('/reportes/materiales-populares');
+    const tbody = document.getElementById('tbody-populares');
+    if (!data.data.length) { tbody.innerHTML = '<tr><td colspan="4" class="text-center py-4 text-muted">Sin datos disponibles</td></tr>'; return; }
+    const medals = ['🥇', '🥈', '🥉'];
+    tbody.innerHTML = data.data.map((m, i) => `<tr><td><span style="font-size:20px;">${medals[i] || (i + 1)}</span></td><td class="fw-semibold">${m.titulo}</td><td><span class="badge bg-light text-dark">${m.tipo}</span></td><td><div class="d-flex align-items-center gap-2"><div class="progress flex-grow-1" style="height:6px;max-width:120px;"><div class="progress-bar" style="width:${Math.min(100, m._count.prestamos * 20)}%"></div></div><span class="fw-semibold">${m._count.prestamos}</span></div></td></tr>`).join('');
+  } catch (err) { console.error(err); }
 }
 </script>

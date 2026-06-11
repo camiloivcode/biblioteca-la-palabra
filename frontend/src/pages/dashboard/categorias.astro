@@ -51,120 +51,79 @@ import DashboardLayout from '../../layouts/DashboardLayout.astro';
 </div>
 
 <script is:inline>
-const API = 'http://localhost:4000/api';
 let editingCatId = null;
 let modalCat;
-const ICONS = ['bi-book', 'bi-journal', 'bi-globe', 'bi-music-note', 'bi-cpu', 'bi-flask', 'bi-brush', 'bi-camera', 'bi-tree', 'bi-heart'];
-const COLORS = ['blue', 'green', 'amber', 'red', 'purple', 'teal', 'blue', 'amber', 'green', 'red'];
 
-function hCat() {
-  return { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('accessToken')}` };
-}
+const iconMap = {
+  Literatura: { icon: 'bi-book-half', color: 'amber' },
+  Historia: { icon: 'bi-hourglass-split', color: 'blue' },
+  Ciencias: { icon: 'bi-flask', color: 'green' },
+  'Filosofía': { icon: 'bi-lightbulb', color: 'purple' },
+  Arte: { icon: 'bi-palette', color: 'red' },
+  Tecnología: { icon: 'bi-cpu', color: 'teal' },
+  Matemáticas: { icon: 'bi-calculator', color: 'blue' },
+  Geografía: { icon: 'bi-globe-americas', color: 'green' },
+  Música: { icon: 'bi-music-note-beamed', color: 'amber' },
+  Deportes: { icon: 'bi-trophy', color: 'red' },
+};
+const fallbacks = [{ icon: 'bi-bookmark', color: 'blue' }, { icon: 'bi-journal-text', color: 'green' }, { icon: 'bi-archive', color: 'amber' }, { icon: 'bi-collection', color: 'purple' }];
 
 async function cargarCategorias() {
-  const res = await fetch(`${API}/categorias`, { headers: hCat() });
-  const data = await res.json();
-  const grid = document.getElementById('grid-categorias');
-
-  if (!data.success || !data.data.length) {
-    grid.innerHTML = '<div class="col-12 text-center py-5 text-muted">No hay categorías registradas</div>';
-    return;
-  }
-
-  // Mapa de íconos y colores por nombre de categoría
-  const iconMap = {
-    'Literatura':   { icon: 'bi-book-half',        color: 'amber'  },
-    'Historia':     { icon: 'bi-hourglass-split',   color: 'blue'   },
-    'Ciencias':     { icon: 'bi-flask',             color: 'green'  },
-    'Filosofía':    { icon: 'bi-lightbulb',         color: 'purple' },
-    'Arte':         { icon: 'bi-palette',           color: 'red'    },
-    'Tecnología':   { icon: 'bi-cpu',               color: 'teal'   },
-    'Matemáticas':  { icon: 'bi-calculator',        color: 'blue'   },
-    'Geografía':    { icon: 'bi-globe-americas',    color: 'green'  },
-    'Música':       { icon: 'bi-music-note-beamed', color: 'amber'  },
-    'Deportes':     { icon: 'bi-trophy',            color: 'red'    },
-  };
-
-  // Fallback para categorías no mapeadas
-  const fallbacks = [
-    { icon: 'bi-bookmark',     color: 'blue'   },
-    { icon: 'bi-journal-text', color: 'green'  },
-    { icon: 'bi-archive',      color: 'amber'  },
-    { icon: 'bi-collection',   color: 'purple' },
-  ];
-
-  grid.innerHTML = data.data.map((c, i) => {
-    const match = iconMap[c.nombre] || fallbacks[i % fallbacks.length];
-    return `
-      <div class="col-xl-3 col-md-4 col-sm-6">
-        <div class="card h-100">
-          <div class="card-body">
-            <div class="d-flex align-items-start justify-content-between mb-3">
-              <div class="stat-icon ${match.color}">
-                <i class="bi ${match.icon}"></i>
-              </div>
-              <div class="d-flex gap-1">
-                <button class="btn btn-icon btn-sm btn-outline-primary" onclick="editarCat(${c.id})" title="Editar">
-                  <i class="bi bi-pencil"></i>
-                </button>
-                <button class="btn btn-icon btn-sm btn-outline-danger" onclick="eliminarCat(${c.id}, '${c.nombre}')" title="Eliminar">
-                  <i class="bi bi-trash"></i>
-                </button>
-              </div>
-            </div>
-            <h6 class="fw-semibold mb-1">${c.nombre}</h6>
-            <p class="text-muted-sm mb-2">${c.descripcion || 'Sin descripción'}</p>
-            <div class="text-muted-sm">
-              <i class="bi bi-book me-1"></i>${c._count?.materiales ?? 0} materiales
+  try {
+    const data = await api.get('/categorias');
+    const grid = document.getElementById('grid-categorias');
+    if (!data.data.length) { grid.innerHTML = '<div class="col-12 text-center py-5 text-muted"><i class="bi bi-tags fs-3 d-block mb-2"></i>No hay categorías registradas</div>'; return; }
+    grid.innerHTML = data.data.map((c, i) => {
+      const m = iconMap[c.nombre] || fallbacks[i % fallbacks.length];
+      return `<div class="col-xl-3 col-md-4 col-sm-6">
+        <div class="card h-100"><div class="card-body">
+          <div class="d-flex align-items-start justify-content-between mb-3">
+            <div class="stat-icon ${m.color}"><i class="bi ${m.icon}"></i></div>
+            <div class="d-flex gap-1">
+              <button class="btn btn-icon btn-sm btn-outline-primary" onclick="editarCat(${c.id})" title="Editar"><i class="bi bi-pencil"></i></button>
+              <button class="btn btn-icon btn-sm btn-outline-danger" onclick="eliminarCat(${c.id}, '${c.nombre}')" title="Eliminar"><i class="bi bi-trash"></i></button>
             </div>
           </div>
-        </div>
-      </div>
-    `;
-  }).join('');
+          <h6 class="fw-semibold mb-1">${c.nombre}</h6>
+          <p class="text-muted-sm mb-2">${c.descripcion || 'Sin descripción'}</p>
+          <div class="text-muted-sm"><i class="bi bi-book me-1"></i>${c._count?.materiales ?? 0} materiales</div>
+        </div></div>
+      </div>`;
+    }).join('');
+  } catch (err) { console.error(err); }
 }
 
 async function editarCat(id) {
   showLoader();
-  const res = await fetch(`${API}/categorias/${id}`, { headers: hCat() });
-  const data = await res.json();
-  hideLoader();
-  if (!data.success) return;
-
-  editingCatId = id;
-  document.getElementById('cat-id').value = data.data.id;
-  document.getElementById('cat-nombre').value = data.data.nombre;
-  document.getElementById('cat-desc').value = data.data.descripcion || '';
-  document.getElementById('modal-title-cat').innerHTML = '<i class="bi bi-pencil me-2"></i>Editar Categoría';
-  modalCat.show();
+  try {
+    const res = await fetch(`${window.API_URL}/categorias/${id}`, { headers: getHeaders() });
+    const d = await res.json();
+    if (!d.success) throw new Error(d.message);
+    editingCatId = id;
+    document.getElementById('cat-id').value = d.data.id;
+    document.getElementById('cat-nombre').value = d.data.nombre;
+    document.getElementById('cat-desc').value = d.data.descripcion || '';
+    document.getElementById('modal-title-cat').innerHTML = '<i class="bi bi-pencil me-2"></i>Editar Categoría';
+    modalCat.show();
+  } catch (err) { showToast('error', err.message); }
+  finally { hideLoader(); }
 }
 
 async function eliminarCat(id, nombre) {
-  const result = await Swal.fire({
-    title: '¿Eliminar categoría?',
-    html: `Se eliminará <strong>${nombre}</strong>.`,
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#c02d2d',
-    confirmButtonText: 'Eliminar',
-    cancelButtonText: 'Cancelar',
-  });
+  const result = await Swal.fire({ title: '¿Eliminar categoría?', html: `Se eliminará <strong>${nombre}</strong>.`, icon: 'warning', showCancelButton: true, confirmButtonColor: '#ef4444', confirmButtonText: 'Eliminar', cancelButtonText: 'Cancelar' });
   if (!result.isConfirmed) return;
-
   showLoader();
-  const res = await fetch(`${API}/categorias/${id}`, { method: 'DELETE', headers: hCat() });
-  const data = await res.json();
-  hideLoader();
-
-  if (!data.success) return Swal.fire({ icon: 'error', title: 'Error', text: data.message });
-  Swal.fire({ icon: 'success', title: 'Categoría eliminada', timer: 1500, showConfirmButton: false });
-  cargarCategorias();
+  try {
+    await api.del(`/categorias/${id}`);
+    showToast('success', 'Categoría eliminada');
+    cargarCategorias();
+  } catch (err) { showToast('error', err.message); }
+  finally { hideLoader(); }
 }
 
 document.addEventListener('DOMContentLoaded', function () {
   modalCat = new bootstrap.Modal(document.getElementById('modalCat'));
   cargarCategorias();
-
   document.getElementById('btn-nueva-cat')?.addEventListener('click', function () {
     editingCatId = null;
     document.getElementById('cat-id').value = '';
@@ -173,27 +132,20 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('modal-title-cat').innerHTML = '<i class="bi bi-tag me-2"></i>Nueva Categoría';
     modalCat.show();
   });
-
   document.getElementById('btn-guardar-cat')?.addEventListener('click', async function () {
     const nombre = document.getElementById('cat-nombre').value.trim();
     if (!nombre) return Swal.fire({ icon: 'warning', title: 'Campo requerido', text: 'El nombre es obligatorio.' });
-
-    const body = { nombre, descripcion: document.getElementById('cat-desc').value.trim() || null };
-
     showLoader();
-    const isEdit = !!editingCatId;
-    const url = isEdit ? `${API}/categorias/${editingCatId}` : `${API}/categorias`;
-    const res = await fetch(url, { method: isEdit ? 'PUT' : 'POST', headers: hCat(), body: JSON.stringify(body) });
-    const data = await res.json();
-    hideLoader();
-
-    if (!data.success) return Swal.fire({ icon: 'error', title: 'Error', text: data.message });
-    modalCat.hide();
-    Swal.fire({ icon: 'success', title: isEdit ? 'Categoría actualizada' : 'Categoría creada', timer: 1500, showConfirmButton: false });
-    cargarCategorias();
+    try {
+      const isEdit = !!editingCatId;
+      isEdit ? await api.put(`/categorias/${editingCatId}`, { nombre, descripcion: document.getElementById('cat-desc').value.trim() || null }) : await api.post('/categorias', { nombre, descripcion: document.getElementById('cat-desc').value.trim() || null });
+      modalCat.hide();
+      showToast('success', isEdit ? 'Categoría actualizada' : 'Categoría creada');
+      cargarCategorias();
+    } catch (err) { showToast('error', err.message); }
+    finally { hideLoader(); }
   });
 });
-
 window.editarCat = editarCat;
 window.eliminarCat = eliminarCat;
 </script>

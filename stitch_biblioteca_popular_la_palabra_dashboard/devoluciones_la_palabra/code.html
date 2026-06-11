@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Registro de Devoluciones - La Palabra</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9fb;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed-variant": "#2d486d",
+                        "on-tertiary-fixed": "#002109",
+                        "surface-container-high": "#e6e8ea",
+                        "primary": "#004ac6",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "on-tertiary-fixed-variant": "#005321",
+                        "on-secondary": "#ffffff",
+                        "primary-fixed": "#dbe1ff",
+                        "surface-container-low": "#f2f4f6",
+                        "on-primary-fixed": "#00174b",
+                        "outline": "#737686",
+                        "surface-dim": "#d8dadc",
+                        "on-secondary-fixed": "#001c3b",
+                        "on-primary-container": "#eeefff",
+                        "surface-container": "#eceef0",
+                        "on-tertiary-container": "#c1ffc5",
+                        "tertiary-fixed": "#6bff8f",
+                        "tertiary": "#006229",
+                        "outline-variant": "#c3c6d7",
+                        "inverse-surface": "#2d3133",
+                        "primary-container": "#2563eb",
+                        "on-surface": "#191c1e",
+                        "tertiary-fixed-dim": "#4ae176",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary": "#455f87",
+                        "on-surface-variant": "#434655",
+                        "surface-bright": "#f7f9fb",
+                        "surface-container-highest": "#e0e3e5",
+                        "inverse-primary": "#b4c5ff",
+                        "background": "#f7f9fb",
+                        "surface-variant": "#e0e3e5",
+                        "secondary-fixed": "#d5e3ff",
+                        "on-primary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "surface-tint": "#0053db",
+                        "secondary-fixed-dim": "#adc8f5",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-container": "#3e5980",
+                        "on-background": "#191c1e",
+                        "surface": "#f7f9fb",
+                        "on-error": "#ffffff",
+                        "error": "#ba1a1a",
+                        "tertiary-container": "#007e37",
+                        "secondary-container": "#b5d0fd",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "inverse-on-surface": "#eff1f3",
+                        "on-error-container": "#93000a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xs": "4px",
+                        "margin-desktop": "32px",
+                        "max-width": "1440px",
+                        "xl": "40px",
+                        "margin-mobile": "16px",
+                        "lg": "24px",
+                        "gutter": "24px",
+                        "sm": "8px",
+                        "md": "16px",
+                        "base": "4px",
+                        "2xl": "64px"
+                    },
+                    "fontFamily": {
+                        "title-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "display": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-md": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "label-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "title-lg": ["18px", {"lineHeight": "24px", "fontWeight": "500"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "display": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "26px", "fontWeight": "400"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "body-md": ["14px", {"lineHeight": "22px", "fontWeight": "400"}],
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "label-sm": ["11px", {"lineHeight": "14px", "fontWeight": "500"}]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface">
+<!-- SideNavBar -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-on-secondary-fixed dark:bg-inverse-surface shadow-md flex flex-col py-md z-50">
+<div class="px-md mb-xl flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-white">menu_book</span>
+</div>
+<div>
+<h1 class="font-headline-sm text-headline-sm text-surface-bright font-bold leading-tight">La Palabra</h1>
+<p class="text-label-sm text-secondary-fixed-dim">Admin System</p>
+</div>
+</div>
+<nav class="flex-1 px-sm space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-secondary-fixed-dim hover:text-surface-bright hover:bg-on-secondary-fixed-variant transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-md text-body-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary-fixed-dim hover:text-surface-bright hover:bg-on-secondary-fixed-variant transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">menu_book</span>
+<span class="font-body-md text-body-md">Materiales</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary-fixed-dim hover:text-surface-bright hover:bg-on-secondary-fixed-variant transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">person_edit</span>
+<span class="font-body-md text-body-md">Autores</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary-fixed-dim hover:text-surface-bright hover:bg-on-secondary-fixed-variant transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">category</span>
+<span class="font-body-md text-body-md">Categorías</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary-fixed-dim hover:text-surface-bright hover:bg-on-secondary-fixed-variant transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-body-md text-body-md">Socios</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary-fixed-dim hover:text-surface-bright hover:bg-on-secondary-fixed-variant transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">auto_stories</span>
+<span class="font-body-md text-body-md">Préstamos</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-primary text-on-primary rounded-lg border-l-4 border-primary-fixed" href="#">
+<span class="material-symbols-outlined">assignment_return</span>
+<span class="font-body-md text-body-md">Devoluciones</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary-fixed-dim hover:text-surface-bright hover:bg-on-secondary-fixed-variant transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-body-md text-body-md">Reportes</span>
+</a>
+</nav>
+<div class="px-sm pt-md border-t border-on-secondary-fixed-variant">
+<a class="flex items-center gap-3 px-4 py-3 text-secondary-fixed-dim hover:text-surface-bright hover:bg-on-secondary-fixed-variant transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-body-md text-body-md">Ajustes</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-64 min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] h-16 bg-surface dark:bg-on-surface-variant border-b border-outline-variant dark:border-outline shadow-sm z-40 flex justify-between items-center px-lg">
+<div class="flex items-center gap-4">
+<h2 class="font-title-lg text-title-lg text-primary">Registro de Devoluciones</h2>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-outline">search</span>
+<input class="pl-10 pr-4 py-1.5 bg-surface-container-low border border-outline-variant rounded-lg text-body-md focus:ring-2 focus:ring-primary focus:outline-none w-64" placeholder="Buscar en el sistema..." type="text"/>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary transition-colors">notifications</span>
+<div class="flex items-center gap-2 border-l border-outline-variant pl-4">
+<img alt="User Avatar" class="w-8 h-8 rounded-full border border-outline-variant" data-alt="Professional headshot of a library administrator in a brightly lit, modern office environment. The person is smiling warmly, wearing business casual attire, conveying reliability and institutional trust. The background is softly blurred, showing rows of books and a high-end minimalist workstation with a sleek monitor and professional tools." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA0HciQVT3vqbCa3qKUKl_j5IcI-Qu4sJzEsHnlMvhzFSTHd0u5m5L7vjrY9WX8iuoMQvKDq3PQBJyYNOtHAj0aOTfKwphjQjG8EwiAXzwkoWNRf-qYdXT95kp-jlzMbTbVcvpg-cuMl3NT0xTQH3OAn0CiNYjQMorsixCjIo6QWsJ5amlAGmX-1BUS4RwTM0_DjmulrNphR5o4xY-fvHVgTZLtlMBjhpVMqajJceJVaLSeAtbCmTRZjxY-YEskwHsN_pkaOUxVzDk"/>
+<span class="font-label-md text-label-md text-on-surface-variant">Admin</span>
+</div>
+</div>
+</div>
+</header>
+<!-- Page Content -->
+<div class="mt-16 p-lg flex-1 overflow-y-auto custom-scrollbar">
+<div class="max-w-max-width mx-auto space-y-lg">
+<!-- Registration & Search Section (Bento Style) -->
+<div class="grid grid-cols-12 gap-gutter">
+<!-- Search & Process Card -->
+<div class="col-span-12 lg:col-span-7 bg-white rounded-xl border border-outline-variant p-lg shadow-sm">
+<div class="flex items-center justify-between mb-md">
+<h3 class="font-headline-sm text-headline-sm text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">qr_code_scanner</span>
+                                Escanear o Buscar Material
+                            </h3>
+<span class="bg-primary-fixed text-on-primary-fixed px-3 py-1 rounded-full text-label-sm">SISTEMA ACTIVO</span>
+</div>
+<p class="text-body-md text-on-surface-variant mb-lg">Escanear código de material o ingresar ID para cargar automáticamente los datos del préstamo activo.</p>
+<div class="relative group">
+<input class="w-full pl-12 pr-4 py-4 bg-surface-container-lowest border-2 border-outline-variant rounded-xl text-headline-sm font-medium focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none" id="return-search" placeholder="Escanear código de barras o ingresar ID del libro..." type="text"/>
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary text-3xl">barcode_scanner</span>
+<button class="absolute right-3 top-1/2 -translate-y-1/2 bg-primary text-white px-6 py-2 rounded-lg font-label-md hover:bg-on-primary-fixed-variant transition-all shadow-md">IDENTIFICAR</button>
+</div>
+<div class="mt-lg grid grid-cols-2 gap-md opacity-40 pointer-events-none grayscale" id="loan-details-preview">
+<div class="p-md bg-surface-container-low rounded-lg border border-outline-variant">
+<p class="text-label-md text-outline mb-1 uppercase">Socio Detectado</p>
+<p class="font-title-lg text-title-lg">---</p>
+</div>
+<div class="p-md bg-surface-container-low rounded-lg border border-outline-variant">
+<p class="text-label-md text-outline mb-1 uppercase">Fecha de Vencimiento</p>
+<p class="font-title-lg text-title-lg">---</p>
+</div>
+</div>
+</div>
+<!-- Process Form (Placeholder for identified material) -->
+<div class="col-span-12 lg:col-span-5 bg-on-secondary-fixed text-white rounded-xl p-lg shadow-md relative overflow-hidden group">
+<div class="absolute -right-16 -top-16 w-48 h-48 bg-primary/20 rounded-full blur-3xl group-hover:bg-primary/30 transition-all"></div>
+<h3 class="font-headline-sm text-headline-sm mb-lg relative z-10">Procesar Nueva Devolución</h3>
+<div class="space-y-md relative z-10">
+<div>
+<label class="block text-label-md text-secondary-fixed-dim mb-2 uppercase">Estado de Recepción</label>
+<div class="grid grid-cols-3 gap-2">
+<button class="flex flex-col items-center gap-1 p-3 rounded-lg border border-outline-variant/30 bg-white/5 hover:bg-white/10 transition-all">
+<span class="material-symbols-outlined text-tertiary-fixed">check_circle</span>
+<span class="text-label-sm">Bueno</span>
+</button>
+<button class="flex flex-col items-center gap-1 p-3 rounded-lg border border-outline-variant/30 bg-white/5 hover:bg-white/10 transition-all">
+<span class="material-symbols-outlined text-error-container">report_problem</span>
+<span class="text-label-sm">Dañado</span>
+</button>
+<button class="flex flex-col items-center gap-1 p-3 rounded-lg border border-outline-variant/30 bg-white/5 hover:bg-white/10 transition-all">
+<span class="material-symbols-outlined text-outline">help</span>
+<span class="text-label-sm">Otro</span>
+</button>
+</div>
+</div>
+<div>
+<label class="block text-label-md text-secondary-fixed-dim mb-2 uppercase">Observaciones</label>
+<textarea class="w-full bg-white/5 border border-outline-variant/30 rounded-lg p-3 text-body-md focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder:text-outline" placeholder="Detalles sobre el estado del material..." rows="3"></textarea>
+</div>
+<button class="w-full bg-primary py-4 rounded-xl font-headline-sm text-white hover:bg-on-primary-fixed-variant shadow-lg active:scale-[0.98] transition-all">
+                                REGISTRAR DEVOLUCIÓN
+                            </button>
+</div>
+</div>
+</div>
+<!-- Table Section -->
+<div class="bg-white rounded-xl border border-outline-variant shadow-sm overflow-hidden">
+<div class="p-lg border-b border-outline-variant flex justify-between items-center bg-surface-container-low">
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Devoluciones Recientes</h3>
+<p class="text-body-md text-on-surface-variant">Últimos registros procesados en la sucursal actual.</p>
+</div>
+<div class="flex gap-2">
+<button class="p-2 border border-outline-variant rounded-lg hover:bg-surface transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">filter_list</span>
+</button>
+<button class="p-2 border border-outline-variant rounded-lg hover:bg-surface transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">download</span>
+</button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container text-on-surface-variant">
+<th class="px-lg py-4 font-label-md uppercase tracking-wider">Socio</th>
+<th class="px-lg py-4 font-label-md uppercase tracking-wider">Material</th>
+<th class="px-lg py-4 font-label-md uppercase tracking-wider">Fecha Devolución</th>
+<th class="px-lg py-4 font-label-md uppercase tracking-wider">Estado</th>
+<th class="px-lg py-4 font-label-md uppercase tracking-wider">Observaciones</th>
+<th class="px-lg py-4 font-label-md uppercase tracking-wider text-right">Acciones</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-lowest transition-colors group">
+<td class="px-lg py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-bold text-xs">RM</div>
+<div>
+<p class="font-body-lg text-body-lg text-on-surface">Ricardo Martínez</p>
+<p class="text-label-sm text-outline">ID: 10425</p>
+</div>
+</div>
+</td>
+<td class="px-lg py-4">
+<p class="font-body-md text-body-md text-on-surface">Rayuela - Julio Cortázar</p>
+<p class="text-label-sm text-outline">INV: LIB-2023-09</p>
+</td>
+<td class="px-lg py-4">
+<p class="font-body-md text-body-md">15 Oct 2024</p>
+<p class="text-label-sm text-tertiary font-medium">A tiempo</p>
+</td>
+<td class="px-lg py-4">
+<span class="px-3 py-1 bg-tertiary-container/20 text-tertiary font-label-md rounded-full">Buen estado</span>
+</td>
+<td class="px-lg py-4 text-body-md text-on-surface-variant italic">
+                                        "Sin marcas visibles."
+                                    </td>
+<td class="px-lg py-4 text-right">
+<button class="material-symbols-outlined text-outline hover:text-primary transition-colors">more_vert</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-lowest transition-colors group">
+<td class="px-lg py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-fixed text-on-primary-fixed flex items-center justify-center font-bold text-xs">EG</div>
+<div>
+<p class="font-body-lg text-body-lg text-on-surface">Elena Gómez</p>
+<p class="text-label-sm text-outline">ID: 09832</p>
+</div>
+</div>
+</td>
+<td class="px-lg py-4">
+<p class="font-body-md text-body-md text-on-surface">Cosmos - Carl Sagan</p>
+<p class="text-label-sm text-outline">INV: LIB-2021-44</p>
+</td>
+<td class="px-lg py-4">
+<p class="font-body-md text-body-md">14 Oct 2024</p>
+<p class="text-label-sm text-error font-medium">1 día retraso</p>
+</td>
+<td class="px-lg py-4">
+<span class="px-3 py-1 bg-error-container/20 text-error font-label-md rounded-full">Dañado</span>
+</td>
+<td class="px-lg py-4 text-body-md text-on-surface-variant italic">
+                                        "Cubierta posterior manchada."
+                                    </td>
+<td class="px-lg py-4 text-right">
+<button class="material-symbols-outlined text-outline hover:text-primary transition-colors">more_vert</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-lowest transition-colors group">
+<td class="px-lg py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center font-bold text-xs">JF</div>
+<div>
+<p class="font-body-lg text-body-lg text-on-surface">Jorge Fernández</p>
+<p class="text-label-sm text-outline">ID: 11200</p>
+</div>
+</div>
+</td>
+<td class="px-lg py-4">
+<p class="font-body-md text-body-md text-on-surface">Fundación - Isaac Asimov</p>
+<p class="text-label-sm text-outline">INV: LIB-2024-12</p>
+</td>
+<td class="px-lg py-4">
+<p class="font-body-md text-body-md">14 Oct 2024</p>
+<p class="text-label-sm text-tertiary font-medium">A tiempo</p>
+</td>
+<td class="px-lg py-4">
+<span class="px-3 py-1 bg-tertiary-container/20 text-tertiary font-label-md rounded-full">Buen estado</span>
+</td>
+<td class="px-lg py-4 text-body-md text-on-surface-variant italic">
+                                        -
+                                    </td>
+<td class="px-lg py-4 text-right">
+<button class="material-symbols-outlined text-outline hover:text-primary transition-colors">more_vert</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-md bg-surface-container-low border-t border-outline-variant flex justify-center">
+<button class="text-primary font-label-md hover:underline flex items-center gap-1">
+                            Ver historial completo
+                            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Footer Stats -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-md">
+<div class="bg-white p-md rounded-lg border border-outline-variant flex items-center gap-4">
+<div class="p-3 bg-primary-fixed text-primary rounded-full">
+<span class="material-symbols-outlined">assignment_turned_in</span>
+</div>
+<div>
+<p class="text-label-sm text-outline uppercase">Total Hoy</p>
+<p class="font-headline-sm text-headline-sm">24</p>
+</div>
+</div>
+<div class="bg-white p-md rounded-lg border border-outline-variant flex items-center gap-4">
+<div class="p-3 bg-tertiary-fixed text-tertiary rounded-full">
+<span class="material-symbols-outlined">sentiment_very_satisfied</span>
+</div>
+<div>
+<p class="text-label-sm text-outline uppercase">Buen Estado</p>
+<p class="font-headline-sm text-headline-sm">92%</p>
+</div>
+</div>
+<div class="bg-white p-md rounded-lg border border-outline-variant flex items-center gap-4">
+<div class="p-3 bg-error-container text-error rounded-full">
+<span class="material-symbols-outlined">warning</span>
+</div>
+<div>
+<p class="text-label-sm text-outline uppercase">Incidencias</p>
+<p class="font-headline-sm text-headline-sm">2</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer Shell -->
+<footer class="w-[calc(100%-16rem)] ml-auto bg-surface-container-low dark:bg-on-surface-variant border-t border-outline-variant flex justify-between items-center py-sm px-lg">
+<p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wide">© 2024 Biblioteca Popular La Palabra. v2.4.0</p>
+<div class="flex gap-lg">
+<a class="font-label-md text-label-md text-on-surface-variant hover:underline transition-all" href="#">Privacidad</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:underline transition-all" href="#">Soporte</a>
+</div>
+</footer>
+</main>
+<script>
+        // Micro-interactions for the search bar identifying material
+        const searchInput = document.getElementById('return-search');
+        const previewSection = document.getElementById('loan-details-preview');
+
+        searchInput.addEventListener('input', (e) => {
+            if (e.target.value.length > 5) {
+                previewSection.classList.remove('opacity-40', 'grayscale', 'pointer-events-none');
+                previewSection.classList.add('transition-all', 'duration-500');
+                
+                // Simulate data fetch
+                const nameDisplay = previewSection.querySelector('p.font-title-lg');
+                const dateDisplay = previewSection.querySelectorAll('p.font-title-lg')[1];
+                
+                if (e.target.value.includes('LIB-2023')) {
+                    nameDisplay.innerText = "Mariana Pérez";
+                    dateDisplay.innerText = "20 Oct 2024";
+                } else {
+                    nameDisplay.innerText = "Socio Detectado";
+                    dateDisplay.innerText = "Esperando identificación...";
+                }
+            } else {
+                previewSection.classList.add('opacity-40', 'grayscale', 'pointer-events-none');
+            }
+        });
+    </script>
+</body></html>

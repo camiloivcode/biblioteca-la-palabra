@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Reportes - Biblioteca Popular La Palabra</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error": "#ffffff",
+                        "surface-bright": "#f7f9fb",
+                        "tertiary-fixed": "#6bff8f",
+                        "inverse-surface": "#2d3133",
+                        "outline": "#737686",
+                        "on-secondary-fixed": "#001c3b",
+                        "tertiary-container": "#007e37",
+                        "on-secondary-container": "#3e5980",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "on-surface": "#191c1e",
+                        "surface-tint": "#0053db",
+                        "on-secondary": "#ffffff",
+                        "surface": "#f7f9fb",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-variant": "#e0e3e5",
+                        "secondary": "#455f87",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "inverse-on-surface": "#eff1f3",
+                        "on-primary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "primary": "#004ac6",
+                        "inverse-primary": "#b4c5ff",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-fixed": "#002109",
+                        "primary-container": "#2563eb",
+                        "outline-variant": "#c3c6d7",
+                        "surface-container": "#eceef0",
+                        "background": "#f7f9fb",
+                        "tertiary-fixed-dim": "#4ae176",
+                        "on-primary-fixed": "#00174b",
+                        "secondary-fixed": "#d5e3ff",
+                        "surface-dim": "#d8dadc",
+                        "on-tertiary-fixed-variant": "#005321",
+                        "on-surface-variant": "#434655",
+                        "secondary-container": "#b5d0fd",
+                        "tertiary": "#006229",
+                        "on-secondary-fixed-variant": "#2d486d",
+                        "on-primary-container": "#eeefff",
+                        "error": "#ba1a1a",
+                        "secondary-fixed-dim": "#adc8f5",
+                        "on-background": "#191c1e",
+                        "surface-container-low": "#f2f4f6",
+                        "on-tertiary-container": "#c1ffc5",
+                        "primary-fixed": "#dbe1ff",
+                        "surface-container-highest": "#e0e3e5",
+                        "error-container": "#ffdad6",
+                        "surface-container-high": "#e6e8ea"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "base": "4px",
+                        "2xl": "64px",
+                        "xl": "40px",
+                        "md": "16px",
+                        "xs": "4px",
+                        "margin-desktop": "32px",
+                        "gutter": "24px",
+                        "lg": "24px",
+                        "sm": "8px",
+                        "max-width": "1440px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Inter"],
+                        "title-lg": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "body-md": ["Inter"],
+                        "display": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "title-lg": ["18px", {"lineHeight": "24px", "fontWeight": "500"}],
+                        "label-sm": ["11px", {"lineHeight": "14px", "fontWeight": "500"}],
+                        "body-md": ["14px", {"lineHeight": "22px", "fontWeight": "400"}],
+                        "display": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "26px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        .chart-container { position: relative; height: 300px; width: 100%; }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-surface-bright text-on-surface">
+<!-- SideNavBar -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-on-secondary-fixed dark:bg-inverse-surface shadow-md flex flex-col py-md z-50">
+<div class="px-lg mb-xl">
+<h1 class="font-headline-sm text-headline-sm text-surface-bright font-bold">La Palabra</h1>
+<p class="text-secondary-fixed-dim text-label-sm opacity-70">Admin System</p>
+</div>
+<nav class="flex-1 space-y-1 px-sm overflow-y-auto custom-scrollbar">
+<!-- Navigation Items Mapping -->
+<a class="flex items-center gap-3 px-4 py-3 text-secondary-fixed-dim hover:text-surface-bright hover:bg-on-secondary-fixed-variant transition-colors rounded-lg font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span> Dashboard
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary-fixed-dim hover:text-surface-bright hover:bg-on-secondary-fixed-variant transition-colors rounded-lg font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" data-icon="menu_book">menu_book</span> Materiales
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary-fixed-dim hover:text-surface-bright hover:bg-on-secondary-fixed-variant transition-colors rounded-lg font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" data-icon="person_edit">person_edit</span> Autores
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary-fixed-dim hover:text-surface-bright hover:bg-on-secondary-fixed-variant transition-colors rounded-lg font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" data-icon="category">category</span> Categorías
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary-fixed-dim hover:text-surface-bright hover:bg-on-secondary-fixed-variant transition-colors rounded-lg font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span> Socios
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary-fixed-dim hover:text-surface-bright hover:bg-on-secondary-fixed-variant transition-colors rounded-lg font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" data-icon="auto_stories">auto_stories</span> Préstamos
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary-fixed-dim hover:text-surface-bright hover:bg-on-secondary-fixed-variant transition-colors rounded-lg font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" data-icon="assignment_return">assignment_return</span> Devoluciones
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 bg-primary text-on-primary rounded-lg border-l-4 border-primary-fixed font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span> Reportes
+            </a>
+</nav>
+<div class="px-sm mt-auto">
+<a class="flex items-center gap-3 px-4 py-3 text-secondary-fixed-dim hover:text-surface-bright hover:bg-on-secondary-fixed-variant transition-colors rounded-lg font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span> Ajustes
+            </a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-64 min-h-screen">
+<!-- TopNavBar -->
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] h-16 bg-surface border-b border-outline-variant flex justify-between items-center px-lg z-40">
+<div class="flex items-center gap-sm">
+<span class="font-headline-md text-headline-md font-bold text-on-secondary-fixed">Biblioteca Popular La Palabra</span>
+<span class="text-outline-variant">/</span>
+<span class="text-primary font-bold border-b-2 border-primary py-1">Reportes</span>
+</div>
+<div class="flex items-center gap-md">
+<div class="relative group">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer p-2 hover:bg-surface-container rounded-full" data-icon="notifications">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full ring-2 ring-surface"></span>
+</div>
+<div class="flex items-center gap-sm cursor-pointer hover:bg-surface-container py-1 px-2 rounded-lg transition-colors">
+<img alt="User Avatar" class="w-8 h-8 rounded-full border border-outline-variant" data-alt="A professional headshot of a library administrator, a man in his 40s with a kind and intelligent expression, wearing a neutral-toned sweater. The background is a soft-focus library interior with warm, cinematic lighting that complements the modern corporate minimalism of the UI. The overall mood is one of quiet authority and expertise." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCD4pxL-56860L2KWgnA8hGaMkFSxJuCnonVUsOxoU3lNKdlXcwBuJkZq20JulNU5qTocCQ4LlW0uKMOJVjOs_lsQ-UJLC61DSDaTsQyD6EGS6MUlucDNofF1bHK6k93EwyR817fhivzDdhHtJmBKahHRi-XXboHdMSIDqIwVTZUk-1aL0reYffJZuE1hN0lK7YjVPxNeZZFXIwGokOJkU8pPS-olRVgARMfzNwo9K8pAemqpdJjNiJ5-3iG_Z8w0N-7DZqBaDnQSo"/>
+<span class="font-label-md text-label-md text-on-surface-variant">Admin Juan</span>
+<span class="material-symbols-outlined text-outline" data-icon="expand_more">expand_more</span>
+</div>
+<button class="text-on-surface-variant font-medium hover:text-primary transition-opacity active:opacity-70 px-sm">Logout</button>
+</div>
+</header>
+<!-- Dashboard Content -->
+<div class="pt-24 pb-lg px-lg max-w-max-width mx-auto">
+<!-- Header & Filter Actions -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-md mb-xl">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Panel de Reportes</h2>
+<p class="text-on-surface-variant font-body-md text-body-md max-w-2xl">Visualización del rendimiento institucional, tendencias de socios y estadísticas de circulación de materiales.</p>
+</div>
+<div class="flex gap-sm">
+<div class="flex items-center bg-white border border-outline-variant rounded-lg px-sm py-xs">
+<span class="material-symbols-outlined text-outline text-[18px]" data-icon="calendar_today">calendar_today</span>
+<select class="border-none focus:ring-0 text-label-md font-label-md text-on-surface-variant bg-transparent cursor-pointer">
+<option>Últimos 30 días</option>
+<option>Último trimestre</option>
+<option>Año 2024</option>
+</select>
+</div>
+<button class="bg-primary text-on-primary px-lg py-sm rounded-lg font-label-md text-label-md flex items-center gap-sm hover:shadow-lg transition-all active:scale-95">
+<span class="material-symbols-outlined text-[18px]" data-icon="download">download</span>
+                        Exportar PDF
+                    </button>
+</div>
+</div>
+<!-- Bento Grid - KPI Cards -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-lg mb-xl">
+<!-- KPI 1 -->
+<div class="bg-white p-lg rounded-xl border border-outline-variant shadow-sm hover:shadow-md transition-shadow group">
+<div class="flex justify-between items-start mb-sm">
+<div class="p-2 bg-primary-fixed text-on-primary-fixed rounded-lg group-hover:bg-primary group-hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="schedule">schedule</span>
+</div>
+<span class="text-tertiary font-label-md text-label-md flex items-center gap-xs">
+<span class="material-symbols-outlined text-[14px]" data-icon="trending_up">trending_up</span> 12%
+                        </span>
+</div>
+<h3 class="text-on-surface-variant font-label-md text-label-md uppercase tracking-wider mb-xs">Promedio Préstamo</h3>
+<p class="text-on-surface font-display text-[32px] font-bold">14.2 <span class="text-body-md font-normal text-on-surface-variant">días</span></p>
+<p class="text-outline text-label-sm mt-xs">vs. 12.5 el mes anterior</p>
+</div>
+<!-- KPI 2 -->
+<div class="bg-white p-lg rounded-xl border border-outline-variant shadow-sm hover:shadow-md transition-shadow group">
+<div class="flex justify-between items-start mb-sm">
+<div class="p-2 bg-tertiary-fixed text-on-tertiary-fixed rounded-lg group-hover:bg-tertiary group-hover:text-on-tertiary transition-colors">
+<span class="material-symbols-outlined" data-icon="verified">verified</span>
+</div>
+<span class="text-tertiary font-label-md text-label-md flex items-center gap-xs">
+<span class="material-symbols-outlined text-[14px]" data-icon="trending_up">trending_up</span> 4%
+                        </span>
+</div>
+<h3 class="text-on-surface-variant font-label-md text-label-md uppercase tracking-wider mb-xs">% Devolución a Tiempo</h3>
+<p class="text-on-surface font-display text-[32px] font-bold">92.5<span class="text-body-md font-normal text-on-surface-variant">%</span></p>
+<p class="text-outline text-label-sm mt-xs">Excelente cumplimiento</p>
+</div>
+<!-- KPI 3 -->
+<div class="bg-white p-lg rounded-xl border border-outline-variant shadow-sm hover:shadow-md transition-shadow group">
+<div class="flex justify-between items-start mb-sm">
+<div class="p-2 bg-secondary-fixed text-on-secondary-fixed rounded-lg group-hover:bg-secondary group-hover:text-on-secondary transition-colors">
+<span class="material-symbols-outlined" data-icon="group_add">group_add</span>
+</div>
+<span class="text-error font-label-md text-label-md flex items-center gap-xs">
+<span class="material-symbols-outlined text-[14px]" data-icon="trending_down">trending_down</span> 2%
+                        </span>
+</div>
+<h3 class="text-on-surface-variant font-label-md text-label-md uppercase tracking-wider mb-xs">Nuevos Socios</h3>
+<p class="text-on-surface font-display text-[32px] font-bold">124</p>
+<p class="text-outline text-label-sm mt-xs">Periodo actual</p>
+</div>
+<!-- KPI 4 -->
+<div class="bg-white p-lg rounded-xl border border-outline-variant shadow-sm hover:shadow-md transition-shadow group">
+<div class="flex justify-between items-start mb-sm">
+<div class="p-2 bg-surface-container-highest text-on-surface rounded-lg group-hover:bg-inverse-surface group-hover:text-surface-bright transition-colors">
+<span class="material-symbols-outlined" data-icon="menu_book">menu_book</span>
+</div>
+<span class="text-tertiary font-label-md text-label-md flex items-center gap-xs">
+<span class="material-symbols-outlined text-[14px]" data-icon="trending_up">trending_up</span> 18%
+                        </span>
+</div>
+<h3 class="text-on-surface-variant font-label-md text-label-md uppercase tracking-wider mb-xs">Circulación Total</h3>
+<p class="text-on-surface font-display text-[32px] font-bold">1,842</p>
+<p class="text-outline text-label-sm mt-xs">Materiales en uso</p>
+</div>
+</div>
+<!-- Charts Section -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-lg mb-xl">
+<!-- Line Chart: Evolución de Socios -->
+<div class="bg-white p-lg rounded-xl border border-outline-variant shadow-sm">
+<div class="flex justify-between items-center mb-lg">
+<div>
+<h3 class="font-title-lg text-title-lg text-on-surface">Evolución de Socios</h3>
+<p class="text-on-surface-variant text-label-sm">Crecimiento mensual acumulado del año en curso</p>
+</div>
+<div class="flex gap-xs">
+<span class="w-3 h-3 bg-primary rounded-full"></span>
+<span class="text-label-sm text-outline">Socios Activos</span>
+</div>
+</div>
+<div class="h-[280px] w-full flex items-end justify-between px-xs border-b border-l border-outline-variant relative">
+<!-- Simulated Chart Grid & Lines -->
+<div class="absolute inset-0 flex flex-col justify-between py-xs pointer-events-none opacity-10">
+<div class="border-t border-on-surface w-full"></div>
+<div class="border-t border-on-surface w-full"></div>
+<div class="border-t border-on-surface w-full"></div>
+<div class="border-t border-on-surface w-full"></div>
+</div>
+<!-- SVG Path Line (Simplified implementation) -->
+<svg class="absolute inset-0 w-full h-full px-xs" preserveaspectratio="none" viewbox="0 0 100 100">
+<path d="M 0 90 L 10 85 L 20 88 L 30 75 L 40 70 L 50 65 L 60 55 L 70 45 L 80 48 L 90 35 L 100 20" fill="none" stroke="#2563EB" stroke-width="2" vector-effect="non-scaling-stroke"></path>
+<path d="M 0 90 L 10 85 L 20 88 L 30 75 L 40 70 L 50 65 L 60 55 L 70 45 L 80 48 L 90 35 L 100 20 V 100 H 0 Z" fill="url(#gradient-blue)" opacity="0.1"></path>
+<defs>
+<lineargradient id="gradient-blue" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#2563EB"></stop>
+<stop offset="100%" stop-color="#ffffff"></stop>
+</lineargradient>
+</defs>
+</svg>
+<!-- Labels -->
+<div class="text-outline text-label-sm -mb-6">Ene</div>
+<div class="text-outline text-label-sm -mb-6">Feb</div>
+<div class="text-outline text-label-sm -mb-6">Mar</div>
+<div class="text-outline text-label-sm -mb-6">Abr</div>
+<div class="text-outline text-label-sm -mb-6">May</div>
+<div class="text-outline text-label-sm -mb-6">Jun</div>
+<div class="text-outline text-label-sm -mb-6">Jul</div>
+<div class="text-outline text-label-sm -mb-6">Ago</div>
+<div class="text-outline text-label-sm -mb-6">Sep</div>
+<div class="text-outline text-label-sm -mb-6">Oct</div>
+</div>
+</div>
+<!-- Bar Chart: Materiales más prestados -->
+<div class="bg-white p-lg rounded-xl border border-outline-variant shadow-sm">
+<div class="flex justify-between items-center mb-lg">
+<div>
+<h3 class="font-title-lg text-title-lg text-on-surface">Materiales más prestados</h3>
+<p class="text-on-surface-variant text-label-sm">Top 5 títulos por volumen de circulación</p>
+</div>
+<span class="material-symbols-outlined text-outline cursor-pointer hover:text-primary" data-icon="more_vert">more_vert</span>
+</div>
+<div class="space-y-md">
+<!-- Bar Item -->
+<div>
+<div class="flex justify-between text-label-md mb-1">
+<span class="text-on-surface font-medium">Cien Años de Soledad</span>
+<span class="text-primary">124 préstamos</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-2">
+<div class="bg-primary h-2 rounded-full transition-all duration-1000" style="width: 85%"></div>
+</div>
+</div>
+<!-- Bar Item -->
+<div>
+<div class="flex justify-between text-label-md mb-1">
+<span class="text-on-surface font-medium">La Tregua</span>
+<span class="text-primary">98 préstamos</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-2">
+<div class="bg-primary h-2 rounded-full transition-all duration-1000" style="width: 70%"></div>
+</div>
+</div>
+<!-- Bar Item -->
+<div>
+<div class="flex justify-between text-label-md mb-1">
+<span class="text-on-surface font-medium">Rayuela</span>
+<span class="text-primary">85 préstamos</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-2">
+<div class="bg-primary h-2 rounded-full transition-all duration-1000" style="width: 60%"></div>
+</div>
+</div>
+<!-- Bar Item -->
+<div>
+<div class="flex justify-between text-label-md mb-1">
+<span class="text-on-surface font-medium">El Aleph</span>
+<span class="text-primary">72 préstamos</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-2">
+<div class="bg-primary h-2 rounded-full transition-all duration-1000" style="width: 52%"></div>
+</div>
+</div>
+<!-- Bar Item -->
+<div>
+<div class="flex justify-between text-label-md mb-1">
+<span class="text-on-surface font-medium">Pedro Páramo</span>
+<span class="text-primary">64 préstamos</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-2">
+<div class="bg-primary h-2 rounded-full transition-all duration-1000" style="width: 48%"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Table Section: Ranking de Socios más Activos -->
+<div class="bg-white rounded-xl border border-outline-variant shadow-sm overflow-hidden">
+<div class="p-lg border-b border-outline-variant flex justify-between items-center">
+<div>
+<h3 class="font-title-lg text-title-lg text-on-surface">Ranking de Socios más Activos</h3>
+<p class="text-on-surface-variant text-label-sm">Usuarios con mayor índice de lectura y participación</p>
+</div>
+<button class="text-primary font-label-md text-label-md hover:underline transition-all">Ver todos los socios</button>
+</div>
+<table class="w-full text-left border-collapse">
+<thead class="bg-surface-container-low">
+<tr>
+<th class="px-lg py-sm font-label-md text-label-md text-outline uppercase">Posición</th>
+<th class="px-lg py-sm font-label-md text-label-md text-outline uppercase">Socio</th>
+<th class="px-lg py-sm font-label-md text-label-md text-outline uppercase text-center">Materiales Prestados</th>
+<th class="px-lg py-sm font-label-md text-label-md text-outline uppercase text-center">Puntualidad</th>
+<th class="px-lg py-sm font-label-md text-label-md text-outline uppercase">Categoría Preferida</th>
+<th class="px-lg py-sm font-label-md text-label-md text-outline uppercase">Acción</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-bright transition-colors group">
+<td class="px-lg py-md">
+<div class="flex items-center gap-xs">
+<span class="w-6 h-6 flex items-center justify-center bg-tertiary text-on-tertiary rounded-full text-[12px] font-bold">1</span>
+</div>
+</td>
+<td class="px-lg py-md">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-bold">ML</div>
+<div>
+<p class="font-body-md text-body-md text-on-surface font-semibold">Mariana López</p>
+<p class="text-label-sm text-outline">Socio #4521</p>
+</div>
+</div>
+</td>
+<td class="px-lg py-md text-center font-body-md text-body-md text-on-surface font-medium">42</td>
+<td class="px-lg py-md text-center">
+<span class="bg-tertiary-fixed text-on-tertiary-fixed px-sm py-xs rounded-full text-label-sm">100%</span>
+</td>
+<td class="px-lg py-md">
+<span class="text-secondary font-label-md text-label-md bg-slate-100 px-sm py-xs rounded">Literatura Clásica</span>
+</td>
+<td class="px-lg py-md">
+<button class="p-2 text-outline group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="visibility">visibility</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-bright transition-colors group">
+<td class="px-lg py-md">
+<div class="flex items-center gap-xs">
+<span class="w-6 h-6 flex items-center justify-center bg-surface-container-highest text-on-surface rounded-full text-[12px] font-bold">2</span>
+</div>
+</td>
+<td class="px-lg py-md">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-full bg-primary-fixed text-on-primary-fixed flex items-center justify-center font-bold">RP</div>
+<div>
+<p class="font-body-md text-body-md text-on-surface font-semibold">Ricardo Pereyra</p>
+<p class="text-label-sm text-outline">Socio #8832</p>
+</div>
+</div>
+</td>
+<td class="px-lg py-md text-center font-body-md text-body-md text-on-surface font-medium">38</td>
+<td class="px-lg py-md text-center">
+<span class="bg-tertiary-fixed text-on-tertiary-fixed px-sm py-xs rounded-full text-label-sm">98%</span>
+</td>
+<td class="px-lg py-md">
+<span class="text-secondary font-label-md text-label-md bg-slate-100 px-sm py-xs rounded">Ensayos</span>
+</td>
+<td class="px-lg py-md">
+<button class="p-2 text-outline group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="visibility">visibility</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-bright transition-colors group">
+<td class="px-lg py-md">
+<div class="flex items-center gap-xs">
+<span class="w-6 h-6 flex items-center justify-center bg-surface-container-highest text-on-surface rounded-full text-[12px] font-bold">3</span>
+</div>
+</td>
+<td class="px-lg py-md">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-full bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center font-bold">EV</div>
+<div>
+<p class="font-body-md text-body-md text-on-surface font-semibold">Elena Valdéz</p>
+<p class="text-label-sm text-outline">Socio #1209</p>
+</div>
+</div>
+</td>
+<td class="px-lg py-md text-center font-body-md text-body-md text-on-surface font-medium">31</td>
+<td class="px-lg py-md text-center">
+<span class="bg-secondary-container text-on-secondary-container px-sm py-xs rounded-full text-label-sm">94%</span>
+</td>
+<td class="px-lg py-md">
+<span class="text-secondary font-label-md text-label-md bg-slate-100 px-sm py-xs rounded">Novela Histórica</span>
+</td>
+<td class="px-lg py-md">
+<button class="p-2 text-outline group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="visibility">visibility</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Footer -->
+<footer class="w-full bg-surface-container-low border-t border-outline-variant flex justify-between items-center py-sm px-lg mt-auto">
+<div class="text-secondary font-label-md text-label-md">
+                © 2024 Biblioteca Popular La Palabra. v2.4.0
+            </div>
+<div class="flex gap-lg">
+<a class="text-on-surface-variant font-label-md text-label-md hover:underline transition-all" href="#">Privacidad</a>
+<a class="text-on-surface-variant font-label-md text-label-md hover:underline transition-all" href="#">Soporte</a>
+</div>
+</footer>
+</main>
+<!-- Overlay Micro-interactions -->
+<script>
+        // Smooth hover effect for Bar Chart
+        const bars = document.querySelectorAll('.bg-primary.h-2');
+        window.addEventListener('load', () => {
+            bars.forEach(bar => {
+                const width = bar.style.width;
+                bar.style.width = '0%';
+                setTimeout(() => {
+                    bar.style.width = width;
+                }, 300);
+            });
+        });
+    </script>
+</body></html>

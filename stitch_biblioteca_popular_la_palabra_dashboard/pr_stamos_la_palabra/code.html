@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Módulo de Préstamos - Biblioteca Popular La Palabra</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error": "#ffffff",
+                        "surface-bright": "#f7f9fb",
+                        "tertiary-fixed": "#6bff8f",
+                        "inverse-surface": "#2d3133",
+                        "outline": "#737686",
+                        "on-secondary-fixed": "#001c3b",
+                        "tertiary-container": "#007e37",
+                        "on-secondary-container": "#3e5980",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "on-surface": "#191c1e",
+                        "surface-tint": "#0053db",
+                        "on-secondary": "#ffffff",
+                        "surface": "#f7f9fb",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-variant": "#e0e3e5",
+                        "secondary": "#455f87",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "inverse-on-surface": "#eff1f3",
+                        "on-primary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "primary": "#004ac6",
+                        "inverse-primary": "#b4c5ff",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-fixed": "#002109",
+                        "primary-container": "#2563eb",
+                        "outline-variant": "#c3c6d7",
+                        "surface-container": "#eceef0",
+                        "background": "#f7f9fb",
+                        "tertiary-fixed-dim": "#4ae176",
+                        "on-primary-fixed": "#00174b",
+                        "secondary-fixed": "#d5e3ff",
+                        "surface-dim": "#d8dadc",
+                        "on-tertiary-fixed-variant": "#005321",
+                        "on-surface-variant": "#434655",
+                        "secondary-container": "#b5d0fd",
+                        "tertiary": "#006229",
+                        "on-secondary-fixed-variant": "#2d486d",
+                        "on-primary-container": "#eeefff",
+                        "error": "#ba1a1a",
+                        "secondary-fixed-dim": "#adc8f5",
+                        "on-background": "#191c1e",
+                        "surface-container-low": "#f2f4f6",
+                        "on-tertiary-container": "#c1ffc5",
+                        "primary-fixed": "#dbe1ff",
+                        "surface-container-highest": "#e0e3e5",
+                        "error-container": "#ffdad6",
+                        "surface-container-high": "#e6e8ea"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "base": "4px",
+                        "2xl": "64px",
+                        "xl": "40px",
+                        "md": "16px",
+                        "xs": "4px",
+                        "margin-desktop": "32px",
+                        "gutter": "24px",
+                        "lg": "24px",
+                        "sm": "8px",
+                        "max-width": "1440px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Inter"],
+                        "title-lg": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "body-md": ["Inter"],
+                        "display": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "title-lg": ["18px", {"lineHeight": "24px", "fontWeight": "500"}],
+                        "label-sm": ["11px", {"lineHeight": "14px", "fontWeight": "500"}],
+                        "body-md": ["14px", {"lineHeight": "22px", "fontWeight": "400"}],
+                        "display": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "26px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .sidebar-active {
+            box-shadow: inset 4px 0 0 0 #004ac6;
+        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-background text-on-surface">
+<!-- SideNavBar -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-on-secondary-fixed dark:bg-inverse-surface flex flex-col py-md shadow-md z-50">
+<div class="px-6 mb-10">
+<h1 class="font-headline-sm text-headline-sm text-surface-bright font-bold tracking-tight">La Palabra</h1>
+<p class="text-secondary-fixed-dim text-[11px] uppercase tracking-widest font-bold opacity-60">Admin System</p>
+</div>
+<nav class="flex-grow space-y-1 px-3">
+<a class="flex items-center gap-3 px-4 py-3 text-secondary-fixed-dim hover:text-surface-bright hover:bg-on-secondary-fixed-variant transition-all duration-200 rounded-lg group" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-body-md text-body-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary-fixed-dim hover:text-surface-bright hover:bg-on-secondary-fixed-variant transition-all duration-200 rounded-lg group" href="#">
+<span class="material-symbols-outlined" data-icon="menu_book">menu_book</span>
+<span class="font-body-md text-body-md">Materiales</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary-fixed-dim hover:text-surface-bright hover:bg-on-secondary-fixed-variant transition-all duration-200 rounded-lg group" href="#">
+<span class="material-symbols-outlined" data-icon="person_edit">person_edit</span>
+<span class="font-body-md text-body-md">Autores</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary-fixed-dim hover:text-surface-bright hover:bg-on-secondary-fixed-variant transition-all duration-200 rounded-lg group" href="#">
+<span class="material-symbols-outlined" data-icon="category">category</span>
+<span class="font-body-md text-body-md">Categorías</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary-fixed-dim hover:text-surface-bright hover:bg-on-secondary-fixed-variant transition-all duration-200 rounded-lg group" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-body-md text-body-md">Socios</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-primary text-on-primary rounded-lg border-l-4 border-primary-fixed shadow-lg transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="auto_stories" style="font-variation-settings: 'FILL' 1;">auto_stories</span>
+<span class="font-body-md text-body-md font-semibold">Préstamos</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary-fixed-dim hover:text-surface-bright hover:bg-on-secondary-fixed-variant transition-all duration-200 rounded-lg group" href="#">
+<span class="material-symbols-outlined" data-icon="assignment_return">assignment_return</span>
+<span class="font-body-md text-body-md">Devoluciones</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary-fixed-dim hover:text-surface-bright hover:bg-on-secondary-fixed-variant transition-all duration-200 rounded-lg group" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-body-md text-body-md">Reportes</span>
+</a>
+</nav>
+<div class="px-3 pt-4 border-t border-on-secondary-fixed-variant">
+<a class="flex items-center gap-3 px-4 py-3 text-secondary-fixed-dim hover:text-surface-bright hover:bg-on-secondary-fixed-variant transition-all duration-200 rounded-lg group" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-body-md text-body-md">Ajustes</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Wrapper -->
+<main class="ml-64 min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] h-16 bg-surface dark:bg-on-surface-variant flex justify-between items-center px-lg border-b border-outline-variant dark:border-outline shadow-sm z-40">
+<div class="flex items-center gap-4">
+<h2 class="font-headline-md text-headline-md font-bold text-on-secondary-fixed">Módulo de Préstamos</h2>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative hidden lg:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline" data-icon="search">search</span>
+<input class="pl-10 pr-4 py-2 bg-surface-container-low border border-outline-variant rounded-lg text-body-md focus:ring-2 focus:ring-primary focus:border-primary transition-all w-72" placeholder="Buscar por socio o libro..." type="text"/>
+</div>
+<div class="flex items-center gap-3 text-on-surface-variant">
+<button class="p-2 hover:bg-surface-container rounded-full transition-colors relative">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full border-2 border-surface"></span>
+</button>
+<button class="p-2 hover:bg-surface-container rounded-full transition-colors">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<div class="h-8 w-px bg-outline-variant mx-1"></div>
+<div class="flex items-center gap-3 cursor-pointer group">
+<div class="text-right">
+<p class="font-label-md text-label-md text-on-surface">Admin Principal</p>
+<p class="text-[10px] text-secondary font-bold uppercase tracking-wider">Gestor</p>
+</div>
+<img alt="User Avatar" class="w-9 h-9 rounded-full border-2 border-primary-fixed bg-surface-container-high object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA4WXtbK2ae5DYnf1pBhYGjpMm-Qsl_OknENLCRRIFgh1Df2YI4OaIvxouyvv6538o3uiYXsZd2PCDO7SY2riBYoUxY6Re63Uwa_wAos5Rz7TD4TCp8_QJSxvGLAUwrkc6LnTm5IEv9G5urP0hCSEl35c9o8AsVSWcpZzU7o2HJbuoHB59_4V535YMCpDCh3R8wQW_SuZ5Ovf5ghUsPC-9XwyqjeE2Cp39rGefthcClnu6XOb3MaNuaG-0VtSrV_dTc0aKhaw8foYE"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Page Content -->
+<div class="mt-16 p-lg space-y-lg flex-grow">
+<!-- KPI Cards -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<!-- KPI: Activos -->
+<div class="bg-white p-6 rounded-xl border border-outline-variant shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-primary/5 rounded-full transition-transform group-hover:scale-125"></div>
+<div class="flex items-center justify-between mb-4">
+<div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[28px]" data-icon="auto_stories">auto_stories</span>
+</div>
+<span class="text-label-sm font-bold text-tertiary px-2 py-1 bg-tertiary-fixed/20 rounded">+12% vs mes ant.</span>
+</div>
+<h3 class="text-secondary font-label-md text-label-md uppercase tracking-wider mb-1">Préstamos Activos</h3>
+<p class="font-display text-[32px] text-on-surface font-bold">124</p>
+</div>
+<!-- KPI: Vencidos -->
+<div class="bg-white p-6 rounded-xl border border-outline-variant shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-error/5 rounded-full transition-transform group-hover:scale-125"></div>
+<div class="flex items-center justify-between mb-4">
+<div class="w-12 h-12 rounded-lg bg-error-container flex items-center justify-center text-error">
+<span class="material-symbols-outlined text-[28px]" data-icon="event_busy">event_busy</span>
+</div>
+<span class="text-label-sm font-bold text-error px-2 py-1 bg-error-container/50 rounded">Urgente</span>
+</div>
+<h3 class="text-secondary font-label-md text-label-md uppercase tracking-wider mb-1">Préstamos Vencidos</h3>
+<p class="font-display text-[32px] text-error font-bold">8</p>
+</div>
+<!-- KPI: En Mora -->
+<div class="bg-white p-6 rounded-xl border border-outline-variant shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-orange-100 rounded-full transition-transform group-hover:scale-125"></div>
+<div class="flex items-center justify-between mb-4">
+<div class="w-12 h-12 rounded-lg bg-orange-100 flex items-center justify-center text-orange-600">
+<span class="material-symbols-outlined text-[28px]" data-icon="warning">warning</span>
+</div>
+<span class="text-label-sm font-bold text-orange-700 px-2 py-1 bg-orange-100 rounded">Pendientes</span>
+</div>
+<h3 class="text-secondary font-label-md text-label-md uppercase tracking-wider mb-1">En Mora</h3>
+<p class="font-display text-[32px] text-orange-600 font-bold">15</p>
+</div>
+</div>
+<!-- Main Table Section -->
+<section class="bg-white rounded-xl border border-outline-variant shadow-sm overflow-hidden">
+<div class="px-6 py-5 border-b border-outline-variant flex flex-col md:flex-row justify-between items-center gap-4">
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Gestión Detallada</h3>
+<p class="text-on-surface-variant font-body-md text-body-md">Listado de todos los préstamos en circulación</p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 px-4 py-2 border border-outline-variant rounded-lg font-label-md text-label-md hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined text-[18px]" data-icon="filter_list">filter_list</span>
+                            Filtrar
+                        </button>
+<button class="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary rounded-lg font-label-md text-label-md shadow-sm hover:shadow transition-all active:scale-95">
+<span class="material-symbols-outlined text-[18px]" data-icon="add">add</span>
+                            Nuevo Préstamo
+                        </button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead class="bg-surface-container-low">
+<tr>
+<th class="px-6 py-4 font-label-md text-label-md text-secondary uppercase">Socio</th>
+<th class="px-6 py-4 font-label-md text-label-md text-secondary uppercase">Material</th>
+<th class="px-6 py-4 font-label-md text-label-md text-secondary uppercase text-center">Fecha Préstamo</th>
+<th class="px-6 py-4 font-label-md text-label-md text-secondary uppercase text-center">Fecha Límite</th>
+<th class="px-6 py-4 font-label-md text-label-md text-secondary uppercase text-center">Estado</th>
+<th class="px-6 py-4 font-label-md text-label-md text-secondary uppercase text-right">Acciones</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<!-- Row 1: Activo -->
+<tr class="hover:bg-surface-bright transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary overflow-hidden">
+<img alt="Socio Avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLJIv7Xy92L_-WWodAFuxtrU3wBSliifjhorCwtJSIczM36crQFxxRsZWFlBfDEx2jtG6VKVXxtHHC9g_5mC_ULIZX3Voi2uiJL1ruwImE0LUsVDnQSr8tDNlGuNWxhGHG5d3026hGltxQuI-IekkPP35TetzzFio0evyWFTnvuQZ_X6oMU6eEatAikRISGEhK8QCuygeqHHZnDzafKtpQ8g0XA16-djLZh4RbTBwDFw-sP4M-KY2eTzYdG5hFHurLHtCptEdMnjQ"/>
+</div>
+<div>
+<p class="font-title-lg text-[14px] text-on-surface font-semibold">Ana Martínez</p>
+<p class="text-label-sm text-secondary">ID: #S-1029</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<div>
+<p class="font-body-md text-body-md font-medium text-on-surface">Cien Años de Soledad</p>
+<p class="text-label-sm text-secondary">G. García Márquez</p>
+</div>
+</td>
+<td class="px-6 py-4 text-center font-body-md text-body-md text-on-surface-variant">10 Oct 2024</td>
+<td class="px-6 py-4 text-center font-body-md text-body-md text-on-surface-variant">24 Oct 2024</td>
+<td class="px-6 py-4">
+<div class="flex justify-center">
+<span class="px-3 py-1 bg-tertiary-fixed/30 text-tertiary-container rounded-full text-label-sm font-bold flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary-container"></span>
+                                            Activo
+                                        </span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="bg-secondary text-white px-4 py-2 rounded-lg text-label-sm font-bold hover:bg-on-secondary-fixed-variant transition-all shadow-sm active:scale-95">
+                                        Registrar Devolución
+                                    </button>
+</td>
+</tr>
+<!-- Row 2: Vencido -->
+<tr class="hover:bg-surface-bright transition-colors group bg-red-50/20">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-error-container flex items-center justify-center text-error overflow-hidden">
+<img alt="Socio Avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6_rD79lQBEmR6e-gBv0rVrdNLapj58J8UyYWCUfD7vxNO0An8cE-NCSjUxROdU3UOQ9Koi1KPfFNLnA5V1SzLD9L9OXlZ78JKhjugw2o7KeS4clPPAnBFPyhd_iLZy3HRUJGyGjH7mi8xDQgs_6wwSXK3smjRYURDmPBlUvYglxkLwTrws41Tpyf1KmOo096a1viQCEM_JtNwRW37h5Ix1FCVqLtk1FDzs2e2hJ4Z2QFdnww2Z_SwkNdT174zt5EDHCfURNhTMO0"/>
+</div>
+<div>
+<p class="font-title-lg text-[14px] text-on-surface font-semibold">Roberto Pérez</p>
+<p class="text-label-sm text-secondary">ID: #S-0854</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<div>
+<p class="font-body-md text-body-md font-medium text-on-surface">El Aleph</p>
+<p class="text-label-sm text-secondary">Jorge Luis Borges</p>
+</div>
+</td>
+<td class="px-6 py-4 text-center font-body-md text-body-md text-on-surface-variant">05 Oct 2024</td>
+<td class="px-6 py-4 text-center font-body-md text-body-md text-error font-bold">19 Oct 2024</td>
+<td class="px-6 py-4">
+<div class="flex justify-center">
+<span class="px-3 py-1 bg-error-container/50 text-error rounded-full text-label-sm font-bold flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-error animate-pulse"></span>
+                                            Vencido
+                                        </span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="bg-error text-white px-4 py-2 rounded-lg text-label-sm font-bold hover:bg-on-error-container transition-all shadow-sm active:scale-95">
+                                        Registrar Devolución
+                                    </button>
+</td>
+</tr>
+<!-- Row 3: En Mora -->
+<tr class="hover:bg-surface-bright transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 overflow-hidden">
+<img alt="Socio Avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBcpuQZ5EhTO7rG7t8WQCcxjflHg2z9LqPFfU8W-xKEt8r2qAjGH9IJD4CmV4igyJuPA_AVVQ7g6gTtofUCwXQx2nWxtDG__gv9EGUoFJgn92B50C0PWrmRUJLffFw8u46IphT1o0Szu0cnbacDcZFBkOkCNd-C-oyMcnPeHQtZePd1vajeB1ApHzbdEeCF74xvwuzspbtjcnRLqKheWk-r8vgQjVpdvdcvJAKndMJdemxtOllKFKtaQFyOuKy6V2zYG0ZQ_1o2JuI"/>
+</div>
+<div>
+<p class="font-title-lg text-[14px] text-on-surface font-semibold">Lucía Castro</p>
+<p class="text-label-sm text-secondary">ID: #S-1122</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<div>
+<p class="font-body-md text-body-md font-medium text-on-surface">Rayuela</p>
+<p class="text-label-sm text-secondary">Julio Cortázar</p>
+</div>
+</td>
+<td class="px-6 py-4 text-center font-body-md text-body-md text-on-surface-variant">02 Oct 2024</td>
+<td class="px-6 py-4 text-center font-body-md text-body-md text-orange-600 font-semibold">16 Oct 2024</td>
+<td class="px-6 py-4">
+<div class="flex justify-center">
+<span class="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-label-sm font-bold flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-orange-600"></span>
+                                            En Mora
+                                        </span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="bg-secondary text-white px-4 py-2 rounded-lg text-label-sm font-bold hover:bg-on-secondary-fixed-variant transition-all shadow-sm active:scale-95">
+                                        Registrar Devolución
+                                    </button>
+</td>
+</tr>
+<!-- Row 4: Activo -->
+<tr class="hover:bg-surface-bright transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary overflow-hidden">
+<img alt="Socio Avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCAr_fm7bPf8IqCzOKSivYQJqwIFsq9eN-MN0hP3KOLOXo8cErgAG-j_m0BGs2vS7H5IhHzIx1WPK_n1Cr1cah__fry8Sd-EIsCZeGfQE6h29swLhlVS33w3tkhhRZ423SLWbm5lWcxoWFnLobjgY6PPQhqqhdGXbcq29ypD5EA_JcfIxE7yQ0RQMVr5BQRNI1IY3tDdQQeYsFBBhTcqMHHPYt0_S4zx1i1ipy1MIFyvafyEg7DmYpefn2XqyvWtjJJOmEsc9qPMlY"/>
+</div>
+<div>
+<p class="font-title-lg text-[14px] text-on-surface font-semibold">Juan Gómez</p>
+<p class="text-label-sm text-secondary">ID: #S-0941</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<div>
+<p class="font-body-md text-body-md font-medium text-on-surface">Don Quijote de la Mancha</p>
+<p class="text-label-sm text-secondary">Miguel de Cervantes</p>
+</div>
+</td>
+<td class="px-6 py-4 text-center font-body-md text-body-md text-on-surface-variant">12 Oct 2024</td>
+<td class="px-6 py-4 text-center font-body-md text-body-md text-on-surface-variant">26 Oct 2024</td>
+<td class="px-6 py-4">
+<div class="flex justify-center">
+<span class="px-3 py-1 bg-tertiary-fixed/30 text-tertiary-container rounded-full text-label-sm font-bold flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary-container"></span>
+                                            Activo
+                                        </span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="bg-secondary text-white px-4 py-2 rounded-lg text-label-sm font-bold hover:bg-on-secondary-fixed-variant transition-all shadow-sm active:scale-95">
+                                        Registrar Devolución
+                                    </button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="px-6 py-4 bg-surface-container-low border-t border-outline-variant flex items-center justify-between">
+<p class="font-label-md text-label-md text-secondary">Mostrando 4 de 124 préstamos activos</p>
+<div class="flex gap-2">
+<button class="p-2 border border-outline-variant rounded-lg hover:bg-white transition-colors disabled:opacity-50" disabled="">
+<span class="material-symbols-outlined" data-icon="chevron_left">chevron_left</span>
+</button>
+<button class="px-3 py-1 bg-primary text-on-primary rounded-lg font-label-md text-label-md">1</button>
+<button class="px-3 py-1 border border-outline-variant rounded-lg font-label-md text-label-md hover:bg-white transition-colors">2</button>
+<button class="px-3 py-1 border border-outline-variant rounded-lg font-label-md text-label-md hover:bg-white transition-colors">3</button>
+<button class="p-2 border border-outline-variant rounded-lg hover:bg-white transition-colors">
+<span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</section>
+</div>
+<!-- Footer -->
+<footer class="w-full py-sm px-lg bg-surface-container-low border-t border-outline-variant flex justify-between items-center mt-auto">
+<p class="font-label-md text-label-md text-on-surface-variant opacity-70">© 2024 Biblioteca Popular La Palabra. v2.4.0</p>
+<div class="flex gap-4">
+<a class="font-label-md text-label-md text-on-surface-variant hover:underline transition-all" href="#">Privacidad</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:underline transition-all" href="#">Soporte</a>
+</div>
+</footer>
+</main>
+<!-- Simple Interactivity -->
+<script>
+        // Micro-interaction for rows
+        document.querySelectorAll('tbody tr').forEach(row => {
+            row.addEventListener('mouseenter', () => {
+                row.style.transform = 'scale(1.002)';
+            });
+            row.addEventListener('mouseleave', () => {
+                row.style.transform = 'scale(1)';
+            });
+        });
+
+        // Search bar focus effect
+        const searchInput = document.querySelector('input[type="text"]');
+        searchInput.addEventListener('focus', () => {
+            searchInput.parentElement.classList.add('ring-2', 'ring-primary/20');
+        });
+        searchInput.addEventListener('blur', () => {
+            searchInput.parentElement.classList.remove('ring-2', 'ring-primary/20');
+        });
+    </script>
+</body></html>

@@ -8,11 +8,7 @@ const { pageTitle = 'Dashboard', breadcrumb = 'Inicio' } = Astro.props;
 
 <header class="topbar">
   <div class="topbar-left">
-    <button
-      class="btn btn-link d-lg-none p-0"
-      id="sidebar-toggle"
-      style="color: var(--color-text-muted); font-size: 20px;"
-    >
+    <button class="btn btn-link d-lg-none p-0" id="sidebar-toggle" style="color: var(--color-text-muted); font-size: 20px;">
       <i class="bi bi-list"></i>
     </button>
     <div>
@@ -31,18 +27,11 @@ const { pageTitle = 'Dashboard', breadcrumb = 'Inicio' } = Astro.props;
   </div>
 
   <div class="topbar-right">
-    <!-- Botón actualizar mora -->
-    <button
-      id="btn-actualizar-mora"
-      class="btn btn-sm"
-      style="background: var(--color-accent-light); color: var(--color-accent); border: 1px solid var(--color-accent); border-radius: 6px;"
-      title="Actualizar estados de mora"
-    >
+    <button id="btn-actualizar-mora" class="btn btn-sm" style="background: var(--color-accent-light); color: var(--color-accent); border: 1px solid var(--color-accent); border-radius: var(--radius-sm);" title="Actualizar estados de mora">
       <i class="bi bi-arrow-clockwise"></i>
       <span class="d-none d-md-inline">Actualizar Mora</span>
     </button>
 
-    <!-- Usuario -->
     <div class="user-menu dropdown" id="user-dropdown">
       <div class="user-avatar" id="user-avatar-initial">A</div>
       <div class="user-info d-none d-md-block">
@@ -56,7 +45,6 @@ const { pageTitle = 'Dashboard', breadcrumb = 'Inicio' } = Astro.props;
 
 <script is:inline>
   document.addEventListener('DOMContentLoaded', function() {
-    // Mostrar datos del usuario
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     if (user.nombre) {
       const el = document.getElementById('user-display-name');
@@ -67,25 +55,21 @@ const { pageTitle = 'Dashboard', breadcrumb = 'Inicio' } = Astro.props;
       if (avatar) avatar.textContent = user.nombre.charAt(0).toUpperCase();
     }
 
-    // Toggle sidebar en móvil
     document.getElementById('sidebar-toggle')?.addEventListener('click', function() {
       document.getElementById('sidebar')?.classList.toggle('open');
     });
 
-    // Actualizar mora
     document.getElementById('btn-actualizar-mora')?.addEventListener('click', async function() {
+      const btn = this;
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
       try {
-        const token = localStorage.getItem('accessToken');
-        const res = await fetch(`${window.API_URL || 'http://localhost:4000/api'}/prestamos/actualizar-mora`, {
-          method: 'PATCH',
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        const data = await res.json();
-        if (data.success) {
-          Swal.fire({ icon: 'success', title: 'Mora actualizada', text: data.data.message, timer: 2000, showConfirmButton: false });
-        }
-      } catch {
-        Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo actualizar la mora' });
+        const data = await api.patch('/prestamos/actualizar-mora');
+        showToast('success', data.data?.message || 'Mora actualizada');
+      } catch { showToast('error', 'No se pudo actualizar la mora'); }
+      finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="bi bi-arrow-clockwise"></i><span class="d-none d-md-inline">Actualizar Mora</span>';
       }
     });
   });

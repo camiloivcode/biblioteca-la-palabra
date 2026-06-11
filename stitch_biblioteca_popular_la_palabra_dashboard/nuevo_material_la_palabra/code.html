@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary": "#006229",
+                        "on-secondary-fixed-variant": "#2d486d",
+                        "surface-container-high": "#e6e8ea",
+                        "secondary": "#455f87",
+                        "on-secondary-container": "#3e5980",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "tertiary-fixed-dim": "#4ae176",
+                        "on-primary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "secondary-container": "#b5d0fd",
+                        "tertiary-container": "#007e37",
+                        "outline-variant": "#c3c6d7",
+                        "primary": "#004ac6",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-low": "#f2f4f6",
+                        "surface-container": "#eceef0",
+                        "on-surface": "#191c1e",
+                        "on-error-container": "#93000a",
+                        "on-error": "#ffffff",
+                        "on-background": "#191c1e",
+                        "surface-container-highest": "#e0e3e5",
+                        "secondary-fixed-dim": "#adc8f5",
+                        "secondary-fixed": "#d5e3ff",
+                        "primary-container": "#2563eb",
+                        "on-tertiary-fixed": "#002109",
+                        "surface-container-lowest": "#ffffff",
+                        "outline": "#737686",
+                        "on-secondary-fixed": "#001c3b",
+                        "background": "#f7f9fb",
+                        "surface-variant": "#e0e3e5",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "on-tertiary-fixed-variant": "#005321",
+                        "on-secondary": "#ffffff",
+                        "on-primary-fixed": "#00174b",
+                        "surface-dim": "#d8dadc",
+                        "on-tertiary-container": "#c1ffc5",
+                        "inverse-on-surface": "#eff1f3",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed": "#6bff8f",
+                        "surface": "#f7f9fb",
+                        "inverse-surface": "#2d3133",
+                        "surface-bright": "#f7f9fb",
+                        "surface-tint": "#0053db",
+                        "primary-fixed": "#dbe1ff",
+                        "on-surface-variant": "#434655",
+                        "inverse-primary": "#b4c5ff",
+                        "on-primary-container": "#eeefff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "max-width": "1440px",
+                        "md": "16px",
+                        "xl": "40px",
+                        "2xl": "64px",
+                        "xs": "4px",
+                        "sm": "8px",
+                        "base": "4px",
+                        "margin-mobile": "16px",
+                        "margin-desktop": "32px",
+                        "lg": "24px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "title-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "display": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "label-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "title-lg": ["18px", {"lineHeight": "24px", "fontWeight": "500"}],
+                        "body-md": ["14px", {"lineHeight": "22px", "fontWeight": "400"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "26px", "fontWeight": "400"}],
+                        "display": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                        "label-sm": ["11px", {"lineHeight": "14px", "fontWeight": "500"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-background text-on-surface">
+<!-- Side Navigation Shell -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-on-secondary-fixed dark:bg-inverse-surface shadow-md flex flex-col py-md z-40">
+<div class="px-6 mb-8">
+<h1 class="font-headline-sm text-headline-sm text-surface-bright font-bold">La Palabra</h1>
+<p class="font-body-md text-body-md text-secondary-fixed-dim">Admin System</p>
+</div>
+<nav class="flex-1 space-y-1 px-3 overflow-y-auto">
+<a class="flex items-center gap-3 px-4 py-3 text-secondary-fixed-dim hover:text-surface-bright hover:bg-on-secondary-fixed-variant transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-md text-body-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-primary text-on-primary rounded-lg border-l-4 border-primary-fixed" href="#">
+<span class="material-symbols-outlined">menu_book</span>
+<span class="font-body-md text-body-md">Materiales</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary-fixed-dim hover:text-surface-bright hover:bg-on-secondary-fixed-variant transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">person_edit</span>
+<span class="font-body-md text-body-md">Autores</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary-fixed-dim hover:text-surface-bright hover:bg-on-secondary-fixed-variant transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">category</span>
+<span class="font-body-md text-body-md">Categorías</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary-fixed-dim hover:text-surface-bright hover:bg-on-secondary-fixed-variant transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-body-md text-body-md">Socios</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary-fixed-dim hover:text-surface-bright hover:bg-on-secondary-fixed-variant transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">auto_stories</span>
+<span class="font-body-md text-body-md">Préstamos</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary-fixed-dim hover:text-surface-bright hover:bg-on-secondary-fixed-variant transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">assignment_return</span>
+<span class="font-body-md text-body-md">Devoluciones</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary-fixed-dim hover:text-surface-bright hover:bg-on-secondary-fixed-variant transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-body-md text-body-md">Reportes</span>
+</a>
+</nav>
+<div class="px-3 pt-4 border-t border-on-secondary-fixed-variant">
+<a class="flex items-center gap-3 px-4 py-3 text-secondary-fixed-dim hover:text-surface-bright hover:bg-on-secondary-fixed-variant transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-body-md text-body-md">Ajustes</span>
+</a>
+</div>
+</aside>
+<!-- Top App Bar -->
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] h-16 bg-surface border-b border-outline-variant shadow-sm z-30 flex justify-between items-center px-lg">
+<div class="flex items-center gap-4">
+<span class="font-headline-md text-headline-md font-bold text-on-secondary-fixed">Biblioteca Popular La Palabra</span>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative w-64">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-container rounded-lg border-none focus:ring-2 focus:ring-primary text-body-md" placeholder="Buscar material..." type="text"/>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors cursor-pointer">notifications</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors cursor-pointer">settings</button>
+<div class="h-8 w-8 rounded-full overflow-hidden border border-outline-variant">
+<img alt="User Avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDNchUX-EMoY-zYB-eknPSe8u6U_-kIILRVwmB4gk9_91HYw7cWHs1n0ieAuuqousBiLWRtbzjLE9cB6vRNcFhkFe13ya5RHuzp4YkBRblA-__UjmRxGDpJuB0zoWL2nS6lM54l9qn9Gr2I9znBjBCpB6BVRD72UWfW4EPtXryIfFtm7PS0R-cDeogLvVOPntd3NAqH8Lc0FcUdYjkNS0d0kJqW3GAY0xJNLWa1ucWCtna2XaT8hTDOE--hqZFiZ5IckxT5SbbWys4"/>
+</div>
+<button class="font-label-md text-label-md text-primary hover:underline">Logout</button>
+</div>
+</div>
+</header>
+<!-- Main Content (Background Canvas) -->
+<main class="ml-64 pt-20 p-lg min-h-screen bg-background">
+<div class="max-w-[1440px] mx-auto">
+<div class="flex justify-between items-end mb-xl">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-xs">Gestión de Materiales</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Administra el catálogo de libros, revistas y material audiovisual.</p>
+</div>
+<button class="bg-primary-container text-on-primary px-lg py-sm rounded-lg flex items-center gap-2 font-title-lg text-title-lg hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined">add</span>
+                    Nuevo Material
+                </button>
+</div>
+<!-- Dashboard Grid (Dummy Content for context) -->
+<div class="grid grid-cols-12 gap-gutter">
+<div class="col-span-8 bg-surface-container-lowest border border-outline-variant rounded-xl p-lg shadow-sm">
+<div class="flex justify-between items-center mb-lg">
+<h3 class="font-headline-sm text-headline-sm">Inventario Reciente</h3>
+<span class="text-primary font-label-md cursor-pointer hover:underline">Ver todo</span>
+</div>
+<table class="w-full text-left">
+<thead class="bg-surface-container-low">
+<tr>
+<th class="px-md py-sm font-label-md text-on-surface-variant">Título</th>
+<th class="px-md py-sm font-label-md text-on-surface-variant">ISBN</th>
+<th class="px-md py-sm font-label-md text-on-surface-variant">Estado</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<tr>
+<td class="px-md py-md font-body-md">Rayuela - Julio Cortázar</td>
+<td class="px-md py-md font-body-md">978-8437604312</td>
+<td class="px-md py-md"><span class="px-sm py-1 bg-tertiary-container text-on-tertiary-container rounded-full text-xs font-bold">Disponible</span></td>
+</tr>
+<tr>
+<td class="px-md py-md font-body-md">Cien Años de Soledad - G.G. Márquez</td>
+<td class="px-md py-md font-body-md">978-0307350381</td>
+<td class="px-md py-md"><span class="px-sm py-1 bg-error-container text-on-error-container rounded-full text-xs font-bold">Prestado</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="col-span-4 bg-surface-container-lowest border border-outline-variant rounded-xl p-lg shadow-sm">
+<h3 class="font-headline-sm text-headline-sm mb-lg text-on-surface">Resumen</h3>
+<div class="space-y-4">
+<div class="p-md bg-secondary-fixed rounded-lg flex items-center justify-between">
+<div>
+<p class="font-label-md text-on-secondary-container">Total Libros</p>
+<p class="font-headline-md text-on-secondary-fixed">4,281</p>
+</div>
+<span class="material-symbols-outlined text-on-secondary-container">auto_stories</span>
+</div>
+<div class="p-md bg-tertiary-fixed rounded-lg flex items-center justify-between">
+<div>
+<p class="font-label-md text-on-tertiary-fixed-variant">Nuevos (Mes)</p>
+<p class="font-headline-md text-on-tertiary-fixed-variant">12</p>
+</div>
+<span class="material-symbols-outlined text-on-tertiary-fixed-variant">new_releases</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-[calc(100%-16rem)] ml-auto flex justify-between items-center py-sm px-lg bg-surface-container-low border-t border-outline-variant">
+<p class="font-label-md text-label-md text-on-surface-variant">© 2024 Biblioteca Popular La Palabra. v2.4.0</p>
+<div class="flex gap-4">
+<a class="font-label-md text-label-md text-on-surface-variant hover:underline transition-all" href="#">Privacidad</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:underline transition-all" href="#">Soporte</a>
+</div>
+</footer>
+<!-- MODAL OVERLAY: Register New Book/Material -->
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-inverse-surface/40 backdrop-blur-sm p-md" id="modal-container">
+<div class="bg-surface-container-lowest w-full max-w-2xl rounded-xl shadow-2xl overflow-hidden border border-outline-variant animate-in fade-in zoom-in duration-300">
+<!-- Modal Header -->
+<div class="px-xl py-lg bg-primary-container text-on-primary flex justify-between items-center">
+<div>
+<h2 class="font-headline-md text-headline-md">Registrar Nuevo Material</h2>
+<p class="font-body-md opacity-90">Ingrese los detalles para el catálogo institucional</p>
+</div>
+<button class="material-symbols-outlined hover:bg-white/10 p-2 rounded-full transition-colors" onclick="document.getElementById('modal-container').classList.add('hidden')">close</button>
+</div>
+<!-- Form Body -->
+<form class="p-xl space-y-lg">
+<div class="grid grid-cols-2 gap-lg">
+<!-- Title (Full Width) -->
+<div class="col-span-2">
+<label class="block font-label-md text-label-md text-on-surface-variant mb-xs">Título del Material</label>
+<input class="w-full p-md border border-outline-variant rounded-lg bg-white focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-md" placeholder="Ej: El Aleph" required="" type="text"/>
+</div>
+<!-- ISBN/Code -->
+<div class="col-span-1">
+<label class="block font-label-md text-label-md text-on-surface-variant mb-xs">ISBN / Código Interno</label>
+<input class="w-full p-md border border-outline-variant rounded-lg bg-white focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-md" placeholder="978-XXXX-XXXX" type="text"/>
+</div>
+<!-- Language -->
+<div class="col-span-1">
+<label class="block font-label-md text-label-md text-on-surface-variant mb-xs">Idioma</label>
+<select class="w-full p-md border border-outline-variant rounded-lg bg-white focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-md appearance-none">
+<option>Español</option>
+<option>Inglés</option>
+<option>Francés</option>
+<option>Alemán</option>
+</select>
+</div>
+<!-- Author -->
+<div class="col-span-1">
+<label class="block font-label-md text-label-md text-on-surface-variant mb-xs">Autor</label>
+<select class="w-full p-md border border-outline-variant rounded-lg bg-white focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-md appearance-none">
+<option disabled="" selected="">Seleccionar autor...</option>
+<option>Jorge Luis Borges</option>
+<option>Julio Cortázar</option>
+<option>Alejandra Pizarnik</option>
+<option>Ernesto Sabato</option>
+</select>
+</div>
+<!-- Category -->
+<div class="col-span-1">
+<label class="block font-label-md text-label-md text-on-surface-variant mb-xs">Categoría</label>
+<select class="w-full p-md border border-outline-variant rounded-lg bg-white focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-md appearance-none">
+<option disabled="" selected="">Seleccionar...</option>
+<option>Ficción</option>
+<option>Ensayo</option>
+<option>Poesía</option>
+<option>Historia</option>
+<option>Ciencia</option>
+</select>
+</div>
+<!-- Type -->
+<div class="col-span-2">
+<label class="block font-label-md text-label-md text-on-surface-variant mb-sm">Tipo de Material</label>
+<div class="flex gap-md">
+<label class="flex-1 flex items-center justify-center gap-2 p-md border border-outline-variant rounded-lg cursor-pointer hover:bg-secondary-container/10 transition-colors has-[:checked]:bg-primary-container has-[:checked]:text-on-primary has-[:checked]:border-primary">
+<input checked="" class="hidden" name="material_type" type="radio" value="book"/>
+<span class="material-symbols-outlined">menu_book</span>
+<span class="font-label-md">Libro</span>
+</label>
+<label class="flex-1 flex items-center justify-center gap-2 p-md border border-outline-variant rounded-lg cursor-pointer hover:bg-secondary-container/10 transition-colors has-[:checked]:bg-primary-container has-[:checked]:text-on-primary has-[:checked]:border-primary">
+<input class="hidden" name="material_type" type="radio" value="magazine"/>
+<span class="material-symbols-outlined">auto_stories</span>
+<span class="font-label-md">Revista</span>
+</label>
+<label class="flex-1 flex items-center justify-center gap-2 p-md border border-outline-variant rounded-lg cursor-pointer hover:bg-secondary-container/10 transition-colors has-[:checked]:bg-primary-container has-[:checked]:text-on-primary has-[:checked]:border-primary">
+<input class="hidden" name="material_type" type="radio" value="dvd"/>
+<span class="material-symbols-outlined">movie</span>
+<span class="font-label-md">DVD</span>
+</label>
+</div>
+</div>
+<!-- Description -->
+<div class="col-span-2">
+<label class="block font-label-md text-label-md text-on-surface-variant mb-xs">Descripción / Notas</label>
+<textarea class="w-full p-md border border-outline-variant rounded-lg bg-white focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-md resize-none" placeholder="Resumen del contenido, estado del material o ubicación física..." rows="3"></textarea>
+</div>
+</div>
+<!-- Footer Actions -->
+<div class="flex justify-end gap-md pt-lg border-t border-outline-variant">
+<button class="px-lg py-sm border border-secondary text-secondary rounded-lg font-title-lg text-title-lg hover:bg-secondary-container/10 transition-all" onclick="document.getElementById('modal-container').classList.add('hidden')" type="button">Cancelar</button>
+<button class="px-2xl py-sm bg-primary text-on-primary rounded-lg font-title-lg text-title-lg hover:shadow-lg hover:opacity-90 active:scale-95 transition-all shadow-md" type="submit">Guardar Material</button>
+</div>
+</form>
+</div>
+</div>
+<!-- Background Pattern Decoration -->
+<div class="fixed inset-0 pointer-events-none opacity-[0.03] z-0">
+<svg height="100%" width="100%">
+<pattern height="40" id="pattern-grid" patternunits="userSpaceOnUse" width="40" x="0" y="0">
+<path d="M 40 0 L 0 0 0 40" fill="none" stroke="currentColor" stroke-width="1"></path>
+</pattern>
+<rect fill="url(#pattern-grid)" height="100%" width="100%"></rect>
+</svg>
+</div>
+<script>
+        // Micro-interaction: Close modal on Esc key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                document.getElementById('modal-container').classList.add('hidden');
+            }
+        });
+
+        // Simple form validation visual cue
+        const form = document.querySelector('form');
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            btn.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span> Procesando...';
+            btn.disabled = true;
+            
+            setTimeout(() => {
+                alert('¡Material registrado con éxito!');
+                document.getElementById('modal-container').classList.add('hidden');
+                btn.innerHTML = 'Guardar Material';
+                btn.disabled = false;
+            }, 1000);
+        });
+    </script>
+</body></html>
