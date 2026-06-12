@@ -47,7 +47,8 @@ class UserService {
     });
   }
 
-  async toggleStatus(id) {
+  async toggleStatus(id, currentUserId) {
+    if (id === currentUserId) throw new AppError('No puedes desactivar tu propia cuenta', 403);
     const user = await this.findById(id);
     return await prisma.user.update({
       where: { id },
@@ -56,7 +57,8 @@ class UserService {
     });
   }
 
-  async remove(id) {
+  async remove(id, currentUserId) {
+    if (id === currentUserId) throw new AppError('No puedes eliminar tu propia cuenta', 403);
     await this.findById(id);
     await prisma.user.delete({ where: { id } });
     return { message: 'Usuario eliminado correctamente' };

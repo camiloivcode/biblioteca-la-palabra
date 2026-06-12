@@ -32,14 +32,14 @@ const userController = {
 
   async toggleStatus(req, res, next) {
     try {
-      const user = await userService.toggleStatus(parseInt(req.params.id));
+      const user = await userService.toggleStatus(parseInt(req.params.id), req.user.id);
       ApiResponse.success(res, user, `Usuario ${user.activo ? 'activado' : 'desactivado'}`);
     } catch (error) { next(error); }
   },
 
   async remove(req, res, next) {
     try {
-      const result = await userService.remove(parseInt(req.params.id));
+      const result = await userService.remove(parseInt(req.params.id), req.user.id);
       ApiResponse.success(res, result);
     } catch (error) { next(error); }
   },

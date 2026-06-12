@@ -12,23 +12,25 @@ async function main() {
 
   await prisma.user.upsert({
     where: { email: 'admin@biblioteca.com' },
-    update: { password: adminPassword },
+    update: { password: adminPassword, activo: true },
     create: {
       nombre: 'Administrador',
       email: 'admin@biblioteca.com',
       password: adminPassword,
       role: 'ADMIN',
+      activo: true,
     },
   });
 
   await prisma.user.upsert({
     where: { email: 'bibliotecario@biblioteca.com' },
-    update: { password: biblioPassword },
+    update: { password: biblioPassword, activo: true },
     create: {
       nombre: 'Juan Pérez',
       email: 'bibliotecario@biblioteca.com',
       password: biblioPassword,
       role: 'BIBLIOTECARIO',
+      activo: true,
     },
   });
 
