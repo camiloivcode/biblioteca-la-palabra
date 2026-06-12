@@ -1,61 +1,119 @@
 ---
 import DashboardLayout from '../../layouts/DashboardLayout.astro';
 ---
-<DashboardLayout pageTitle="Dashboard" breadcrumb="Inicio">
+<DashboardLayout pageTitle="Dashboard Overview">
+  <!-- Stats Grid -->
+  <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter mb-xl" id="stats-container">
+    <!-- Cargadas dinámicamente -->
+  </section>
 
-  <!-- Stats Row -->
-  <div class="row g-3 gap-section" id="stats-container">
-    <!-- Se cargan dinámicamente -->
-    <div class="col-12 text-center py-4">
-      <div class="spinner-border text-primary" role="status"></div>
-    </div>
-  </div>
-
-  <div class="row g-3">
-    <!-- Préstamos activos recientes -->
-    <div class="col-lg-8">
-      <div class="card">
-        <div class="card-header">
-          <h6 class="card-title mb-0">
-            <i class="bi bi-arrow-left-right me-2" style="color:var(--color-primary);"></i>
-            Préstamos Activos
-          </h6>
-          <a href="/dashboard/prestamos" class="btn btn-sm btn-outline-primary">Ver todos</a>
+  <!-- Charts and Details Grid -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+    <!-- Left: Chart + Loans Table -->
+    <div class="lg:col-span-2 space-y-gutter">
+      <!-- Chart -->
+      <div class="bg-white p-lg rounded-xl border border-outline-variant shadow-[0px_1px_3px_rgba(0,0,0,0.05)]">
+        <div class="flex justify-between items-center mb-xl">
+          <div>
+            <h2 class="font-title-lg text-title-lg text-on-surface">Préstamos por Mes</h2>
+            <p class="font-body-md text-body-md text-outline">Evolución de préstamos durante el año 2024</p>
+          </div>
+          <select class="bg-surface-container-low border-outline-variant rounded-lg font-label-md text-label-md px-sm py-1 focus:ring-primary focus:border-primary">
+            <option>Últimos 6 meses</option>
+            <option>Este año</option>
+          </select>
         </div>
-        <div class="card-body p-0">
-          <div class="table-responsive">
-            <table class="table table-hover mb-0" id="tabla-prestamos-activos">
-              <thead>
-                <tr>
-                  <th>Socio</th>
-                  <th>Material</th>
-                  <th>Vencimiento</th>
-                  <th>Estado</th>
-                </tr>
-              </thead>
-              <tbody id="tbody-prestamos"></tbody>
-            </table>
+        <div class="h-64 flex items-end justify-between gap-4 px-4 pb-8 relative" id="chart-bars">
+          <div class="absolute inset-x-0 top-0 h-px bg-outline-variant opacity-30"></div>
+          <div class="absolute inset-x-0 top-1/4 h-px bg-outline-variant opacity-30"></div>
+          <div class="absolute inset-x-0 top-2/4 h-px bg-outline-variant opacity-30"></div>
+          <div class="absolute inset-x-0 top-3/4 h-px bg-outline-variant opacity-30"></div>
+          <div class="flex-1 flex flex-col items-center gap-2 group">
+            <div class="w-full bg-primary-container opacity-40 hover:opacity-100 transition-all rounded-t-lg" style="height:45%"></div>
+            <span class="font-label-sm text-label-sm text-outline">Ene</span>
+          </div>
+          <div class="flex-1 flex flex-col items-center gap-2 group">
+            <div class="w-full bg-primary-container opacity-40 hover:opacity-100 transition-all rounded-t-lg" style="height:60%"></div>
+            <span class="font-label-sm text-label-sm text-outline">Feb</span>
+          </div>
+          <div class="flex-1 flex flex-col items-center gap-2 group">
+            <div class="w-full bg-primary opacity-80 hover:opacity-100 transition-all rounded-t-lg" style="height:85%"></div>
+            <span class="font-label-sm text-label-sm text-outline">Mar</span>
+          </div>
+          <div class="flex-1 flex flex-col items-center gap-2 group">
+            <div class="w-full bg-primary-container opacity-40 hover:opacity-100 transition-all rounded-t-lg" style="height:70%"></div>
+            <span class="font-label-sm text-label-sm text-outline">Abr</span>
+          </div>
+          <div class="flex-1 flex flex-col items-center gap-2 group">
+            <div class="w-full bg-primary-container opacity-40 hover:opacity-100 transition-all rounded-t-lg" style="height:95%"></div>
+            <span class="font-label-sm text-label-sm text-outline">May</span>
+          </div>
+          <div class="flex-1 flex flex-col items-center gap-2 group">
+            <div class="w-full bg-primary-container opacity-40 hover:opacity-100 transition-all rounded-t-lg" style="height:80%"></div>
+            <span class="font-label-sm text-label-sm text-outline">Jun</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Loans Table -->
+      <div class="bg-white rounded-xl border border-outline-variant shadow-sm overflow-hidden">
+        <div class="p-lg border-b border-outline-variant flex justify-between items-center">
+          <h2 class="font-title-lg text-title-lg text-on-surface">Últimos Préstamos</h2>
+          <a href="/dashboard/prestamos" class="text-primary font-label-md text-label-md hover:underline">Ver todos</a>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead class="bg-surface-container-low">
+              <tr>
+                <th class="px-lg py-3 font-label-md text-label-md text-outline uppercase tracking-wider">Socio</th>
+                <th class="px-lg py-3 font-label-md text-label-md text-outline uppercase tracking-wider">Material</th>
+                <th class="px-lg py-3 font-label-md text-label-md text-outline uppercase tracking-wider">Fecha</th>
+                <th class="px-lg py-3 font-label-md text-label-md text-outline uppercase tracking-wider">Estado</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-outline-variant" id="tbody-prestamos">
+              <tr><td colspan="4" class="px-lg py-8 text-center font-body-md text-outline">Cargando...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Sidebar -->
+    <div class="space-y-gutter">
+      <!-- Most Requested -->
+      <div class="bg-white p-lg rounded-xl border border-outline-variant shadow-sm h-fit">
+        <div class="flex items-center gap-2 mb-xl">
+          <span class="material-symbols-outlined text-primary">trending_up</span>
+          <h2 class="font-title-lg text-title-lg text-on-surface">Más Solicitados</h2>
+        </div>
+        <div class="space-y-lg" id="lista-morosos">
+          <div class="font-body-md text-outline text-center py-4">Cargando...</div>
+        </div>
+      </div>
+
+      <!-- Alerts -->
+      <div class="bg-on-secondary-fixed text-surface-bright p-lg rounded-xl shadow-md">
+        <h3 class="font-title-lg text-title-lg mb-lg">Alertas del Sistema</h3>
+        <div class="space-y-md">
+          <div class="flex gap-3">
+            <span class="material-symbols-outlined text-error">error_outline</span>
+            <div>
+              <p class="font-body-md text-body-md font-bold">Reserva Expirada</p>
+              <p class="font-label-sm text-label-sm opacity-70">El socio 234 no retiró 'Rayuela' a tiempo.</p>
+            </div>
+          </div>
+          <div class="flex gap-3">
+            <span class="material-symbols-outlined text-tertiary-fixed">check_circle</span>
+            <div>
+              <p class="font-body-md text-body-md font-bold">Inventario Actualizado</p>
+              <p class="font-label-sm text-label-sm opacity-70">Se agregaron 15 nuevos títulos a la colección.</p>
+            </div>
           </div>
         </div>
       </div>
     </div>
-
-    <!-- Socios morosos -->
-    <div class="col-lg-4">
-      <div class="card">
-        <div class="card-header">
-          <h6 class="card-title mb-0">
-            <i class="bi bi-exclamation-triangle me-2" style="color:var(--color-danger);"></i>
-            Socios en Mora
-          </h6>
-        </div>
-        <div class="card-body p-0">
-          <div id="lista-morosos" style="max-height:340px; overflow-y:auto;"></div>
-        </div>
-      </div>
-    </div>
   </div>
-
 </DashboardLayout>
 
 <script is:inline>
@@ -64,23 +122,37 @@ async function loadDashboard() {
     const data = await api.get('/reportes/dashboard');
     const { socios, materiales, prestamos } = data.data;
     document.getElementById('stats-container').innerHTML = `
-      <div class="col-xl-2 col-md-4 col-6">
-        <div class="stat-card"><div class="stat-icon blue"><i class="bi bi-people"></i></div><div><div class="stat-label">Total Socios</div><div class="stat-value">${socios.total}</div><div class="stat-change negative">${socios.morosos} en mora</div></div></div>
+      <div class="bg-white p-lg rounded-xl border border-outline-variant shadow-[0px_1px_3px_rgba(0,0,0,0.05)] hover:shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.08)] transition-all">
+        <div class="flex justify-between items-start mb-sm">
+          <div class="p-3 bg-primary-fixed rounded-lg text-primary"><span class="material-symbols-outlined">menu_book</span></div>
+          <span class="font-label-sm text-label-sm px-2 py-1 bg-tertiary-fixed-dim text-on-tertiary-fixed-variant rounded-full">${materiales.total}</span>
+        </div>
+        <h3 class="font-label-md text-label-md text-outline uppercase tracking-wider">Materiales Disponibles</h3>
+        <p class="font-headline-lg text-headline-lg text-on-surface mt-1">${materiales.disponibles}</p>
       </div>
-      <div class="col-xl-2 col-md-4 col-6">
-        <div class="stat-card"><div class="stat-icon green"><i class="bi bi-person-check"></i></div><div><div class="stat-label">Socios Activos</div><div class="stat-value">${socios.activos}</div></div></div>
+      <div class="bg-white p-lg rounded-xl border border-outline-variant shadow-[0px_1px_3px_rgba(0,0,0,0.05)] hover:shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.08)] transition-all">
+        <div class="flex justify-between items-start mb-sm">
+          <div class="p-3 bg-secondary-container rounded-lg text-secondary"><span class="material-symbols-outlined">auto_stories</span></div>
+          <span class="font-label-sm text-label-sm px-2 py-1 bg-secondary-fixed text-on-secondary-fixed-variant rounded-full">Actualizado</span>
+        </div>
+        <h3 class="font-label-md text-label-md text-outline uppercase tracking-wider">Préstamos Activos</h3>
+        <p class="font-headline-lg text-headline-lg text-on-surface mt-1">${prestamos.activos}</p>
       </div>
-      <div class="col-xl-2 col-md-4 col-6">
-        <div class="stat-card"><div class="stat-icon amber"><i class="bi bi-book"></i></div><div><div class="stat-label">Total Materiales</div><div class="stat-value">${materiales.total}</div></div></div>
+      <div class="bg-white p-lg rounded-xl border border-outline-variant shadow-[0px_1px_3px_rgba(0,0,0,0.05)] hover:shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.08)] transition-all">
+        <div class="flex justify-between items-start mb-sm">
+          <div class="p-3 bg-tertiary-container rounded-lg text-on-tertiary"><span class="material-symbols-outlined">group</span></div>
+          <span class="font-label-sm text-label-sm px-2 py-1 bg-tertiary-fixed-dim text-on-tertiary-fixed-variant rounded-full">+${socios.activos}</span>
+        </div>
+        <h3 class="font-label-md text-label-md text-outline uppercase tracking-wider">Socios Registrados</h3>
+        <p class="font-headline-lg text-headline-lg text-on-surface mt-1">${socios.total}</p>
       </div>
-      <div class="col-xl-2 col-md-4 col-6">
-        <div class="stat-card"><div class="stat-icon teal"><i class="bi bi-book-fill"></i></div><div><div class="stat-label">Disponibles</div><div class="stat-value">${materiales.disponibles}</div></div></div>
-      </div>
-      <div class="col-xl-2 col-md-4 col-6">
-        <div class="stat-card"><div class="stat-icon purple"><i class="bi bi-arrow-left-right"></i></div><div><div class="stat-label">Préstamos Activos</div><div class="stat-value">${prestamos.activos}</div></div></div>
-      </div>
-      <div class="col-xl-2 col-md-4 col-6">
-        <div class="stat-card"><div class="stat-icon red"><i class="bi bi-clock-history"></i></div><div><div class="stat-label">Devol. Hoy</div><div class="stat-value">${prestamos.devoluccionesHoy}</div></div></div>
+      <div class="bg-white p-lg rounded-xl border border-error-container shadow-[0px_1px_3px_rgba(0,0,0,0.05)] hover:shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.08)] transition-all border-l-4 border-l-error">
+        <div class="flex justify-between items-start mb-sm">
+          <div class="p-3 bg-error-container rounded-lg text-error"><span class="material-symbols-outlined">report_problem</span></div>
+          <span class="font-label-sm text-label-sm px-2 py-1 bg-error-container text-error rounded-full">Crítico</span>
+        </div>
+        <h3 class="font-label-md text-label-md text-outline uppercase tracking-wider">Materiales en Mora</h3>
+        <p class="font-headline-lg text-headline-lg text-error mt-1">${prestamos.mora || 0}</p>
       </div>
     `;
   } catch (e) { console.error('Error cargando dashboard:', e); }
@@ -90,30 +162,26 @@ async function loadPrestamosActivos() {
   try {
     const data = await api.get('/reportes/prestamos-activos');
     const tbody = document.getElementById('tbody-prestamos');
-    if (!data.data.length) { tbody.innerHTML = '<tr><td colspan="4" class="text-center py-4 text-muted">No hay préstamos activos</td></tr>'; return; }
-    const hoy = new Date();
-    tbody.innerHTML = data.data.slice(0, 8).map(p => {
-      const vence = new Date(p.fechaDevolucion);
-      const dias = Math.ceil((vence - hoy) / (1000 * 60 * 60 * 24));
-      const badge = p.estado === 'MORA' || dias <= 3 ? 'badge-mora' : 'badge-activo';
-      return `<tr><td><div class="fw-semibold">${p.socio.apellido}, ${p.socio.nombre}</div><div class="text-muted-sm">DNI: ${p.socio.dni}</div></td><td><div>${p.material.titulo}</div><div class="text-muted-sm">${p.material.tipo}</div></td><td><div>${formatDate(p.fechaDevolucion)}</div><div class="text-muted-sm">${dias > 0 ? dias + ' días restantes' : 'Vencido'}</div></td><td>${estadoBadge(p.estado)}</td></tr>`;
+    if (!data.data || !data.data.length) {
+      tbody.innerHTML = '<tr><td colspan="4" class="px-lg py-8 text-center font-body-md text-outline">No hay préstamos activos</td></tr>';
+      return;
+    }
+    tbody.innerHTML = data.data.slice(0, 6).map(function(p) {
+      const initials = (p.socio.nombre.charAt(0) + p.socio.apellido.charAt(0)).toUpperCase();
+      const badgeClass = p.estado === 'MORA' || p.estado === 'VENCIDO' ? 'bg-error-container text-error' : 'bg-tertiary-fixed-dim text-on-tertiary-fixed-variant';
+      const dotClass = p.estado === 'MORA' || p.estado === 'VENCIDO' ? 'bg-error' : 'bg-tertiary';
+      return '<tr class="hover:bg-surface-bright transition-colors">' +
+        '<td class="px-lg py-4"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-primary-fixed text-primary flex items-center justify-center font-bold text-xs">' + initials + '</div><span class="font-body-md text-body-md font-medium text-on-surface">' + p.socio.nombre + ' ' + p.socio.apellido + '</span></div></td>' +
+        '<td class="px-lg py-4 font-body-md text-body-md text-on-surface">' + p.material.titulo + '</td>' +
+        '<td class="px-lg py-4 font-body-md text-body-md text-outline">' + window.formatDate(p.fechaDevolucion) + '</td>' +
+        '<td class="px-lg py-4"><span class="px-2 py-1 ' + badgeClass + ' text-xs font-bold rounded-full inline-flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full ' + dotClass + '"></span>' + p.estado + '</span></td>' +
+        '</tr>';
     }).join('');
   } catch (e) { console.error('Error cargando préstamos:', e); }
 }
 
-async function loadMorosos() {
-  try {
-    const data = await api.get('/reportes/socios-morosos');
-    const container = document.getElementById('lista-morosos');
-    if (!data.data.length) { container.innerHTML = '<div class="p-3 text-center" style="font-size:13px;color:var(--color-success);">✓ No hay socios en mora</div>'; return; }
-    container.innerHTML = data.data.map(s => `
-      <div class="d-flex align-items-center gap-3 px-3 py-2" style="border-bottom:1px solid var(--color-border);">
-        <div class="user-avatar" style="background:var(--color-danger);font-size:12px;width:32px;height:32px;">${s.apellido.charAt(0)}</div>
-        <div class="flex-grow-1"><div class="fw-semibold" style="font-size:13px;">${s.apellido}, ${s.nombre}</div><div class="text-muted-sm">DNI: ${s.dni} · ${s.prestamos.length} en mora</div></div>
-      </div>
-    `).join('');
-  } catch (e) { console.error('Error cargando morosos:', e); }
-}
-
-document.addEventListener('DOMContentLoaded', function() { loadDashboard(); loadPrestamosActivos(); loadMorosos(); });
+document.addEventListener('DOMContentLoaded', function() {
+  loadDashboard();
+  loadPrestamosActivos();
+});
 </script>

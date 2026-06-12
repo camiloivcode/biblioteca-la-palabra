@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const passwordInput = document.getElementById('password');
   const submitBtn = document.getElementById('btn-submit');
   const errorDiv = document.getElementById('login-error');
+  const errorText = document.getElementById('login-error-text');
 
   form?.addEventListener('submit', async function (e) {
     e.preventDefault();
@@ -20,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     setLoading(true);
     try {
-      const response = await fetch(`${window.API_URL}/auth/login`, {
+      const response = await fetch(window.API_URL + '/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -34,11 +35,11 @@ document.addEventListener('DOMContentLoaded', function () {
       localStorage.setItem('refreshToken', data.data.refreshToken);
       localStorage.setItem('user', JSON.stringify(data.data.user));
       Swal.fire({
-        icon: 'success', title: `¡Bienvenido, ${data.data.user.nombre}!`,
+        icon: 'success', title: 'Bienvenido, ' + data.data.user.nombre + '!',
         text: 'Redirigiendo al dashboard...',
         timer: 1500, showConfirmButton: false, timerProgressBar: true,
-      }).then(() => { window.location.href = '/dashboard'; });
-    } catch {
+      }).then(function () { window.location.href = '/dashboard'; });
+    } catch (err) {
       showError('Error de conexión. Verifica que el servidor esté activo.');
     } finally {
       setLoading(false);
@@ -46,15 +47,18 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   function showError(msg) {
-    if (errorDiv) { errorDiv.textContent = msg; errorDiv.style.display = 'flex'; }
+    if (errorDiv && errorText) {
+      errorText.textContent = msg;
+      errorDiv.classList.remove('hidden');
+    }
   }
 
   function setLoading(loading) {
     if (submitBtn) {
       submitBtn.disabled = loading;
       submitBtn.innerHTML = loading
-        ? '<span class="spinner-border spinner-border-sm me-2"></span>Iniciando sesión...'
-        : '<i class="bi bi-box-arrow-in-right me-2"></i>Iniciar Sesión';
+        ? '<span class="material-symbols-outlined animate-spin">sync</span> Ingresando...'
+        : '<span>Acceder al Sistema</span><span class="material-symbols-outlined">login</span>';
     }
   }
 });

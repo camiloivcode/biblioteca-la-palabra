@@ -10,6 +10,9 @@ class ReporteService {
       materialesDisponibles,
       materialesPrestados,
       prestamosActivos,
+      prestamosMora,
+      prestamosVencidos,
+      prestamosDevueltos,
       prestamosHoy,
       devoluccionesHoy,
     ] = await Promise.all([
@@ -19,7 +22,15 @@ class ReporteService {
       prisma.material.count(),
       prisma.material.count({ where: { estado: 'DISPONIBLE' } }),
       prisma.material.count({ where: { estado: 'PRESTADO' } }),
-      prisma.prestamo.count({ where: { estado: { in: ['ACTIVO', 'MORA'] } } }),
+      prisma.prestamo.count({ where: { estado: 'ACTIVO' } }),
+      prisma.prestamo.count({ where: { estado: 'MORA' } }),
+      prisma.prestamo.count({
+        where: {
+          estado: 'ACTIVO',
+          fechaDevolucion: { lt: new Date(new Date().setHours(0, 0, 0, 0)) },
+        },
+      }),
+      prisma.prestamo.count({ where: { estado: 'DEVUELTO' } }),
       prisma.prestamo.count({
         where: {
           fechaPrestamo: { gte: new Date(new Date().setHours(0, 0, 0, 0)) },
@@ -36,7 +47,7 @@ class ReporteService {
     return {
       socios: { total: totalSocios, activos: sociosActivos, morosos: sociosMorosos },
       materiales: { total: totalMateriales, disponibles: materialesDisponibles, prestados: materialesPrestados },
-      prestamos: { activos: prestamosActivos, hoy: prestamosHoy, devoluccionesHoy },
+      prestamos: { activos: prestamosActivos, mora: prestamosMora, vencidos: prestamosVencidos, devueltos: prestamosDevueltos, hoy: prestamosHoy, devoluccionesHoy },
     };
   }
 

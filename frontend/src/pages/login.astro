@@ -2,110 +2,118 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 <BaseLayout title="Iniciar Sesión">
-  <div class="login-page">
-    <div class="login-card">
-      <div class="login-header">
-        <div class="login-logo">📚</div>
-        <h1 class="login-title">La Palabra</h1>
-        <p class="login-subtitle">Sistema de Gestión Bibliotecaria</p>
-      </div>
-
-      <div
-        id="login-error"
-        class="alert alert-danger d-flex align-items-center gap-2 mb-4"
-        role="alert"
-        style="display:none!important; font-size:13px;"
-      >
-        <i class="bi bi-exclamation-triangle-fill flex-shrink-0"></i>
-        <span></span>
-      </div>
-
-      <form id="login-form" novalidate>
-        <div class="mb-3">
-          <label for="email" class="form-label">
-            <i class="bi bi-envelope me-1" style="color:var(--color-text-muted)"></i>
-            Correo electrónico
-          </label>
-          <input
-            type="email"
-            class="form-control"
-            id="email"
-            placeholder="usuario@biblioteca.com"
-            autocomplete="email"
-            required
-          />
-        </div>
-
-        <div class="mb-4">
-          <label for="password" class="form-label">
-            <i class="bi bi-lock me-1" style="color:var(--color-text-muted)"></i>
-            Contraseña
-          </label>
-          <div class="input-group">
-            <input
-              type="password"
-              class="form-control"
-              id="password"
-              placeholder="••••••••"
-              autocomplete="current-password"
-              required
-            />
-            <button
-              class="btn btn-outline-secondary"
-              type="button"
-              id="toggle-password"
-              tabindex="-1"
-            >
-              <i class="bi bi-eye" id="toggle-icon"></i>
-            </button>
-          </div>
-        </div>
-
-        <button type="submit" class="btn btn-primary w-100" id="btn-submit" style="height:44px;">
-          <i class="bi bi-box-arrow-in-right me-2"></i>
-          Iniciar Sesión
-        </button>
-      </form>
-
-      <p class="text-center mt-4 mb-0" style="font-size:12px; color:var(--color-text-muted);">
-        ¿Problemas para acceder? Contacta al administrador del sistema.
-      </p>
-
-      <!-- Credenciales demo -->
-      <div class="mt-4 p-3 rounded" style="background:var(--color-bg); font-size:12px;">
-        <p class="fw-semibold mb-1" style="color:var(--color-text-muted);">Credenciales de prueba:</p>
-        <p class="mb-0" style="color:var(--color-text);">
-          <strong>Admin:</strong> admin@biblioteca.com / Admin2024!
-        </p>
-        <p class="mb-0" style="color:var(--color-text);">
-          <strong>Biblioteca:</strong> bibliotecario@biblioteca.com / Biblio2024!
-        </p>
-      </div>
+  <div class="flex items-center justify-center min-h-screen p-margin-mobile md:p-0 relative overflow-hidden bg-surface">
+    <!-- Ambient Background Shapes -->
+    <div class="fixed inset-0 pointer-events-none -z-10"
+      style="background: radial-gradient(circle at 20% 30%, #dbe1ff 0%, transparent 40%),
+              radial-gradient(circle at 80% 70%, #b5d0fd 0%, transparent 40%),
+              radial-gradient(circle at 50% 50%, #f7f9fb 0%, transparent 100%);">
     </div>
+    <div class="floating-shape w-96 h-96 -top-20 -left-20 fixed pointer-events-none -z-10"
+      style="border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; background: rgba(37,99,235,0.05);">
+    </div>
+    <div class="floating-shape w-80 h-80 bottom-0 right-0 fixed pointer-events-none -z-10"
+      style="border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; background: rgba(37,99,235,0.05); animation-delay: -5s; animation-duration: 25s;">
+    </div>
+
+    <main class="w-full max-w-md">
+      <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-xl flex flex-col items-center shadow-[0px_1px_3px_rgba(0,0,0,0.05),0px_20px_25px_-5px_rgba(0,0,0,0.1)]">
+        <!-- Logo Section -->
+        <div class="mb-xl text-center">
+          <div class="w-24 h-24 mb-md mx-auto rounded-2xl bg-on-secondary-fixed flex items-center justify-center">
+            <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+              <path d="M12 6v7"></path>
+              <path d="M9 9h6"></path>
+            </svg>
+          </div>
+          <h1 class="font-headline-md text-headline-md text-on-secondary-fixed tracking-tight">Biblioteca Popular</h1>
+          <p class="font-body-md text-body-md text-secondary">La Palabra - Sistema de Gestión</p>
+        </div>
+
+        <!-- Error alert -->
+        <div id="login-error" class="w-full font-body-md text-body-md text-error bg-error-container p-3 rounded-lg mb-lg hidden">
+          <span id="login-error-text"></span>
+        </div>
+
+        <!-- Form -->
+        <form id="login-form" class="w-full space-y-lg">
+          <div class="space-y-sm">
+            <label class="block font-label-md text-label-md text-secondary uppercase tracking-wider" for="email">Correo Electrónico</label>
+            <div class="relative group">
+              <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors">mail</span>
+              <input class="w-full pl-10 pr-4 py-3 bg-surface rounded-lg border border-outline-variant focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all font-body-md text-body-md outline-none" id="email" name="email" placeholder="ejemplo@biblioteca.org" required type="email" />
+            </div>
+          </div>
+          <div class="space-y-sm">
+            <div class="flex justify-between items-center">
+              <label class="block font-label-md text-label-md text-secondary uppercase tracking-wider" for="password">Contraseña</label>
+              <a class="font-label-sm text-label-sm text-primary hover:underline transition-all" href="#">¿Olvidaste tu contraseña?</a>
+            </div>
+            <div class="relative group">
+              <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors">lock</span>
+              <input class="w-full pl-10 pr-12 py-3 bg-surface rounded-lg border border-outline-variant focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all font-body-md text-body-md outline-none" id="password" name="password" placeholder="••••••••" required type="password" />
+              <button class="absolute right-3 top-1/2 -translate-y-1/2 text-outline hover:text-secondary transition-colors border-0 bg-transparent cursor-pointer" id="togglePassword" type="button">
+                <span class="material-symbols-outlined" id="eyeIcon">visibility</span>
+              </button>
+            </div>
+          </div>
+          <div class="flex items-center gap-sm">
+            <input class="w-4 h-4 text-primary border-outline-variant rounded focus:ring-primary" id="remember" type="checkbox" />
+            <label class="font-body-md text-body-md text-on-surface-variant cursor-pointer" for="remember">Mantener sesión iniciada</label>
+          </div>
+          <button class="w-full bg-primary-container text-on-primary py-3 px-6 rounded-lg font-title-lg text-title-lg shadow-md hover:shadow-lg hover:bg-primary transition-all duration-200 active:scale-[0.98] flex items-center justify-center gap-2" type="submit" id="btn-submit">
+            <span>Acceder al Sistema</span>
+            <span class="material-symbols-outlined">login</span>
+          </button>
+        </form>
+
+        <div class="mt-xl pt-lg border-t border-outline-variant w-full text-center">
+          <p class="font-body-md text-body-md text-on-surface-variant">
+            ¿No tienes una cuenta?
+            <a class="text-primary font-bold hover:underline" href="#">Contactar Admin</a>
+          </p>
+        </div>
+
+        <!-- Demo credentials -->
+        <div class="mt-lg p-md bg-surface-container-low rounded-lg w-full text-left">
+          <p class="font-label-md text-label-md text-secondary uppercase tracking-wider mb-sm">Credenciales de prueba</p>
+          <p class="font-label-sm text-label-sm text-on-surface-variant mb-xs"><span class="text-on-surface font-medium">Admin:</span> admin@biblioteca.com / Admin2024!</p>
+          <p class="font-label-sm text-label-sm text-on-surface-variant"><span class="text-on-surface font-medium">Biblio:</span> bibliotecario@biblioteca.com / Biblio2024!</p>
+        </div>
+      </div>
+
+      <div class="mt-lg text-center">
+        <p class="font-label-md text-label-md text-secondary-fixed-dim">© 2024 Biblioteca Popular La Palabra. v2.4.0</p>
+      </div>
+    </main>
   </div>
 
   <script src="../scripts/auth.js"></script>
   <script is:inline>
-    // Toggle mostrar contraseña
-    document.getElementById('toggle-password')?.addEventListener('click', function() {
+    // Password toggle
+    document.getElementById('togglePassword')?.addEventListener('click', function() {
       const input = document.getElementById('password');
-      const icon = document.getElementById('toggle-icon');
+      const icon = document.getElementById('eyeIcon');
       if (input.type === 'password') {
         input.type = 'text';
-        icon.classList.replace('bi-eye', 'bi-eye-slash');
+        icon.textContent = 'visibility_off';
       } else {
         input.type = 'password';
-        icon.classList.replace('bi-eye-slash', 'bi-eye');
+        icon.textContent = 'visibility';
       }
     });
 
-    // Mostrar error correctamente
-    const errorDiv = document.getElementById('login-error');
-    if (errorDiv) {
-      const original = errorDiv.querySelector('span');
-      Object.defineProperty(errorDiv, 'textContent', {
-        set: function(val) { if (original) original.textContent = val; }
+    // Parallax effect on floating shapes
+    document.addEventListener('mousemove', function(e) {
+      const shapes = document.querySelectorAll('.floating-shape');
+      const x = e.clientX / window.innerWidth;
+      const y = e.clientY / window.innerHeight;
+      shapes.forEach(function(shape, index) {
+        const speed = (index + 1) * 20;
+        shape.style.transform = 'translate(' + (x * speed) + 'px, ' + (y * speed) + 'px)';
       });
-    }
+    });
   </script>
 </BaseLayout>

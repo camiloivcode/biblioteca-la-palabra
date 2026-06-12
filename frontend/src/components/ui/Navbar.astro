@@ -1,76 +1,57 @@
 ---
 export interface Props {
   pageTitle?: string;
-  breadcrumb?: string;
 }
-const { pageTitle = 'Dashboard', breadcrumb = 'Inicio' } = Astro.props;
+const { pageTitle = 'Dashboard' } = Astro.props;
 ---
 
-<header class="topbar">
-  <div class="topbar-left">
-    <button class="btn btn-link d-lg-none p-0" id="sidebar-toggle" style="color: var(--color-text-muted); font-size: 20px;">
-      <i class="bi bi-list"></i>
+<header id="app-navbar" class="fixed top-0 right-0 bg-surface border-b border-outline-variant shadow-sm flex justify-between items-center px-lg z-40 transition-all" style="height: 64px;">
+  <div class="flex items-center gap-4">
+    <button id="sidebar-toggle" class="lg:hidden p-2 text-on-surface-variant hover:text-primary transition-colors cursor-pointer border-0 bg-transparent">
+      <span class="material-symbols-outlined">menu</span>
     </button>
-    <div>
-      <div class="page-title">{pageTitle}</div>
-      <div class="page-breadcrumb">
-        <i class="bi bi-house" style="font-size: 10px;"></i>
-        <span>{breadcrumb}</span>
-        {pageTitle !== breadcrumb && (
-          <>
-            <i class="bi bi-chevron-right" style="font-size: 9px;"></i>
-            <span>{pageTitle}</span>
-          </>
-        )}
-      </div>
-    </div>
+    <h2 class="font-headline-md text-headline-md font-bold text-on-secondary-fixed">{pageTitle}</h2>
   </div>
-
-  <div class="topbar-right">
-    <button id="btn-actualizar-mora" class="btn btn-sm" style="background: var(--color-accent-light); color: var(--color-accent); border: 1px solid var(--color-accent); border-radius: var(--radius-sm);" title="Actualizar estados de mora">
-      <i class="bi bi-arrow-clockwise"></i>
-      <span class="d-none d-md-inline">Actualizar Mora</span>
-    </button>
-
-    <div class="user-menu dropdown" id="user-dropdown">
-      <div class="user-avatar" id="user-avatar-initial">A</div>
-      <div class="user-info d-none d-md-block">
-        <div class="user-name" id="user-display-name">Cargando...</div>
-        <div class="user-role" id="user-display-role">—</div>
+  <div class="flex items-center gap-4">
+    <div class="relative hidden lg:block">
+      <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]">search</span>
+      <input id="global-search" class="lg:w-64 w-40 bg-surface-container-low border border-outline-variant rounded-full px-4 py-1.5 pl-10 font-body-md text-body-md focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none" placeholder="Buscar..." type="text" />
+    </div>
+    <div class="flex items-center gap-2">
+      <button class="p-2 text-on-surface-variant hover:text-primary transition-opacity cursor-pointer border-0 bg-transparent" title="Notificaciones">
+        <span class="material-symbols-outlined">notifications</span>
+      </button>
+      <div class="h-8 w-px bg-outline-variant mx-1"></div>
+      <div class="flex items-center gap-2 cursor-pointer group">
+        <div class="w-8 h-8 rounded-full bg-primary-fixed text-primary flex items-center justify-center font-bold text-xs" id="user-avatar-initial">A</div>
+        <span class="font-label-md text-label-md text-on-surface-variant group-hover:text-primary transition-colors" id="user-display-name">Admin</span>
+        <span class="material-symbols-outlined text-outline text-[18px]">expand_more</span>
       </div>
-      <i class="bi bi-chevron-down" style="font-size: 11px; color: var(--color-text-muted);"></i>
     </div>
   </div>
 </header>
+
+<style>
+  @media (min-width: 1024px) {
+    #app-navbar { width: calc(100% - 256px); }
+  }
+  @media (max-width: 1023px) {
+    #app-navbar { width: 100%; }
+  }
+</style>
 
 <script is:inline>
   document.addEventListener('DOMContentLoaded', function() {
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     if (user.nombre) {
-      const el = document.getElementById('user-display-name');
-      const role = document.getElementById('user-display-role');
-      const avatar = document.getElementById('user-avatar-initial');
-      if (el) el.textContent = user.nombre;
-      if (role) role.textContent = user.role === 'ADMIN' ? 'Administrador' : 'Bibliotecario';
-      if (avatar) avatar.textContent = user.nombre.charAt(0).toUpperCase();
+      const nameEl = document.getElementById('user-display-name');
+      const avatarEl = document.getElementById('user-avatar-initial');
+      if (nameEl) nameEl.textContent = user.nombre.split(' ')[0];
+      if (avatarEl) avatarEl.textContent = user.nombre.charAt(0).toUpperCase();
     }
 
     document.getElementById('sidebar-toggle')?.addEventListener('click', function() {
       document.getElementById('sidebar')?.classList.toggle('open');
-    });
-
-    document.getElementById('btn-actualizar-mora')?.addEventListener('click', async function() {
-      const btn = this;
-      btn.disabled = true;
-      btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
-      try {
-        const data = await api.patch('/prestamos/actualizar-mora');
-        showToast('success', data.data?.message || 'Mora actualizada');
-      } catch { showToast('error', 'No se pudo actualizar la mora'); }
-      finally {
-        btn.disabled = false;
-        btn.innerHTML = '<i class="bi bi-arrow-clockwise"></i><span class="d-none d-md-inline">Actualizar Mora</span>';
-      }
     });
   });
 </script>

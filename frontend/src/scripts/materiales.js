@@ -1,157 +1,186 @@
-let currentPage = 1;
-let currentFilters = {};
-let editingId = null;
-let modal = null;
+var currentPage = 1;
+var currentFilters = {};
+var editingId = null;
 
-async function cargarMateriales(page = 1, filters = {}) {
-  currentPage = page;
-  currentFilters = filters;
+function openMatModal() {
+  document.getElementById('modalMaterialBackdrop').classList.remove('modal-hidden');
+}
+function closeMatModal() {
+  document.getElementById('modalMaterialBackdrop').classList.add('modal-hidden');
+}
+
+async function loadMatStats() {
   try {
-    const data = await api.get('/materiales', { page, limit: 15, ...filters });
-    const materiales = data.data;
-    const meta = data.meta;
-    const tbody = document.getElementById('tbody-materiales');
+    var data = await api.get('/reportes/dashboard');
+    var m = data.data.materiales;
+    document.getElementById('stat-total').textContent = m.total || '0';
+    document.getElementById('stat-disponibles').textContent = m.disponibles || '0';
+    document.getElementById('stat-prestados').textContent = (m.total - m.disponibles) || '0';
+    document.getElementById('stat-mora').textContent = '0';
+  } catch(e) {}
+}
 
-    if (!materiales.length) {
-      tbody.innerHTML = '<tr><td colspan="9" class="text-center py-5 text-muted"><i class="bi bi-book fs-3 d-block mb-2"></i>No se encontraron materiales</td></tr>';
+async function cargarMateriales(page, filters) {
+  if (!page) page = 1;
+  currentPage = page;
+  if (filters) currentFilters = filters;
+  try {
+    var data = await api.get('/materiales', { page: page, limit: 15, ...currentFilters });
+    var materiales = data.data;
+    var meta = data.meta;
+    var tbody = document.getElementById('tbody-materiales');
+
+    if (!materiales || !materiales.length) {
+      tbody.innerHTML = '<tr><td colspan="5" class="p-md text-center font-body-md text-outline">No se encontraron materiales</td></tr>';
+      updateMatPagination(meta);
       return;
     }
 
-    tbody.innerHTML = materiales.map((m, i) => `
-      <tr>
-        <td class="text-muted-sm">${(meta.page - 1) * meta.limit + i + 1}</td>
-        <td>
-          <div class="fw-semibold">${m.titulo}</div>
-          ${m.editorial ? `<div class="text-muted-sm">${m.editorial}</div>` : ''}
-        </td>
-        <td><span class="badge bg-light text-dark" style="font-size:11px;">${m.tipo}</span></td>
-        <td>${m.autor ? `${m.autor.apellido}, ${m.autor.nombre}` : '—'}</td>
-        <td>${m.categoria?.nombre || '—'}</td>
-        <td class="text-muted-sm">${m.isbn || '—'}</td>
-        <td><span class="fw-semibold">${m.stock}</span>${m.anioPubl ? `<div class="text-muted-sm">${m.anioPubl}</div>` : ''}</td>
-        <td>${estadoBadge(m.estado)}</td>
-        <td>
-          <div class="d-flex gap-1 justify-content-center">
-            <button class="btn btn-icon btn-sm btn-outline-primary" onclick="editarMaterial(${m.id})" title="Editar"><i class="bi bi-pencil"></i></button>
-            <button class="btn btn-icon btn-sm btn-outline-danger" onclick="eliminarMaterial(${m.id}, '${m.titulo.replace(/'/g, "\\'")}')" title="Eliminar"><i class="bi bi-trash"></i></button>
-          </div>
-        </td>
-      </tr>
-    `).join('');
+    tbody.innerHTML = materiales.map(function(m) {
+      var catBadge = m.categoria ? '<span class="px-3 py-1 rounded-full bg-surface-variant text-on-surface-variant text-label-sm uppercase">' + m.categoria.nombre + '</span>' : '—';
+      var estadoBadge = m.estado === 'DISPONIBLE'
+        ? '<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-label-sm font-semibold uppercase bg-tertiary-fixed text-on-tertiary-fixed-variant"><span class="w-1.5 h-1.5 rounded-full bg-tertiary-container"></span> DISPONIBLE</span>'
+        : '<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-label-sm font-semibold uppercase bg-secondary-fixed text-on-secondary-fixed-variant"><span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> PRESTADO</span>';
+      return '<tr class="border-b border-outline-variant hover:bg-surface-container transition-colors group">' +
+        '<td class="p-md font-mono text-xs text-on-surface-variant">' + (m.id || '—') + '</td>' +
+        '<td class="p-md"><span class="font-medium text-on-surface group-hover:text-primary transition-colors">' + m.titulo + '</span></td>' +
+        '<td class="p-md">' + catBadge + '</td>' +
+        '<td class="p-md">' + estadoBadge + '</td>' +
+        '<td class="p-md text-right"><div class="flex justify-end gap-2">' +
+        '<button class="p-2 hover:bg-primary-fixed hover:text-primary rounded-lg transition-colors border-0 bg-transparent cursor-pointer" onclick="editarMaterial(' + m.id + ')" title="Editar"><span class="material-symbols-outlined">edit</span></button>' +
+        '<button class="p-2 hover:bg-secondary-container hover:text-secondary rounded-lg transition-colors border-0 bg-transparent cursor-pointer" onclick="eliminarMaterial(' + m.id + ',\'' + m.titulo.replace(/'/g, '') + '\')" title="Eliminar"><span class="material-symbols-outlined">delete</span></button>' +
+        '</div></td></tr>';
+    }).join('');
 
-    document.getElementById('pag-mat-info').textContent = `${materiales.length} de ${meta.total} materiales`;
-    const btns = document.getElementById('pag-mat-btns');
-    btns.innerHTML = '';
-    for (let p = 1; p <= meta.totalPages; p++) {
-      const btn = document.createElement('button');
-      btn.className = `btn btn-sm ${p === meta.page ? 'btn-primary' : 'btn-outline-secondary'}`;
-      btn.textContent = p;
-      btn.onclick = () => cargarMateriales(p, currentFilters);
-      btns.appendChild(btn);
-    }
+    updateMatPagination(meta);
   } catch (err) {
-    document.getElementById('tbody-materiales').innerHTML = `<tr><td colspan="9" class="text-center py-4 text-danger">${err.message}</td></tr>`;
+    document.getElementById('tbody-materiales').innerHTML = '<tr><td colspan="5" class="p-md text-center font-body-md text-error">Error: ' + err.message + '</td></tr>';
   }
+}
+
+function updateMatPagination(meta) {
+  if (!meta) return;
+  document.getElementById('pag-mat-info').textContent = 'Mostrando ' + (meta.page || '1') + ' de ' + (meta.totalPages || '1') + ' páginas';
+  var btns = document.getElementById('pag-mat-btns');
+  btns.innerHTML = '';
+  for (var p = 1; p <= meta.totalPages && p <= 7; p++) {
+    (function(pageNum) {
+      var btn = document.createElement('button');
+      btn.className = 'w-8 h-8 rounded font-label-md transition-colors border-0 cursor-pointer ' + (pageNum === meta.page ? 'bg-primary text-on-primary' : 'hover:bg-surface-variant text-on-surface');
+      btn.textContent = pageNum;
+      btn.onclick = function() { cargarMateriales(pageNum); };
+      btns.appendChild(btn);
+    })(p);
+  }
+  if (meta.totalPages > 7) {
+    var ellipsis = document.createElement('span');
+    ellipsis.className = 'w-8 h-8 flex items-center justify-center';
+    ellipsis.textContent = '...';
+    btns.appendChild(ellipsis);
+    (function() {
+      var btn = document.createElement('button');
+      btn.className = 'w-8 h-8 rounded hover:bg-surface-variant font-label-md transition-colors border-0 cursor-pointer';
+      btn.textContent = meta.totalPages;
+      btn.onclick = function() { cargarMateriales(meta.totalPages); };
+      btns.appendChild(btn);
+    })();
+  }
+  document.getElementById('pag-prev').disabled = meta.page <= 1;
+  document.getElementById('pag-next').disabled = meta.page >= meta.totalPages;
+  document.getElementById('pag-prev').className = 'flex items-center gap-1 transition-colors border-0 bg-transparent cursor-pointer ' + (meta.page <= 1 ? 'text-outline opacity-40' : 'text-on-surface-variant hover:text-primary');
+  document.getElementById('pag-next').className = 'flex items-center gap-1 transition-colors border-0 bg-transparent cursor-pointer ' + (meta.page >= meta.totalPages ? 'text-outline opacity-40' : 'text-on-surface-variant hover:text-primary');
+  document.getElementById('pag-prev').onclick = function() { if (meta.page > 1) cargarMateriales(meta.page - 1); };
+  document.getElementById('pag-next').onclick = function() { if (meta.page < meta.totalPages) cargarMateriales(meta.page + 1); };
 }
 
 async function cargarSelectsMaterial() {
   try {
-    const [autData, catData] = await Promise.all([
-      api.get('/autores'),
-      api.get('/categorias'),
-    ]);
-    const selAutor = document.getElementById('mat-autor');
-    const selCat = document.getElementById('mat-categoria');
-    selAutor.innerHTML = '<option value="">Selecciona un autor...</option>';
-    selCat.innerHTML = '<option value="">Selecciona una categoría...</option>';
-    (autData.data || []).forEach(a => {
-      const opt = document.createElement('option');
+    var autData = await api.get('/autores');
+    var catData = await api.get('/categorias');
+    var selAutor = document.getElementById('mat-autor');
+    var selCat = document.getElementById('mat-categoria');
+    selAutor.innerHTML = '<option value="">Seleccionar autor...</option>';
+    selCat.innerHTML = '<option value="">Seleccionar...</option>';
+    (autData.data || []).forEach(function(a) {
+      var opt = document.createElement('option');
       opt.value = a.id;
-      opt.textContent = `${a.apellido}, ${a.nombre}`;
+      opt.textContent = a.apellido + ', ' + a.nombre;
       selAutor.appendChild(opt);
     });
-    (catData.data || []).forEach(c => {
-      const opt = document.createElement('option');
+    (catData.data || []).forEach(function(c) {
+      var opt = document.createElement('option');
       opt.value = c.id;
       opt.textContent = c.nombre;
       selCat.appendChild(opt);
     });
-  } catch (err) {
-    console.error('Error cargando selects:', err);
-  }
+  } catch (err) { console.error('Error cargando selects:', err); }
 }
 
-async function editarMaterial(id) {
+window.editarMaterial = async function(id) {
   try {
     showLoader();
     if (document.getElementById('mat-autor').options.length <= 1) await cargarSelectsMaterial();
-    const data = await api.get(`/materiales/${id}`);
-    const m = data.data;
+    var data = await api.get('/materiales/' + id);
+    var m = data.data;
     editingId = id;
     document.getElementById('material-id').value = m.id;
     document.getElementById('mat-titulo').value = m.titulo;
     document.getElementById('mat-tipo').value = m.tipo;
     document.getElementById('mat-isbn').value = m.isbn || '';
     document.getElementById('mat-anio').value = m.anioPubl || '';
-    document.getElementById('mat-autor').value = m.autorId;
-    document.getElementById('mat-categoria').value = m.categoriaId;
-    document.getElementById('mat-editorial').value = m.editorial || '';
-    document.getElementById('mat-stock').value = m.stock;
+    document.getElementById('mat-autor').value = m.autorId || '';
+    document.getElementById('mat-categoria').value = m.categoriaId || '';
+    document.getElementById('mat-stock').value = m.stock || 1;
     document.getElementById('mat-desc').value = m.descripcion || '';
-    document.getElementById('modal-title-material').innerHTML = '<i class="bi bi-pencil me-2"></i>Editar Material';
-    modal.show();
-  } catch (err) {
-    showToast('error', err.message);
-  } finally {
-    hideLoader();
-  }
-}
+    document.getElementById('modal-title-material').textContent = 'Editar Material';
+    openMatModal();
+  } catch (err) { showToast('error', err.message); }
+  finally { hideLoader(); }
+};
 
-async function eliminarMaterial(id, titulo) {
-  const result = await Swal.fire({
+window.eliminarMaterial = async function(id, titulo) {
+  var result = await Swal.fire({
     title: '¿Eliminar material?',
-    html: `Se eliminará <strong>${titulo}</strong>.`,
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#ef4444',
-    confirmButtonText: 'Sí, eliminar',
-    cancelButtonText: 'Cancelar',
+    html: 'Se eliminará <strong>' + titulo + '</strong>.',
+    icon: 'warning', showCancelButton: true,
+    confirmButtonColor: '#ba1a1a', confirmButtonText: 'Sí, eliminar', cancelButtonText: 'Cancelar',
   });
   if (!result.isConfirmed) return;
   try {
     showLoader();
-    await api.del(`/materiales/${id}`);
+    await api.del('/materiales/' + id);
     showToast('success', 'Material eliminado');
-    cargarMateriales(currentPage, currentFilters);
-  } catch (err) {
-    showToast('error', err.message);
-  } finally {
-    hideLoader();
-  }
-}
+    cargarMateriales(currentPage);
+  } catch (err) { showToast('error', err.message); }
+  finally { hideLoader(); }
+};
 
-document.addEventListener('DOMContentLoaded', function () {
-  modal = new bootstrap.Modal(document.getElementById('modalMaterial'));
+document.addEventListener('DOMContentLoaded', function() {
+  loadMatStats();
   cargarMateriales();
 
-  document.getElementById('btn-nuevo-material')?.addEventListener('click', async function () {
+  document.querySelectorAll('.modal-close-material').forEach(function(el) {
+    el.addEventListener('click', closeMatModal);
+  });
+
+  document.getElementById('btn-nuevo-material').addEventListener('click', async function() {
     editingId = null;
     document.getElementById('form-material').reset();
     document.getElementById('material-id').value = '';
-    document.getElementById('modal-title-material').innerHTML = '<i class="bi bi-book me-2"></i>Nuevo Material';
+    document.getElementById('modal-title-material').textContent = 'Registrar Nuevo Material';
     if (document.getElementById('mat-autor').options.length <= 1) await cargarSelectsMaterial();
-    modal.show();
+    openMatModal();
   });
 
-  document.getElementById('btn-guardar-material')?.addEventListener('click', async function () {
-    const body = {
+  document.getElementById('form-material').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    var body = {
       titulo: document.getElementById('mat-titulo').value.trim(),
       tipo: document.getElementById('mat-tipo').value,
       isbn: document.getElementById('mat-isbn').value.trim() || null,
       anioPubl: parseInt(document.getElementById('mat-anio').value) || null,
       autorId: parseInt(document.getElementById('mat-autor').value),
       categoriaId: parseInt(document.getElementById('mat-categoria').value),
-      editorial: document.getElementById('mat-editorial').value.trim() || null,
       stock: parseInt(document.getElementById('mat-stock').value) || 1,
       descripcion: document.getElementById('mat-desc').value.trim() || null,
     };
@@ -161,36 +190,27 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     try {
       showLoader();
-      const isEdit = !!editingId;
-      isEdit ? await api.put(`/materiales/${editingId}`, body) : await api.post('/materiales', body);
-      modal.hide();
-      showToast('success', isEdit ? 'Material actualizado' : 'Material registrado');
-      cargarMateriales(currentPage, currentFilters);
-    } catch (err) {
-      showToast('error', err.message);
-    } finally {
-      hideLoader();
-    }
+      if (editingId) {
+        await api.put('/materiales/' + editingId, body);
+        showToast('success', 'Material actualizado');
+      } else {
+        await api.post('/materiales', body);
+        showToast('success', 'Material registrado');
+      }
+      closeMatModal();
+      cargarMateriales(currentPage);
+    } catch (err) { showToast('error', err.message); }
+    finally { hideLoader(); }
   });
 
-  document.getElementById('btn-filtrar-mat')?.addEventListener('click', function () {
-    const filters = {};
-    const s = document.getElementById('filtro-search-mat').value.trim();
-    const t = document.getElementById('filtro-tipo-mat').value;
-    const e = document.getElementById('filtro-estado-mat').value;
-    if (s) filters.search = s;
-    if (t) filters.tipo = t;
-    if (e) filters.estado = e;
+  document.getElementById('btn-filtrar-mat').addEventListener('click', function() {
+    var filters = {};
+    var cat = document.getElementById('filtro-categoria-mat').value;
+    var tipo = document.getElementById('filtro-tipo-mat').value;
+    var estado = document.getElementById('filtro-estado-mat').value;
+    if (cat) filters.categoriaId = cat;
+    if (tipo) filters.tipo = tipo;
+    if (estado) filters.estado = estado;
     cargarMateriales(1, filters);
   });
-
-  document.getElementById('btn-limpiar-mat')?.addEventListener('click', function () {
-    document.getElementById('filtro-search-mat').value = '';
-    document.getElementById('filtro-tipo-mat').value = '';
-    document.getElementById('filtro-estado-mat').value = '';
-    cargarMateriales(1, {});
-  });
 });
-
-window.editarMaterial = editarMaterial;
-window.eliminarMaterial = eliminarMaterial;

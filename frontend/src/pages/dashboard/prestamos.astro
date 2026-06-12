@@ -1,121 +1,134 @@
 ---
 import DashboardLayout from '../../layouts/DashboardLayout.astro';
 ---
-<DashboardLayout pageTitle="Gestión de Préstamos" breadcrumb="Préstamos">
-
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <div>
-      <h5 class="mb-1">Préstamos</h5>
-      <p class="text-muted mb-0" style="font-size:13px;">Registra y gestiona los préstamos de materiales</p>
-    </div>
-    <button class="btn btn-primary" id="btn-nuevo-prestamo">
-      <i class="bi bi-plus-circle me-2"></i>Nuevo Préstamo
-    </button>
-  </div>
-
-  <!-- Filtros -->
-  <div class="card mb-4">
-    <div class="card-body py-3">
-      <div class="row g-3 align-items-end">
-        <div class="col-md-4">
-          <label class="form-label">Estado</label>
-          <select class="form-select" id="filtro-estado-prestamo">
-            <option value="">Todos</option>
-            <option value="ACTIVO">Activo</option>
-            <option value="MORA">En Mora</option>
-            <option value="DEVUELTO">Devuelto</option>
-          </select>
+<DashboardLayout pageTitle="Módulo de Préstamos">
+  <!-- KPI Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter mb-lg" id="kpi-prestamos">
+    <div class="bg-white p-6 rounded-xl border border-outline-variant shadow-sm relative overflow-hidden group">
+      <div class="absolute -right-4 -top-4 w-24 h-24 bg-primary/5 rounded-full transition-transform group-hover:scale-125"></div>
+      <div class="flex items-center justify-between mb-4">
+        <div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+          <span class="material-symbols-outlined text-[28px]">auto_stories</span>
         </div>
-        <div class="col-md-3">
-          <button class="btn btn-outline-primary w-100" id="btn-filtrar-prestamo">
-            <i class="bi bi-search me-1"></i>Filtrar
-          </button>
-        </div>
+        <span class="text-label-sm font-bold text-tertiary px-2 py-1 bg-tertiary-fixed/20 rounded">+12% vs mes ant.</span>
       </div>
+      <h3 class="text-secondary font-label-md text-label-md uppercase tracking-wider mb-1">Préstamos Activos</h3>
+      <p class="font-display text-[32px] text-on-surface font-bold" id="kpi-activos">—</p>
     </div>
-  </div>
-
-  <!-- Tabla -->
-  <div class="card">
-    <div class="card-body p-0">
-      <div class="table-responsive">
-        <table class="table table-hover mb-0">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Socio</th>
-              <th>Material</th>
-              <th>Préstamo</th>
-              <th>Vencimiento</th>
-              <th>Estado</th>
-              <th class="text-center">Acciones</th>
-            </tr>
-          </thead>
-          <tbody id="tbody-prestamos-full">
-            <tr>
-              <td colspan="7" class="text-center py-5">
-                <div class="spinner-border text-primary spinner-border-sm me-2"></div>
-                Cargando préstamos...
-              </td>
-            </tr>
-          </tbody>
-        </table>
+    <div class="bg-white p-6 rounded-xl border border-outline-variant shadow-sm relative overflow-hidden group">
+      <div class="absolute -right-4 -top-4 w-24 h-24 bg-error/5 rounded-full transition-transform group-hover:scale-125"></div>
+      <div class="flex items-center justify-between mb-4">
+        <div class="w-12 h-12 rounded-lg bg-error-container flex items-center justify-center text-error">
+          <span class="material-symbols-outlined text-[28px]">event_busy</span>
+        </div>
+        <span class="text-label-sm font-bold text-error px-2 py-1 bg-error-container/50 rounded">Urgente</span>
       </div>
+      <h3 class="text-secondary font-label-md text-label-md uppercase tracking-wider mb-1">Préstamos Vencidos</h3>
+      <p class="font-display text-[32px] text-error font-bold" id="kpi-vencidos">—</p>
+    </div>
+    <div class="bg-white p-6 rounded-xl border border-outline-variant shadow-sm relative overflow-hidden group">
+      <div class="absolute -right-4 -top-4 w-24 h-24 bg-orange-100 rounded-full transition-transform group-hover:scale-125"></div>
+      <div class="flex items-center justify-between mb-4">
+        <div class="w-12 h-12 rounded-lg bg-orange-100 flex items-center justify-center text-orange-600">
+          <span class="material-symbols-outlined text-[28px]">warning</span>
+        </div>
+        <span class="text-label-sm font-bold text-orange-700 px-2 py-1 bg-orange-100 rounded">Pendientes</span>
+      </div>
+      <h3 class="text-secondary font-label-md text-label-md uppercase tracking-wider mb-1">En Mora</h3>
+      <p class="font-display text-[32px] text-orange-600 font-bold" id="kpi-mora">—</p>
     </div>
   </div>
 
-  <!-- Paginación -->
-  <div class="d-flex justify-content-between align-items-center mt-3" id="pag-prestamos">
-    <div id="pag-prestamos-info" style="font-size:13px; color:var(--color-text-muted);"></div>
-    <div id="pag-prestamos-btns" class="d-flex gap-2"></div>
-  </div>
-</DashboardLayout>
-
-<!-- Modal Préstamo -->
-<div class="modal fade" id="modalPrestamo" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title fw-semibold">
-          <i class="bi bi-plus-circle me-2"></i>Registrar Préstamo
-        </h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+  <!-- Table Section -->
+  <section class="bg-white rounded-xl border border-outline-variant shadow-sm">
+    <div class="px-6 py-5 border-b border-outline-variant flex flex-col md:flex-row justify-between items-center gap-4">
+      <div>
+        <h3 class="font-headline-sm text-headline-sm text-on-surface">Gestión Detallada</h3>
+        <p class="text-on-surface-variant font-body-md text-body-md">Listado de todos los préstamos en circulación</p>
       </div>
-      <div class="modal-body">
-        <div class="alert alert-info d-flex gap-2" style="font-size:13px;">
-          <i class="bi bi-info-circle-fill flex-shrink-0 mt-1"></i>
-          <div>
-            Un socio puede tener máximo <strong>3 préstamos activos</strong>.
-            El plazo de devolución es de <strong>30 días</strong>.
-          </div>
-        </div>
-        <form id="form-prestamo" novalidate>
-          <div class="mb-3">
-            <label class="form-label">Socio <span class="text-danger">*</span></label>
-            <select class="form-select" id="prestamo-socio" required>
-              <option value="">Selecciona un socio...</option>
-            </select>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Material <span class="text-danger">*</span></label>
-            <select class="form-select" id="prestamo-material" required>
-              <option value="">Selecciona un material disponible...</option>
-            </select>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Observaciones</label>
-            <textarea class="form-control" id="prestamo-obs" rows="2" placeholder="Notas adicionales..."></textarea>
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="button" class="btn btn-primary" id="btn-guardar-prestamo">
-          <i class="bi bi-check-circle me-2"></i>Registrar Préstamo
+      <div class="flex gap-3 flex-wrap justify-end">
+        <select id="filtro-estado-prestamo" class="bg-surface-container-low border-outline-variant rounded-lg text-label-md px-sm py-1 focus:ring-primary focus:border-primary">
+          <option value="">Todos los estados</option>
+          <option value="ACTIVO">Activo</option>
+          <option value="MORA">En Mora</option>
+          <option value="DEVUELTO">Devuelto</option>
+        </select>
+        <button id="btn-filtrar-prestamo" class="flex items-center gap-2 px-4 py-1.5 border border-outline-variant rounded-lg font-label-md text-label-md hover:bg-surface-container-low transition-colors">
+          <span class="material-symbols-outlined text-[18px]">filter_list</span> Filtrar
+        </button>
+        <button id="btn-actualizar-mora" class="flex items-center gap-2 px-4 py-1.5 bg-error-container text-error rounded-lg font-label-md text-label-md shadow-sm hover:shadow transition-all active:scale-95">
+          <span class="material-symbols-outlined text-[18px]">sync</span> Actualizar Mora
+        </button>
+        <button id="btn-nuevo-prestamo" class="flex items-center gap-2 px-4 py-1.5 bg-primary text-on-primary rounded-lg font-label-md text-label-md shadow-sm hover:shadow transition-all active:scale-95">
+          <span class="material-symbols-outlined text-[18px]">add</span> Nuevo Préstamo
         </button>
       </div>
     </div>
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse min-w-[700px]">
+        <thead class="bg-surface-container-low">
+          <tr>
+            <th class="px-6 py-4 font-label-md text-label-md text-secondary uppercase">Socio</th>
+            <th class="px-6 py-4 font-label-md text-label-md text-secondary uppercase">Material</th>
+            <th class="px-6 py-4 font-label-md text-label-md text-secondary uppercase text-center">Fecha Préstamo</th>
+            <th class="px-6 py-4 font-label-md text-label-md text-secondary uppercase text-center">Fecha Límite</th>
+            <th class="px-6 py-4 font-label-md text-label-md text-secondary uppercase text-center">Estado</th>
+            <th class="px-6 py-4 font-label-md text-label-md text-secondary uppercase text-right">Acciones</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-outline-variant" id="tbody-prestamos-full">
+          <tr>
+            <td colspan="6" class="px-6 py-8 text-center font-body-md text-outline">
+              <span class="material-symbols-outlined animate-spin inline-block">sync</span> Cargando préstamos...
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="px-6 py-4 bg-surface-container-low border-t border-outline-variant flex items-center justify-between" id="pag-prestamos">
+      <p class="font-label-md text-label-md text-secondary" id="pag-prestamos-info">Cargando...</p>
+      <div class="flex gap-2" id="pag-prestamos-btns"></div>
+    </div>
+  </section>
+
+  <!-- Modal Préstamo -->
+  <div class="modal-backdrop modal-hidden" id="modalPrestamoBackdrop">
+    <div class="bg-surface-container-lowest w-full max-w-lg rounded-xl shadow-2xl overflow-hidden border border-outline-variant">
+      <div class="px-xl py-lg bg-primary-container text-on-primary flex justify-between items-center">
+        <div>
+          <h2 class="font-headline-md text-headline-md">Registrar Préstamo</h2>
+          <p class="font-body-md opacity-90">Seleccionar socio y material disponible</p>
+        </div>
+        <button class="material-symbols-outlined hover:bg-white/10 p-2 rounded-full transition-colors border-0 bg-transparent text-on-primary cursor-pointer modal-close-prestamo">close</button>
+      </div>
+      <form id="form-prestamo" class="p-xl space-y-lg">
+        <div class="p-md bg-secondary-fixed rounded-lg font-body-md text-on-secondary-fixed-variant flex gap-2">
+          <span class="material-symbols-outlined text-[18px]">info</span>
+          <div>Un socio puede tener máximo <strong>3 préstamos activos</strong>. El plazo de devolución es de <strong>30 días</strong>.</div>
+        </div>
+        <div>
+          <label class="block font-label-md text-label-md text-on-surface-variant mb-xs">Socio <span class="text-error">*</span></label>
+          <select id="prestamo-socio" class="w-full p-md border border-outline-variant rounded-lg bg-white focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-md outline-none appearance-none" required>
+            <option value="">Selecciona un socio...</option>
+          </select>
+        </div>
+        <div>
+          <label class="block font-label-md text-label-md text-on-surface-variant mb-xs">Material <span class="text-error">*</span></label>
+          <select id="prestamo-material" class="w-full p-md border border-outline-variant rounded-lg bg-white focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-md outline-none appearance-none" required>
+            <option value="">Selecciona un material disponible...</option>
+          </select>
+        </div>
+        <div>
+          <label class="block font-label-md text-label-md text-on-surface-variant mb-xs">Observaciones</label>
+          <textarea id="prestamo-obs" class="w-full p-md border border-outline-variant rounded-lg bg-white focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-md outline-none resize-none" placeholder="Notas adicionales..." rows="2"></textarea>
+        </div>
+        <div class="flex justify-end gap-md pt-lg border-t border-outline-variant">
+          <button type="button" class="px-lg py-sm border border-secondary text-secondary rounded-lg font-title-lg hover:bg-secondary-container/10 transition-all modal-close-prestamo">Cancelar</button>
+          <button type="submit" class="px-2xl py-sm bg-primary text-on-primary rounded-lg font-title-lg hover:shadow-lg active:scale-95 transition-all shadow-md">Registrar Préstamo</button>
+        </div>
+      </form>
+    </div>
   </div>
-</div>
+</DashboardLayout>
 
 <script src="../../scripts/prestamos.js"></script>

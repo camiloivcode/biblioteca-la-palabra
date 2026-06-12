@@ -1,167 +1,83 @@
 ---
 import DashboardLayout from '../../layouts/DashboardLayout.astro';
 ---
-<DashboardLayout pageTitle="Gestión de Usuarios" breadcrumb="Usuarios">
-
-  <div class="d-flex justify-content-between align-items-center mb-4">
+<DashboardLayout pageTitle="Gestión de Usuarios">
+  <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-lg">
     <div>
-      <h5 class="mb-1">Usuarios del Sistema</h5>
-      <p class="text-muted mb-0" style="font-size:13px;">Solo administradores pueden gestionar usuarios</p>
+      <p class="text-on-surface-variant font-body-md text-body-md">Solo administradores pueden gestionar usuarios</p>
     </div>
-    <button class="btn btn-primary" id="btn-nuevo-user">
-      <i class="bi bi-person-plus me-2"></i>Nuevo Usuario
+    <button id="btn-nuevo-user" class="flex items-center gap-2 px-4 py-1.5 bg-primary text-on-primary rounded-lg font-label-md text-label-md shadow-sm hover:shadow transition-all active:scale-95">
+      <span class="material-symbols-outlined text-[18px]">person_add</span> Nuevo Usuario
     </button>
   </div>
 
-  <div class="card">
-    <div class="card-body p-0">
-      <table class="table table-hover mb-0">
-        <thead>
+  <!-- Table -->
+  <section class="bg-white rounded-xl border border-outline-variant shadow-sm overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse">
+        <thead class="bg-surface-container-low">
           <tr>
-            <th>#</th><th>Nombre</th><th>Email</th><th>Rol</th>
-            <th>Estado</th><th>Registrado</th><th class="text-center">Acciones</th>
+            <th class="px-6 py-4 font-label-md text-label-md text-secondary uppercase">#</th>
+            <th class="px-6 py-4 font-label-md text-label-md text-secondary uppercase">Nombre</th>
+            <th class="px-6 py-4 font-label-md text-label-md text-secondary uppercase">Email</th>
+            <th class="px-6 py-4 font-label-md text-label-md text-secondary uppercase">Rol</th>
+            <th class="px-6 py-4 font-label-md text-label-md text-secondary uppercase text-center">Estado</th>
+            <th class="px-6 py-4 font-label-md text-label-md text-secondary uppercase text-center">Registrado</th>
+            <th class="px-6 py-4 font-label-md text-label-md text-secondary uppercase text-right">Acciones</th>
           </tr>
         </thead>
-        <tbody id="tbody-users">
-          <tr><td colspan="7" class="text-center py-5"><div class="spinner-border text-primary spinner-border-sm"></div></td></tr>
+        <tbody class="divide-y divide-outline-variant" id="tbody-users">
+          <tr>
+            <td colspan="7" class="px-6 py-8 text-center font-body-md text-outline">
+              <span class="material-symbols-outlined animate-spin inline-block">sync</span> Cargando usuarios...
+            </td>
+          </tr>
         </tbody>
       </table>
+    </div>
+  </section>
+
+  <!-- Modal Usuario -->
+  <div class="modal-backdrop modal-hidden" id="modalUserBackdrop">
+    <div class="bg-surface-container-lowest w-full max-w-md rounded-xl shadow-2xl overflow-hidden border border-outline-variant">
+      <div class="px-xl py-lg bg-primary-container text-on-primary flex justify-between items-center">
+        <div>
+          <h2 class="font-headline-md text-headline-md" id="modal-title-user">Nuevo Usuario</h2>
+          <p class="font-body-md opacity-90">Crea una cuenta para el personal</p>
+        </div>
+        <button class="material-symbols-outlined hover:bg-white/10 p-2 rounded-full transition-colors border-0 bg-transparent text-on-primary cursor-pointer modal-close-user">close</button>
+      </div>
+      <form id="form-user" class="p-xl space-y-lg">
+        <input type="hidden" id="user-id" />
+        <div>
+          <label class="block font-label-md text-label-md text-on-surface-variant mb-xs">Nombre <span class="text-error">*</span></label>
+          <input type="text" id="user-nombre" class="w-full p-md border border-outline-variant rounded-lg bg-white focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-md outline-none" required />
+        </div>
+        <div>
+          <label class="block font-label-md text-label-md text-on-surface-variant mb-xs">Email <span class="text-error">*</span></label>
+          <input type="email" id="user-email" class="w-full p-md border border-outline-variant rounded-lg bg-white focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-md outline-none" required />
+        </div>
+        <div>
+          <label class="block font-label-md text-label-md text-on-surface-variant mb-xs">
+            Contraseña <span class="text-error" id="pass-required">*</span>
+          </label>
+          <input type="password" id="user-password" class="w-full p-md border border-outline-variant rounded-lg bg-white focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-md outline-none" placeholder="Mín. 8 caracteres, 1 mayúscula, 1 número" />
+          <p class="font-label-md text-xs text-on-surface-variant mt-1" id="pass-hint" style="display:none;">Déjala en blanco para no cambiarla</p>
+        </div>
+        <div>
+          <label class="block font-label-md text-label-md text-on-surface-variant mb-xs">Rol <span class="text-error">*</span></label>
+          <select id="user-role" class="w-full p-md border border-outline-variant rounded-lg bg-white focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-md outline-none appearance-none">
+            <option value="BIBLIOTECARIO">Bibliotecario</option>
+            <option value="ADMIN">Administrador</option>
+          </select>
+        </div>
+        <div class="flex justify-end gap-md pt-lg border-t border-outline-variant">
+          <button type="button" class="px-lg py-sm border border-secondary text-secondary rounded-lg font-title-lg hover:bg-secondary-container/10 transition-all modal-close-user">Cancelar</button>
+          <button type="submit" class="px-2xl py-sm bg-primary text-on-primary rounded-lg font-title-lg hover:shadow-lg active:scale-95 transition-all shadow-md">Guardar</button>
+        </div>
+      </form>
     </div>
   </div>
 </DashboardLayout>
 
-<!-- Modal Usuario -->
-<div class="modal fade" id="modalUser" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title fw-semibold" id="modal-title-user">Nuevo Usuario</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <input type="hidden" id="user-id" />
-        <div class="row g-3">
-          <div class="col-12">
-            <label class="form-label">Nombre <span class="text-danger">*</span></label>
-            <input type="text" class="form-control" id="user-nombre" required />
-          </div>
-          <div class="col-12">
-            <label class="form-label">Email <span class="text-danger">*</span></label>
-            <input type="email" class="form-control" id="user-email" required />
-          </div>
-          <div class="col-12">
-            <label class="form-label">Contraseña <span class="text-danger" id="pass-required">*</span></label>
-            <input type="password" class="form-control" id="user-password" placeholder="Mín. 8 caracteres, 1 mayúscula, 1 número" />
-            <div class="form-text" id="pass-hint">Déjala en blanco para no cambiarla</div>
-          </div>
-          <div class="col-12">
-            <label class="form-label">Rol <span class="text-danger">*</span></label>
-            <select class="form-select" id="user-role">
-              <option value="BIBLIOTECARIO">Bibliotecario</option>
-              <option value="ADMIN">Administrador</option>
-            </select>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="button" class="btn btn-primary" id="btn-guardar-user">
-          <i class="bi bi-check-circle me-2"></i>Guardar
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script is:inline>
-let editingUserId = null;
-let modalUser;
-
-async function cargarUsuarios() {
-  try {
-    const data = await api.get('/users');
-    const tbody = document.getElementById('tbody-users');
-    tbody.innerHTML = data.data.map((u, i) => `
-      <tr>
-        <td class="text-muted-sm">${i + 1}</td>
-        <td><div class="d-flex align-items-center gap-2"><div class="user-avatar" style="width:30px;height:30px;font-size:11px;background:${u.role === 'ADMIN' ? 'var(--color-accent)' : 'var(--color-primary)'};">${u.nombre.charAt(0)}</div><span class="fw-semibold">${u.nombre}</span></div></td>
-        <td>${u.email}</td>
-        <td><span class="badge ${u.role === 'ADMIN' ? 'bg-warning text-dark' : 'bg-primary bg-opacity-10 text-primary'} fw-semibold">${u.role}</span></td>
-        <td>${estadoBadge(u.activo ? 'ACTIVO' : 'SUSPENDIDO')}</td>
-        <td class="text-muted-sm">${formatDate(u.createdAt)}</td>
-        <td><div class="d-flex gap-1 justify-content-center">
-          <button class="btn btn-icon btn-sm btn-outline-primary" onclick="editarUser(${u.id})" title="Editar"><i class="bi bi-pencil"></i></button>
-          <button class="btn btn-icon btn-sm btn-outline-${u.activo ? 'warning' : 'success'}" onclick="toggleUser(${u.id})" title="${u.activo ? 'Desactivar' : 'Activar'}"><i class="bi bi-${u.activo ? 'person-dash' : 'person-check'}"></i></button>
-        </div></td>
-      </tr>
-    `).join('');
-  } catch (err) {
-    document.getElementById('tbody-users').innerHTML = '<tr><td colspan="7" class="text-center py-4 text-danger"><i class="bi bi-exclamation-triangle me-2"></i>No tienes permisos o error al cargar</td></tr>';
-  }
-}
-
-async function editarUser(id) {
-  showLoader();
-  try {
-    const res = await fetch(`${window.API_URL}/users/${id}`, { headers: getHeaders() });
-    const d = await res.json();
-    if (!d.success) throw new Error(d.message);
-    editingUserId = id;
-    const u = d.data;
-    document.getElementById('user-id').value = u.id;
-    document.getElementById('user-nombre').value = u.nombre;
-    document.getElementById('user-email').value = u.email;
-    document.getElementById('user-password').value = '';
-    document.getElementById('user-role').value = u.role;
-    document.getElementById('modal-title-user').textContent = 'Editar Usuario';
-    document.getElementById('pass-required').style.display = 'none';
-    document.getElementById('pass-hint').style.display = 'block';
-    modalUser.show();
-  } catch (err) { showToast('error', err.message); }
-  finally { hideLoader(); }
-}
-
-async function toggleUser(id) {
-  showLoader();
-  try {
-    const data = await api.patch(`/users/${id}/toggle`);
-    showToast('success', data.message);
-    cargarUsuarios();
-  } catch (err) { showToast('error', err.message); }
-  finally { hideLoader(); }
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
-  if (user.role !== 'ADMIN') { window.location.href = '/dashboard'; return; }
-  modalUser = new bootstrap.Modal(document.getElementById('modalUser'));
-  cargarUsuarios();
-  document.getElementById('btn-nuevo-user')?.addEventListener('click', function() {
-    editingUserId = null;
-    ['user-id','user-nombre','user-email','user-password'].forEach(id => document.getElementById(id).value = '');
-    document.getElementById('user-role').value = 'BIBLIOTECARIO';
-    document.getElementById('modal-title-user').textContent = 'Nuevo Usuario';
-    document.getElementById('pass-required').style.display = 'inline';
-    document.getElementById('pass-hint').style.display = 'none';
-    modalUser.show();
-  });
-  document.getElementById('btn-guardar-user')?.addEventListener('click', async function() {
-    const isEdit = !!editingUserId;
-    const body = { nombre: document.getElementById('user-nombre').value.trim(), email: document.getElementById('user-email').value.trim(), role: document.getElementById('user-role').value };
-    const password = document.getElementById('user-password').value;
-    if (password) body.password = password;
-    if (!body.nombre || !body.email) return Swal.fire({ icon: 'warning', title: 'Campos requeridos', text: 'Nombre y email son obligatorios.' });
-    if (!isEdit && !password) return Swal.fire({ icon: 'warning', title: 'Contraseña requerida', text: 'Ingresa una contraseña para el nuevo usuario.' });
-    showLoader();
-    try {
-      isEdit ? await api.put(`/users/${editingUserId}`, body) : await api.post('/users', body);
-      modalUser.hide();
-      showToast('success', isEdit ? 'Usuario actualizado' : 'Usuario creado');
-      cargarUsuarios();
-    } catch (err) { showToast('error', err.message); }
-    finally { hideLoader(); }
-  });
-});
-window.editarUser = editarUser;
-window.toggleUser = toggleUser;
-</script>
+<script src="../../scripts/usuarios.js"></script>

@@ -1,164 +1,215 @@
 ---
 import DashboardLayout from '../../layouts/DashboardLayout.astro';
 ---
-<DashboardLayout pageTitle="Gestión de Materiales" breadcrumb="Materiales">
-
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <div>
-      <h5 class="mb-1">Catálogo de Materiales</h5>
-      <p class="text-muted mb-0" style="font-size:13px;">Libros, revistas, DVDs y más</p>
+<DashboardLayout pageTitle="Materiales">
+  <div class="max-w-max-width mx-auto">
+    <!-- Page Header -->
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-xl">
+      <div>
+        <h2 class="font-headline-lg text-headline-lg text-on-surface">Gestión de Materiales</h2>
+        <p class="text-on-surface-variant mt-1">Administra el catálogo de libros, revistas y otros recursos de la biblioteca.</p>
+      </div>
+      <button id="btn-nuevo-material" class="flex items-center gap-2 bg-primary text-on-primary px-6 py-3 rounded-lg font-title-lg text-title-lg shadow-md hover:bg-primary-container transition-all active:scale-95">
+        <span class="material-symbols-outlined">add</span>
+        Nuevo Material
+      </button>
     </div>
-    <button class="btn btn-primary" id="btn-nuevo-material">
-      <i class="bi bi-plus-circle me-2"></i>Nuevo Material
-    </button>
-  </div>
 
-  <!-- Filtros -->
-  <div class="card mb-4">
-    <div class="card-body py-3">
-      <div class="row g-3 align-items-end">
-        <div class="col-md-4">
-          <label class="form-label">Buscar</label>
-          <input type="text" class="form-control" id="filtro-search-mat" placeholder="Título, ISBN, editorial..." />
+    <!-- Stats Summary -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-gutter mb-xl" id="stats-materiales">
+      <div class="bg-surface border border-outline-variant rounded-xl p-md shadow-sm">
+        <div class="flex items-center gap-md">
+          <div class="bg-primary-fixed p-3 rounded-lg"><span class="material-symbols-outlined text-primary">auto_stories</span></div>
+          <div><p class="text-label-sm text-on-surface-variant uppercase">Total Libros</p><p class="font-headline-sm text-headline-sm" id="stat-total">—</p></div>
         </div>
-        <div class="col-md-2">
-          <label class="form-label">Tipo</label>
-          <select class="form-select" id="filtro-tipo-mat">
-            <option value="">Todos</option>
+      </div>
+      <div class="bg-surface border border-outline-variant rounded-xl p-md shadow-sm">
+        <div class="flex items-center gap-md">
+          <div class="bg-tertiary-fixed-dim p-3 rounded-lg text-on-tertiary-fixed-variant"><span class="material-symbols-outlined">check_circle</span></div>
+          <div><p class="text-label-sm text-on-surface-variant uppercase">Disponibles</p><p class="font-headline-sm text-headline-sm" id="stat-disponibles">—</p></div>
+        </div>
+      </div>
+      <div class="bg-secondary-fixed rounded-xl p-md shadow-sm">
+        <div class="flex items-center gap-md">
+          <div class="bg-secondary-container p-3 rounded-lg text-on-secondary-container"><span class="material-symbols-outlined">sync_alt</span></div>
+          <div><p class="text-label-sm text-on-surface-variant uppercase">Prestados</p><p class="font-headline-sm text-headline-sm" id="stat-prestados">—</p></div>
+        </div>
+      </div>
+      <div class="bg-surface border border-outline-variant rounded-xl p-md shadow-sm">
+        <div class="flex items-center gap-md">
+          <div class="bg-error-container p-3 rounded-lg text-on-error-container"><span class="material-symbols-outlined">warning</span></div>
+          <div><p class="text-label-sm text-on-surface-variant uppercase">En Mora</p><p class="font-headline-sm text-headline-sm" id="stat-mora">—</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Table Section -->
+    <div class="bg-surface border border-outline-variant rounded-xl shadow-sm">
+      <div class="p-md border-b border-outline-variant flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+        <div class="flex flex-wrap gap-md">
+          <select id="filtro-categoria-mat" class="bg-surface-container-low border-outline-variant rounded-lg text-label-md px-sm py-1 focus:ring-primary focus:border-primary">
+            <option value="">Todas las Categorías</option>
+          </select>
+          <select id="filtro-tipo-mat" class="bg-surface-container-low border-outline-variant rounded-lg text-label-md px-sm py-1 focus:ring-primary focus:border-primary">
+            <option value="">Tipo: Todos</option>
             <option value="LIBRO">Libro</option>
             <option value="REVISTA">Revista</option>
             <option value="DVD">DVD</option>
             <option value="PERIODICO">Periódico</option>
             <option value="OTRO">Otro</option>
           </select>
-        </div>
-        <div class="col-md-2">
-          <label class="form-label">Estado</label>
-          <select class="form-select" id="filtro-estado-mat">
-            <option value="">Todos</option>
+          <select id="filtro-estado-mat" class="bg-surface-container-low border-outline-variant rounded-lg text-label-md px-sm py-1 focus:ring-primary focus:border-primary">
+            <option value="">Estado: Todos</option>
             <option value="DISPONIBLE">Disponible</option>
             <option value="PRESTADO">Prestado</option>
           </select>
         </div>
-        <div class="col-md-2">
-          <button class="btn btn-outline-primary w-100" id="btn-filtrar-mat">
-            <i class="bi bi-search me-1"></i>Filtrar
-          </button>
-        </div>
-        <div class="col-md-2">
-          <button class="btn btn-outline-secondary w-100" id="btn-limpiar-mat">Limpiar</button>
+        <div class="flex gap-2 items-center">
+          <button id="btn-filtrar-mat" class="bg-surface-container-low px-3 py-1 rounded-lg text-label-md hover:bg-surface-container-high transition-colors">Filtrar</button>
+          <p class="text-label-md text-on-surface-variant" id="pag-mat-info"></p>
         </div>
       </div>
-    </div>
-  </div>
-
-  <!-- Tabla -->
-  <div class="card">
-    <div class="card-body p-0">
-      <div class="table-responsive">
-        <table class="table table-hover mb-0">
-          <thead>
+      <div class="overflow-x-auto">
+        <table class="w-full border-collapse min-w-[600px]">
+          <thead class="bg-surface-container-low text-on-surface-variant">
             <tr>
-              <th>#</th>
-              <th>Título</th>
-              <th>Tipo</th>
-              <th>Autor</th>
-              <th>Categoría</th>
-              <th>ISBN</th>
-              <th>Stock</th>
-              <th>Estado</th>
-              <th class="text-center">Acciones</th>
+              <th class="text-left py-4 px-md font-label-md text-label-md uppercase tracking-wider">Código (ID)</th>
+              <th class="text-left py-4 px-md font-label-md text-label-md uppercase tracking-wider">Título</th>
+              <th class="text-left py-4 px-md font-label-md text-label-md uppercase tracking-wider">Categoría</th>
+              <th class="text-left py-4 px-md font-label-md text-label-md uppercase tracking-wider">Estado</th>
+              <th class="text-right py-4 px-md font-label-md text-label-md uppercase tracking-wider">Acciones</th>
             </tr>
           </thead>
           <tbody id="tbody-materiales">
-            <tr>
-              <td colspan="9" class="text-center py-5">
-                <div class="spinner-border text-primary spinner-border-sm me-2"></div>
-                Cargando materiales...
-              </td>
+            <tr class="border-b border-outline-variant">
+              <td class="p-md"><div class="h-4 w-16 skeleton rounded"></div></td>
+              <td class="p-md"><div class="h-4 w-48 skeleton rounded"></div></td>
+              <td class="p-md"><div class="h-6 w-24 skeleton rounded-full"></div></td>
+              <td class="p-md"><div class="h-6 w-20 skeleton rounded-full"></div></td>
+              <td class="p-md"><div class="flex justify-end gap-md"><div class="h-8 w-8 skeleton rounded"></div><div class="h-8 w-8 skeleton rounded"></div></div></td>
+            </tr>
+            <tr class="border-b border-outline-variant">
+              <td class="p-md"><div class="h-4 w-16 skeleton rounded"></div></td>
+              <td class="p-md"><div class="h-4 w-56 skeleton rounded"></div></td>
+              <td class="p-md"><div class="h-6 w-24 skeleton rounded-full"></div></td>
+              <td class="p-md"><div class="h-6 w-20 skeleton rounded-full"></div></td>
+              <td class="p-md"><div class="flex justify-end gap-md"><div class="h-8 w-8 skeleton rounded"></div><div class="h-8 w-8 skeleton rounded"></div></div></td>
+            </tr>
+            <tr class="border-b border-outline-variant">
+              <td class="p-md"><div class="h-4 w-16 skeleton rounded"></div></td>
+              <td class="p-md"><div class="h-4 w-40 skeleton rounded"></div></td>
+              <td class="p-md"><div class="h-6 w-24 skeleton rounded-full"></div></td>
+              <td class="p-md"><div class="h-6 w-20 skeleton rounded-full"></div></td>
+              <td class="p-md"><div class="flex justify-end gap-md"><div class="h-8 w-8 skeleton rounded"></div><div class="h-8 w-8 skeleton rounded"></div></div></td>
             </tr>
           </tbody>
         </table>
       </div>
-    </div>
-  </div>
-  <div class="d-flex justify-content-between mt-3" id="pag-materiales">
-    <div id="pag-mat-info" style="font-size:13px;color:var(--color-text-muted);"></div>
-    <div id="pag-mat-btns" class="d-flex gap-2"></div>
-  </div>
-</DashboardLayout>
-
-<!-- Modal Material -->
-<div class="modal fade" id="modalMaterial" tabindex="-1">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title fw-semibold" id="modal-title-material">
-          <i class="bi bi-book me-2"></i>Nuevo Material
-        </h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <form id="form-material" novalidate>
-          <input type="hidden" id="material-id" />
-          <div class="row g-3">
-            <div class="col-12">
-              <label class="form-label">Título <span class="text-danger">*</span></label>
-              <input type="text" class="form-control" id="mat-titulo" placeholder="Título del material" required />
-            </div>
-            <div class="col-md-4">
-              <label class="form-label">Tipo <span class="text-danger">*</span></label>
-              <select class="form-select" id="mat-tipo" required>
-                <option value="LIBRO">Libro</option>
-                <option value="REVISTA">Revista</option>
-                <option value="DVD">DVD</option>
-                <option value="PERIODICO">Periódico</option>
-                <option value="OTRO">Otro</option>
-              </select>
-            </div>
-            <div class="col-md-4">
-              <label class="form-label">ISBN</label>
-              <input type="text" class="form-control" id="mat-isbn" placeholder="978-..." />
-            </div>
-            <div class="col-md-4">
-              <label class="form-label">Año Publicación</label>
-              <input type="number" class="form-control" id="mat-anio" placeholder="2024" min="1000" max="2025" />
-            </div>
-            <div class="col-md-6">
-              <label class="form-label">Autor <span class="text-danger">*</span></label>
-              <select class="form-select" id="mat-autor" required>
-                <option value="">Selecciona un autor...</option>
-              </select>
-            </div>
-            <div class="col-md-6">
-              <label class="form-label">Categoría <span class="text-danger">*</span></label>
-              <select class="form-select" id="mat-categoria" required>
-                <option value="">Selecciona una categoría...</option>
-              </select>
-            </div>
-            <div class="col-md-6">
-              <label class="form-label">Editorial</label>
-              <input type="text" class="form-control" id="mat-editorial" placeholder="Nombre de la editorial" />
-            </div>
-            <div class="col-md-6">
-              <label class="form-label">Stock</label>
-              <input type="number" class="form-control" id="mat-stock" value="1" min="1" />
-            </div>
-            <div class="col-12">
-              <label class="form-label">Descripción</label>
-              <textarea class="form-control" id="mat-desc" rows="3" placeholder="Breve descripción del material..."></textarea>
-            </div>
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="button" class="btn btn-primary" id="btn-guardar-material">
-          <i class="bi bi-check-circle me-2"></i>Guardar
+      <!-- Pagination -->
+      <div class="p-md flex items-center justify-between border-t border-outline-variant bg-surface-container-low" id="pag-materiales">
+        <button id="pag-prev" class="flex items-center gap-1 text-on-surface-variant hover:text-primary transition-colors disabled:opacity-50 border-0 bg-transparent cursor-pointer">
+          <span class="material-symbols-outlined">chevron_left</span> Anterior
+        </button>
+        <div class="flex gap-2" id="pag-mat-btns"></div>
+        <button id="pag-next" class="flex items-center gap-1 text-on-surface-variant hover:text-primary transition-colors border-0 bg-transparent cursor-pointer">
+          Siguiente <span class="material-symbols-outlined">chevron_right</span>
         </button>
       </div>
     </div>
+
+    <!-- Info Tip -->
+    <div class="mt-xl bg-primary-fixed-dim bg-opacity-20 border border-primary-container p-lg rounded-xl flex gap-md items-start">
+      <span class="material-symbols-outlined text-primary text-3xl">info</span>
+      <div>
+        <h4 class="font-headline-sm text-headline-sm text-on-primary-fixed-variant">Tip de Administración</h4>
+        <p class="text-body-md text-on-primary-fixed-variant mt-1">Recuerda que los materiales marcados como 'Préstamo Restringido' solo pueden ser consultados dentro de la sala de lectura y no permiten retiro a domicilio.</p>
+      </div>
+    </div>
   </div>
-</div>
+
+  <!-- Modal Material -->
+  <div class="modal-backdrop modal-hidden" id="modalMaterialBackdrop">
+    <div class="bg-surface-container-lowest w-full max-w-2xl rounded-xl shadow-2xl overflow-hidden border border-outline-variant">
+      <div class="px-xl py-lg bg-primary-container text-on-primary flex justify-between items-center">
+        <div>
+          <h2 class="font-headline-md text-headline-md" id="modal-title-material">Registrar Nuevo Material</h2>
+          <p class="font-body-md opacity-90">Ingrese los detalles para el catálogo institucional</p>
+        </div>
+        <button class="material-symbols-outlined hover:bg-white/10 p-2 rounded-full transition-colors border-0 bg-transparent text-on-primary cursor-pointer modal-close-material">close</button>
+      </div>
+      <form id="form-material" class="p-xl space-y-lg">
+        <input type="hidden" id="material-id" />
+        <div class="grid grid-cols-2 gap-lg">
+          <div class="col-span-2">
+            <label class="block font-label-md text-label-md text-on-surface-variant mb-xs">Título del Material <span class="text-error">*</span></label>
+            <input type="text" id="mat-titulo" class="w-full p-md border border-outline-variant rounded-lg bg-white focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-md outline-none" placeholder="Ej: El Aleph" required />
+          </div>
+          <div>
+            <label class="block font-label-md text-label-md text-on-surface-variant mb-xs">ISBN / Código Interno</label>
+            <input type="text" id="mat-isbn" class="w-full p-md border border-outline-variant rounded-lg bg-white focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-md outline-none" placeholder="978-XXXX-XXXX" />
+          </div>
+          <div>
+            <label class="block font-label-md text-label-md text-on-surface-variant mb-xs">Tipo <span class="text-error">*</span></label>
+            <select id="mat-tipo" class="w-full p-md border border-outline-variant rounded-lg bg-white focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-md outline-none appearance-none">
+              <option value="LIBRO">Libro</option>
+              <option value="REVISTA">Revista</option>
+              <option value="DVD">DVD</option>
+              <option value="PERIODICO">Periódico</option>
+              <option value="OTRO">Otro</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-label-md text-label-md text-on-surface-variant mb-xs">Año Publicación</label>
+            <input type="number" id="mat-anio" class="w-full p-md border border-outline-variant rounded-lg bg-white focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-md outline-none" placeholder="2024" />
+          </div>
+          <div>
+            <label class="block font-label-md text-label-md text-on-surface-variant mb-xs">Autor <span class="text-error">*</span></label>
+            <select id="mat-autor" class="w-full p-md border border-outline-variant rounded-lg bg-white focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-md outline-none appearance-none">
+              <option value="">Seleccionar autor...</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-label-md text-label-md text-on-surface-variant mb-xs">Categoría <span class="text-error">*</span></label>
+            <select id="mat-categoria" class="w-full p-md border border-outline-variant rounded-lg bg-white focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-md outline-none appearance-none">
+              <option value="">Seleccionar...</option>
+            </select>
+          </div>
+          <div class="col-span-2">
+            <label class="block font-label-md text-label-md text-on-surface-variant mb-sm">Tipo de Material</label>
+            <div class="flex gap-md">
+              <label class="flex-1 flex items-center justify-center gap-2 p-md border border-outline-variant rounded-lg cursor-pointer hover:bg-secondary-container/10 transition-colors has-[:checked]:bg-primary-container has-[:checked]:text-on-primary has-[:checked]:border-primary">
+                <input checked class="hidden" name="material_radio_type" type="radio" value="LIBRO" />
+                <span class="material-symbols-outlined">menu_book</span>
+                <span class="font-label-md">Libro</span>
+              </label>
+              <label class="flex-1 flex items-center justify-center gap-2 p-md border border-outline-variant rounded-lg cursor-pointer hover:bg-secondary-container/10 transition-colors has-[:checked]:bg-primary-container has-[:checked]:text-on-primary has-[:checked]:border-primary">
+                <input class="hidden" name="material_radio_type" type="radio" value="REVISTA" />
+                <span class="material-symbols-outlined">auto_stories</span>
+                <span class="font-label-md">Revista</span>
+              </label>
+              <label class="flex-1 flex items-center justify-center gap-2 p-md border border-outline-variant rounded-lg cursor-pointer hover:bg-secondary-container/10 transition-colors has-[:checked]:bg-primary-container has-[:checked]:text-on-primary has-[:checked]:border-primary">
+                <input class="hidden" name="material_radio_type" type="radio" value="DVD" />
+                <span class="material-symbols-outlined">movie</span>
+                <span class="font-label-md">DVD</span>
+              </label>
+            </div>
+          </div>
+          <div class="col-span-2">
+            <label class="block font-label-md text-label-md text-on-surface-variant mb-xs">Descripción / Notas</label>
+            <textarea id="mat-desc" class="w-full p-md border border-outline-variant rounded-lg bg-white focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-md outline-none resize-none" placeholder="Resumen del contenido, estado del material o ubicación física..." rows="3"></textarea>
+          </div>
+          <div class="col-span-2">
+            <label class="block font-label-md text-label-md text-on-surface-variant mb-xs">Stock</label>
+            <input type="number" id="mat-stock" class="w-full p-md border border-outline-variant rounded-lg bg-white focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-md outline-none" value="1" min="1" />
+          </div>
+        </div>
+        <div class="flex justify-end gap-md pt-lg border-t border-outline-variant">
+          <button type="button" class="px-lg py-sm border border-secondary text-secondary rounded-lg font-title-lg hover:bg-secondary-container/10 transition-all modal-close-material">Cancelar</button>
+          <button type="submit" class="px-2xl py-sm bg-primary text-on-primary rounded-lg font-title-lg hover:shadow-lg hover:opacity-90 active:scale-95 transition-all shadow-md">Guardar Material</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</DashboardLayout>
 
 <script src="../../scripts/materiales.js"></script>

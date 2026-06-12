@@ -1,161 +1,128 @@
 ---
 import DashboardLayout from '../../layouts/DashboardLayout.astro';
 ---
-<DashboardLayout pageTitle="Gestión de Autores" breadcrumb="Autores">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <div>
-      <h5 class="mb-1">Autores</h5>
-      <p class="text-muted mb-0" style="font-size:13px;">Administra los autores del catálogo</p>
+<DashboardLayout pageTitle="Módulo de Autores">
+  <!-- Stats Overview -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter mb-lg">
+    <div class="bg-white p-6 rounded-xl border border-outline-variant shadow-sm">
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="font-label-md text-label-md uppercase text-secondary tracking-wider">Total Autores</h3>
+        <span class="material-symbols-outlined text-primary">groups</span>
+      </div>
+      <p class="font-display text-[32px] text-on-surface font-bold" id="stat-autores-total">—</p>
     </div>
-    <button class="btn btn-primary" id="btn-nuevo-autor">
-      <i class="bi bi-person-plus me-2"></i>Nuevo Autor
-    </button>
+    <div class="bg-white p-6 rounded-xl border border-outline-variant shadow-sm">
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="font-label-md text-label-md uppercase text-secondary tracking-wider">Con Materiales</h3>
+        <span class="material-symbols-outlined text-tertiary-container">library_books</span>
+      </div>
+      <p class="font-display text-[32px] text-on-surface font-bold" id="stat-autores-con">—</p>
+    </div>
+    <div class="bg-white p-6 rounded-xl border border-outline-variant shadow-sm">
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="font-label-md text-label-md uppercase text-secondary tracking-wider">Sin Materiales</h3>
+        <span class="material-symbols-outlined text-secondary">person_off</span>
+      </div>
+      <p class="font-display text-[32px] text-on-surface font-bold" id="stat-autores-sin">—</p>
+    </div>
   </div>
 
-  <div class="card">
-    <div class="card-body p-0">
-      <div class="table-responsive">
-        <table class="table table-hover mb-0" id="tabla-autores">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Nombre</th>
-              <th>Nacionalidad</th>
-              <th>Materiales</th>
-              <th class="text-center">Acciones</th>
-            </tr>
-          </thead>
-          <tbody id="tbody-autores">
-            <tr><td colspan="5" class="text-center py-5"><div class="spinner-border text-primary spinner-border-sm"></div></td></tr>
-          </tbody>
-        </table>
+  <!-- Bento Filters + Featured Author -->
+  <div class="grid grid-cols-1 lg:grid-cols-4 gap-gutter mb-lg">
+    <div class="lg:col-span-3 bg-white p-lg rounded-xl border border-outline-variant shadow-sm">
+      <div class="flex flex-wrap gap-2 mb-lg" id="alpha-filters">
+        <button class="px-4 py-1.5 border border-outline-variant rounded-lg font-label-md text-label-md hover:bg-primary-fixed hover:text-primary hover:border-primary transition-colors alpha-filter active" data-letter="">Todos</button>
+        <button class="px-4 py-1.5 border border-outline-variant rounded-lg font-label-md text-label-md hover:bg-primary-fixed hover:text-primary hover:border-primary transition-colors alpha-filter" data-letter="A-E">A–E</button>
+        <button class="px-4 py-1.5 border border-outline-variant rounded-lg font-label-md text-label-md hover:bg-primary-fixed hover:text-primary hover:border-primary transition-colors alpha-filter" data-letter="F-J">F–J</button>
+        <button class="px-4 py-1.5 border border-outline-variant rounded-lg font-label-md text-label-md hover:bg-primary-fixed hover:text-primary hover:border-primary transition-colors alpha-filter" data-letter="K-O">K–O</button>
+        <button class="px-4 py-1.5 border border-outline-variant rounded-lg font-label-md text-label-md hover:bg-primary-fixed hover:text-primary hover:border-primary transition-colors alpha-filter" data-letter="P-T">P–T</button>
+        <button class="px-4 py-1.5 border border-outline-variant rounded-lg font-label-md text-label-md hover:bg-primary-fixed hover:text-primary hover:border-primary transition-colors alpha-filter" data-letter="U-Z">U–Z</button>
       </div>
+      <div class="flex flex-wrap items-center gap-2">
+        <select id="filtro-nac-autor" class="bg-surface-container-low border border-outline-variant rounded-lg text-label-md px-sm py-1.5 focus:ring-primary focus:border-primary outline-none">
+          <option value="">Todas las nacionalidades</option>
+        </select>
+        <button id="btn-filtrar-autor" class="flex items-center gap-2 px-4 py-1.5 border border-outline-variant rounded-lg font-label-md text-label-md hover:bg-surface-container-low transition-colors">
+          <span class="material-symbols-outlined text-[18px]">filter_list</span> Filtrar
+        </button>
+        <div class="flex-1 hidden lg:block"></div>
+        <button id="btn-nuevo-autor" class="flex items-center gap-2 px-4 py-1.5 bg-primary text-on-primary rounded-lg font-label-md text-label-md shadow-sm hover:shadow transition-all active:scale-95">
+          <span class="material-symbols-outlined text-[18px]">add</span> Nuevo Autor
+        </button>
+      </div>
+    </div>
+    <div class="bg-gradient-to-br from-surface-container-lowest to-primary-fixed/20 p-lg rounded-xl border border-primary/20 shadow-sm flex flex-col items-center text-center">
+      <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-3">
+        <span class="material-symbols-outlined text-[32px] text-primary">auto_stories</span>
+      </div>
+      <h4 class="font-headline-sm text-headline-sm text-on-surface">Jorge Luis Borges</h4>
+      <p class="font-body-md text-body-md text-on-surface-variant mb-2">Argentina · 1899–1986</p>
+      <p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-3">Escritor, poeta y ensayista argentino, figura clave de la literatura universal. Autor de "Ficciones", "El Aleph" y "El jardín de los senderos que se bifurcan".</p>
+      <span class="mt-3 text-label-sm font-bold text-primary bg-primary-fixed px-3 py-1 rounded-full">Autor Destacado</span>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <section class="bg-white rounded-xl border border-outline-variant shadow-sm overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse">
+        <thead class="bg-surface-container-low">
+          <tr>
+            <th class="px-6 py-4 font-label-md text-label-md text-secondary uppercase">#</th>
+            <th class="px-6 py-4 font-label-md text-label-md text-secondary uppercase">Nombre</th>
+            <th class="px-6 py-4 font-label-md text-label-md text-secondary uppercase">Nacionalidad</th>
+            <th class="px-6 py-4 font-label-md text-label-md text-secondary uppercase text-center">Materiales</th>
+            <th class="px-6 py-4 font-label-md text-label-md text-secondary uppercase text-right">Acciones</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-outline-variant" id="tbody-autores">
+          <tr>
+            <td colspan="5" class="px-6 py-8 text-center font-body-md text-outline">
+              <span class="material-symbols-outlined animate-spin inline-block">sync</span> Cargando autores...
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Modal Autor -->
+  <div class="modal-backdrop modal-hidden" id="modalAutorBackdrop">
+    <div class="bg-surface-container-lowest w-full max-w-lg rounded-xl shadow-2xl overflow-hidden border border-outline-variant">
+      <div class="px-xl py-lg bg-primary-container text-on-primary flex justify-between items-center">
+        <div>
+          <h2 class="font-headline-md text-headline-md" id="modal-title-autor">Nuevo Autor</h2>
+          <p class="font-body-md opacity-90">Completa los datos del autor</p>
+        </div>
+        <button class="material-symbols-outlined hover:bg-white/10 p-2 rounded-full transition-colors border-0 bg-transparent text-on-primary cursor-pointer modal-close-autor">close</button>
+      </div>
+      <form id="form-autor" class="p-xl space-y-lg">
+        <input type="hidden" id="autor-id" />
+        <div class="grid grid-cols-2 gap-md">
+          <div>
+            <label class="block font-label-md text-label-md text-on-surface-variant mb-xs">Nombre <span class="text-error">*</span></label>
+            <input type="text" id="autor-nombre" class="w-full p-md border border-outline-variant rounded-lg bg-white focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-md outline-none" required />
+          </div>
+          <div>
+            <label class="block font-label-md text-label-md text-on-surface-variant mb-xs">Apellido <span class="text-error">*</span></label>
+            <input type="text" id="autor-apellido" class="w-full p-md border border-outline-variant rounded-lg bg-white focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-md outline-none" required />
+          </div>
+        </div>
+        <div>
+          <label class="block font-label-md text-label-md text-on-surface-variant mb-xs">Nacionalidad</label>
+          <input type="text" id="autor-nacionalidad" class="w-full p-md border border-outline-variant rounded-lg bg-white focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-md outline-none" placeholder="Ej: Colombiana" />
+        </div>
+        <div>
+          <label class="block font-label-md text-label-md text-on-surface-variant mb-xs">Biografía</label>
+          <textarea id="autor-bio" class="w-full p-md border border-outline-variant rounded-lg bg-white focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-md outline-none resize-none" placeholder="Breve reseña del autor..." rows="3"></textarea>
+        </div>
+        <div class="flex justify-end gap-md pt-lg border-t border-outline-variant">
+          <button type="button" class="px-lg py-sm border border-secondary text-secondary rounded-lg font-title-lg hover:bg-secondary-container/10 transition-all modal-close-autor">Cancelar</button>
+          <button type="submit" class="px-2xl py-sm bg-primary text-on-primary rounded-lg font-title-lg hover:shadow-lg active:scale-95 transition-all shadow-md">Guardar</button>
+        </div>
+      </form>
     </div>
   </div>
 </DashboardLayout>
 
-<!-- Modal Autor -->
-<div class="modal fade" id="modalAutor" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title fw-semibold" id="modal-title-autor">
-          <i class="bi bi-person-badge me-2"></i>Nuevo Autor
-        </h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <form id="form-autor" novalidate>
-          <input type="hidden" id="autor-id" />
-          <div class="row g-3">
-            <div class="col-md-6">
-              <label class="form-label">Nombre <span class="text-danger">*</span></label>
-              <input type="text" class="form-control" id="autor-nombre" required />
-            </div>
-            <div class="col-md-6">
-              <label class="form-label">Apellido <span class="text-danger">*</span></label>
-              <input type="text" class="form-control" id="autor-apellido" required />
-            </div>
-            <div class="col-12">
-              <label class="form-label">Nacionalidad</label>
-              <input type="text" class="form-control" id="autor-nacionalidad" placeholder="Ej: Colombiana" />
-            </div>
-            <div class="col-12">
-              <label class="form-label">Biografía</label>
-              <textarea class="form-control" id="autor-bio" rows="3" placeholder="Breve reseña del autor..."></textarea>
-            </div>
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="button" class="btn btn-primary" id="btn-guardar-autor">
-          <i class="bi bi-check-circle me-2"></i>Guardar
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script is:inline>
-let editingAutorId = null;
-let modalAutor;
-
-async function cargarAutores() {
-  try {
-    const data = await api.get('/autores');
-    const tbody = document.getElementById('tbody-autores');
-    if (!data.data.length) { tbody.innerHTML = '<tr><td colspan="5" class="text-center py-5 text-muted"><i class="bi bi-person-badge fs-3 d-block mb-2"></i>No hay autores registrados</td></tr>'; return; }
-    tbody.innerHTML = data.data.map((a, i) => `
-      <tr>
-        <td class="text-muted-sm">${i + 1}</td>
-        <td class="fw-semibold">${a.apellido}, ${a.nombre}</td>
-        <td>${a.nacionalidad || '—'}</td>
-        <td><span class="badge bg-primary bg-opacity-10 text-primary fw-semibold">${a._count?.materiales ?? 0} materiales</span></td>
-        <td><div class="d-flex gap-1 justify-content-center">
-          <button class="btn btn-icon btn-sm btn-outline-primary" onclick="editarAutor(${a.id})" title="Editar"><i class="bi bi-pencil"></i></button>
-          <button class="btn btn-icon btn-sm btn-outline-danger" onclick="eliminarAutor(${a.id}, '${a.apellido}, ${a.nombre}')" title="Eliminar"><i class="bi bi-trash"></i></button>
-        </div></td>
-      </tr>
-    `).join('');
-  } catch (err) { console.error(err); }
-}
-
-async function editarAutor(id) {
-  showLoader();
-  try {
-    const res = await fetch(`${window.API_URL}/autores/${id}`, { headers: getHeaders() });
-    const d = await res.json();
-    if (!d.success) throw new Error(d.message);
-    const a = d.data;
-    editingAutorId = id;
-    document.getElementById('autor-id').value = a.id;
-    document.getElementById('autor-nombre').value = a.nombre;
-    document.getElementById('autor-apellido').value = a.apellido;
-    document.getElementById('autor-nacionalidad').value = a.nacionalidad || '';
-    document.getElementById('autor-bio').value = a.biografia || '';
-    document.getElementById('modal-title-autor').innerHTML = '<i class="bi bi-pencil me-2"></i>Editar Autor';
-    modalAutor.show();
-  } catch (err) { showToast('error', err.message); }
-  finally { hideLoader(); }
-}
-
-async function eliminarAutor(id, nombre) {
-  const result = await Swal.fire({ title: '¿Eliminar autor?', html: `Se eliminará a <strong>${nombre}</strong>.`, icon: 'warning', showCancelButton: true, confirmButtonColor: '#ef4444', confirmButtonText: 'Sí, eliminar', cancelButtonText: 'Cancelar' });
-  if (!result.isConfirmed) return;
-  showLoader();
-  try {
-    await api.del(`/autores/${id}`);
-    showToast('success', 'Autor eliminado');
-    cargarAutores();
-  } catch (err) { showToast('error', err.message); }
-  finally { hideLoader(); }
-}
-
-document.addEventListener('DOMContentLoaded', function () {
-  modalAutor = new bootstrap.Modal(document.getElementById('modalAutor'));
-  cargarAutores();
-  document.getElementById('btn-nuevo-autor')?.addEventListener('click', function () {
-    editingAutorId = null;
-    document.getElementById('form-autor').reset();
-    document.getElementById('autor-id').value = '';
-    document.getElementById('modal-title-autor').innerHTML = '<i class="bi bi-person-badge me-2"></i>Nuevo Autor';
-    modalAutor.show();
-  });
-  document.getElementById('btn-guardar-autor')?.addEventListener('click', async function () {
-    const body = { nombre: document.getElementById('autor-nombre').value.trim(), apellido: document.getElementById('autor-apellido').value.trim(), nacionalidad: document.getElementById('autor-nacionalidad').value.trim() || null, biografia: document.getElementById('autor-bio').value.trim() || null };
-    if (!body.nombre || !body.apellido) return Swal.fire({ icon: 'warning', title: 'Campos requeridos', text: 'Nombre y apellido son obligatorios.' });
-    showLoader();
-    try {
-      const isEdit = !!editingAutorId;
-      isEdit ? await api.put(`/autores/${editingAutorId}`, body) : await api.post('/autores', body);
-      modalAutor.hide();
-      showToast('success', isEdit ? 'Autor actualizado' : 'Autor registrado');
-      cargarAutores();
-    } catch (err) { showToast('error', err.message); }
-    finally { hideLoader(); }
-  });
-});
-window.editarAutor = editarAutor;
-window.eliminarAutor = eliminarAutor;
-</script>
+<script src="../../scripts/autores.js"></script>

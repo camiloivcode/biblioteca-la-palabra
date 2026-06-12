@@ -1,152 +1,195 @@
 ---
 import DashboardLayout from '../../layouts/DashboardLayout.astro';
 ---
-<DashboardLayout pageTitle="Reportes" breadcrumb="Reportes">
-
-  <div class="row g-3 mb-4">
-    <div class="col-12">
-      <h5 class="mb-1">Centro de Reportes</h5>
-      <p class="text-muted mb-0" style="font-size:13px;">Análisis y estadísticas del sistema</p>
+<DashboardLayout pageTitle="Centro de Reportes">
+  <!-- KPI Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-gutter mb-lg" id="kpi-reportes">
+    <div class="bg-white p-lg rounded-xl border border-outline-variant shadow-sm">
+      <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary mb-3">
+        <span class="material-symbols-outlined">swap_horiz</span>
+      </div>
+      <p class="font-label-md text-label-md text-secondary uppercase tracking-wider mb-1">Total Préstamos</p>
+      <p class="font-display text-[28px] text-on-surface font-bold" id="kpi-total-prestamos">—</p>
+    </div>
+    <div class="bg-white p-lg rounded-xl border border-outline-variant shadow-sm">
+      <div class="w-10 h-10 rounded-lg bg-tertiary-fixed/50 flex items-center justify-center text-tertiary-container mb-3">
+        <span class="material-symbols-outlined">check_circle</span>
+      </div>
+      <p class="font-label-md text-label-md text-secondary uppercase tracking-wider mb-1">Devueltos</p>
+      <p class="font-display text-[28px] text-on-surface font-bold" id="kpi-devueltos">—</p>
+    </div>
+    <div class="bg-white p-lg rounded-xl border border-outline-variant shadow-sm">
+      <div class="w-10 h-10 rounded-lg bg-error-container/50 flex items-center justify-center text-error mb-3">
+        <span class="material-symbols-outlined">warning</span>
+      </div>
+      <p class="font-label-md text-label-md text-secondary uppercase tracking-wider mb-1">En Mora</p>
+      <p class="font-display text-[28px] text-on-surface font-bold" id="kpi-en-mora">—</p>
+    </div>
+    <div class="bg-white p-lg rounded-xl border border-outline-variant shadow-sm">
+      <div class="w-10 h-10 rounded-lg bg-secondary-fixed/50 flex items-center justify-center text-secondary mb-3">
+        <span class="material-symbols-outlined">people</span>
+      </div>
+      <p class="font-label-md text-label-md text-secondary uppercase tracking-wider mb-1">Socios Morosos</p>
+      <p class="font-display text-[28px] text-on-surface font-bold" id="kpi-morosos">—</p>
     </div>
   </div>
 
-  <!-- Pestañas -->
-  <ul class="nav nav-tabs mb-4" id="reportes-tabs">
-    <li class="nav-item">
-      <button class="nav-link active" data-tab="historial">
-        <i class="bi bi-clock-history me-1"></i>Historial de Préstamos
-      </button>
-    </li>
-    <li class="nav-item">
-      <button class="nav-link" data-tab="morosos">
-        <i class="bi bi-exclamation-triangle me-1"></i>Socios Morosos
-      </button>
-    </li>
-    <li class="nav-item">
-      <button class="nav-link" data-tab="populares">
-        <i class="bi bi-star me-1"></i>Materiales Populares
-      </button>
-    </li>
-  </ul>
+  <!-- Tabs -->
+  <section class="bg-white rounded-xl border border-outline-variant shadow-sm overflow-hidden">
+    <div class="border-b border-outline-variant px-lg">
+      <div class="flex gap-0" id="reportes-tabs">
+        <button class="px-lg py-4 font-label-md text-label-md border-b-2 border-primary text-primary transition-colors active-tab" data-tab="historial">
+          <div class="flex items-center gap-2"><span class="material-symbols-outlined text-[18px]">history</span>Historial</div>
+        </button>
+        <button class="px-lg py-4 font-label-md text-label-md text-secondary border-b-2 border-transparent hover:border-outline-variant transition-colors" data-tab="morosos">
+          <div class="flex items-center gap-2"><span class="material-symbols-outlined text-[18px]">gpp_bad</span>Socios Morosos</div>
+        </button>
+        <button class="px-lg py-4 font-label-md text-label-md text-secondary border-b-2 border-transparent hover:border-outline-variant transition-colors" data-tab="populares">
+          <div class="flex items-center gap-2"><span class="material-symbols-outlined text-[18px]">trending_up</span>Más Populares</div>
+        </button>
+      </div>
+    </div>
 
-  <!-- Panel: Historial -->
-  <div id="tab-historial">
-    <div class="card mb-3">
-      <div class="card-body py-3">
-        <div class="row g-3 align-items-end">
-          <div class="col-md-3">
-            <label class="form-label">Desde</label>
-            <input type="date" class="form-control" id="rep-desde" />
+    <!-- Tab: Historial -->
+    <div id="tab-historial">
+      <div class="p-xl bg-surface-container-low border-b border-outline-variant">
+        <div class="flex flex-wrap gap-md items-end">
+          <div>
+            <label class="block font-label-md text-label-md text-on-surface-variant mb-xs">Desde</label>
+            <input type="date" id="rep-desde" class="px-4 py-2 border border-outline-variant rounded-lg bg-white focus:ring-2 focus:ring-primary focus:border-primary outline-none font-body-md" />
           </div>
-          <div class="col-md-3">
-            <label class="form-label">Hasta</label>
-            <input type="date" class="form-control" id="rep-hasta" />
+          <div>
+            <label class="block font-label-md text-label-md text-on-surface-variant mb-xs">Hasta</label>
+            <input type="date" id="rep-hasta" class="px-4 py-2 border border-outline-variant rounded-lg bg-white focus:ring-2 focus:ring-primary focus:border-primary outline-none font-body-md" />
           </div>
-          <div class="col-md-3">
-            <label class="form-label">Estado</label>
-            <select class="form-select" id="rep-estado">
+          <div>
+            <label class="block font-label-md text-label-md text-on-surface-variant mb-xs">Estado</label>
+            <select id="rep-estado" class="px-4 py-2 border border-outline-variant rounded-lg bg-white focus:ring-2 focus:ring-primary focus:border-primary outline-none font-body-md appearance-none">
               <option value="">Todos</option>
               <option value="ACTIVO">Activo</option>
               <option value="MORA">Mora</option>
               <option value="DEVUELTO">Devuelto</option>
             </select>
           </div>
-          <div class="col-md-3">
-            <button class="btn btn-primary w-100" id="btn-generar-historial">
-              <i class="bi bi-search me-1"></i>Generar
-            </button>
-          </div>
+          <button id="btn-generar-historial" class="px-lg py-1.5 bg-primary text-on-primary rounded-lg font-label-md text-label-md shadow-sm hover:shadow transition-all active:scale-95 flex items-center gap-2">
+            <span class="material-symbols-outlined text-[18px]">search</span> Generar
+          </button>
         </div>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead class="bg-surface-container-low">
+            <tr>
+              <th class="px-6 py-4 font-label-md text-label-md text-secondary uppercase">Fecha</th>
+              <th class="px-6 py-4 font-label-md text-label-md text-secondary uppercase">Socio</th>
+              <th class="px-6 py-4 font-label-md text-label-md text-secondary uppercase">Material</th>
+              <th class="px-6 py-4 font-label-md text-label-md text-secondary uppercase text-center">Vencimiento</th>
+              <th class="px-6 py-4 font-label-md text-label-md text-secondary uppercase text-center">Dev. Real</th>
+              <th class="px-6 py-4 font-label-md text-label-md text-secondary uppercase text-center">Estado</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-outline-variant" id="tbody-historial">
+            <tr><td colspan="6" class="px-6 py-8 text-center font-body-md text-outline">Selecciona filtros y presiona Generar</td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
 
-    <div class="card">
-      <div class="card-body p-0">
-        <div class="table-responsive">
-          <table class="table table-hover mb-0" id="tabla-historial">
-            <thead>
-              <tr>
-                <th>Fecha</th><th>Socio</th><th>Material</th>
-                <th>Vencimiento</th><th>Dev. Real</th><th>Estado</th>
-              </tr>
-            </thead>
-            <tbody id="tbody-historial">
-              <tr><td colspan="6" class="text-center py-4 text-muted">Selecciona filtros y presiona Generar</td></tr>
-            </tbody>
-          </table>
-        </div>
+    <!-- Tab: Morosos -->
+    <div id="tab-morosos" class="hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead class="bg-surface-container-low">
+            <tr>
+              <th class="px-6 py-4 font-label-md text-label-md text-secondary uppercase">#</th>
+              <th class="px-6 py-4 font-label-md text-label-md text-secondary uppercase">Socio</th>
+              <th class="px-6 py-4 font-label-md text-label-md text-secondary uppercase">DNI</th>
+              <th class="px-6 py-4 font-label-md text-label-md text-secondary uppercase">Préstamos en Mora</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-outline-variant" id="tbody-morosos">
+            <tr><td colspan="4" class="px-6 py-8 text-center font-body-md text-outline">
+              <span class="material-symbols-outlined animate-spin inline-block">sync</span>
+            </td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
-  </div>
 
-  <!-- Panel: Morosos -->
-  <div id="tab-morosos" style="display:none;">
-    <div class="card">
-      <div class="card-body p-0">
-        <div class="table-responsive">
-          <table class="table table-hover mb-0" id="tabla-morosos">
-            <thead>
-              <tr><th>#</th><th>Socio</th><th>DNI</th><th>Préstamos en Mora</th></tr>
-            </thead>
-            <tbody id="tbody-morosos">
-              <tr><td colspan="4" class="text-center py-5"><div class="spinner-border text-primary spinner-border-sm"></div></td></tr>
-            </tbody>
-          </table>
-        </div>
+    <!-- Tab: Populares -->
+    <div id="tab-populares" class="hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead class="bg-surface-container-low">
+            <tr>
+              <th class="px-6 py-4 font-label-md text-label-md text-secondary uppercase">Posición</th>
+              <th class="px-6 py-4 font-label-md text-label-md text-secondary uppercase">Material</th>
+              <th class="px-6 py-4 font-label-md text-label-md text-secondary uppercase">Tipo</th>
+              <th class="px-6 py-4 font-label-md text-label-md text-secondary uppercase text-right">Total Préstamos</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-outline-variant" id="tbody-populares">
+            <tr><td colspan="4" class="px-6 py-8 text-center font-body-md text-outline">
+              <span class="material-symbols-outlined animate-spin inline-block">sync</span>
+            </td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
-  </div>
-
-  <!-- Panel: Populares -->
-  <div id="tab-populares" style="display:none;">
-    <div class="card">
-      <div class="card-body p-0">
-        <div class="table-responsive">
-          <table class="table table-hover mb-0">
-            <thead>
-              <tr><th>Posición</th><th>Material</th><th>Tipo</th><th>Total Préstamos</th></tr>
-            </thead>
-            <tbody id="tbody-populares">
-              <tr><td colspan="4" class="text-center py-5"><div class="spinner-border text-primary spinner-border-sm"></div></td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
-
+  </section>
 </DashboardLayout>
 
 <script is:inline>
 function switchTab(tab) {
-  document.querySelectorAll('[data-tab]').forEach(b => b.classList.remove('active'));
-  document.querySelector(`[data-tab="${tab}"]`)?.classList.add('active');
-  document.getElementById('tab-historial').style.display = tab === 'historial' ? '' : 'none';
-  document.getElementById('tab-morosos').style.display = tab === 'morosos' ? '' : 'none';
-  document.getElementById('tab-populares').style.display = tab === 'populares' ? '' : 'none';
+  document.querySelectorAll('[data-tab]').forEach(function(b) {
+    b.classList.remove('text-primary', 'border-primary', 'active-tab');
+    b.classList.add('text-secondary', 'border-transparent');
+    if (b.dataset.tab === tab) {
+      b.classList.remove('text-secondary', 'border-transparent');
+      b.classList.add('text-primary', 'border-primary', 'active-tab');
+    }
+  });
+  ['historial', 'morosos', 'populares'].forEach(function(t) {
+    document.getElementById('tab-' + t).classList.toggle('hidden', t !== tab);
+  });
   if (tab === 'morosos') cargarMorosos();
   if (tab === 'populares') cargarPopulares();
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-  document.querySelectorAll('[data-tab]').forEach(btn => {
-    btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+  // KPI cards
+  (async function() {
+    try {
+      var d = await api.get('/reportes/dashboard');
+      var p = d.data.prestamos;
+      var s = d.data.socios;
+      document.getElementById('kpi-total-prestamos').textContent = (p.activos + p.mora + p.devueltos) || '0';
+      document.getElementById('kpi-devueltos').textContent = p.devueltos || '0';
+      document.getElementById('kpi-en-mora').textContent = p.mora || '0';
+      document.getElementById('kpi-morosos').textContent = (s && s.morosos !== undefined) ? s.morosos : '—';
+    } catch(e) {}
+  })();
+
+  document.querySelectorAll('[data-tab]').forEach(function(btn) {
+    btn.addEventListener('click', function() { switchTab(btn.dataset.tab); });
   });
 
-  document.getElementById('btn-generar-historial')?.addEventListener('click', async function() {
-    const params = {};
-    const desde = document.getElementById('rep-desde').value;
-    const hasta = document.getElementById('rep-hasta').value;
-    const estado = document.getElementById('rep-estado').value;
+  document.getElementById('btn-generar-historial').addEventListener('click', async function() {
+    var params = {};
+    var desde = document.getElementById('rep-desde').value;
+    var hasta = document.getElementById('rep-hasta').value;
+    var estado = document.getElementById('rep-estado').value;
     if (desde) params.desde = desde;
     if (hasta) params.hasta = hasta;
     if (estado) params.estado = estado;
     showLoader();
     try {
-      const data = await api.get('/reportes/historial', params);
-      const tbody = document.getElementById('tbody-historial');
-      if (!data.data.length) { tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-muted">Sin resultados</td></tr>'; return; }
-      tbody.innerHTML = data.data.map(p => `<tr><td>${formatDate(p.fechaPrestamo)}</td><td><div class="fw-semibold">${p.socio.apellido}, ${p.socio.nombre}</div><div class="text-muted-sm">DNI: ${p.socio.dni}</div></td><td>${p.material.titulo}</td><td>${formatDate(p.fechaDevolucion)}</td><td>${p.fechaDevReal ? formatDate(p.fechaDevReal) : '—'}</td><td>${estadoBadge(p.estado)}</td></tr>`).join('');
+      var data = await api.get('/reportes/historial', params);
+      var tbody = document.getElementById('tbody-historial');
+      if (!data.data.length) { tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-8 text-center font-body-md text-outline">Sin resultados</td></tr>'; return; }
+      tbody.innerHTML = data.data.map(function(p) {
+        return '<tr class="border-b border-outline-variant hover:bg-surface-container transition-colors"><td class="p-md text-on-surface-variant font-label-md">' + formatDate(p.fechaPrestamo) + '</td><td class="p-md"><span class="font-medium text-on-surface">' + p.socio.apellido + ', ' + p.socio.nombre + '</span><div class="font-label-md text-xs text-on-surface-variant">DNI: ' + p.socio.dni + '</div></td><td class="p-md text-on-surface">' + p.material.titulo + '</td><td class="p-md text-center">' + formatDate(p.fechaDevolucion) + '</td><td class="p-md text-center">' + (p.fechaDevReal ? formatDate(p.fechaDevReal) : '\u2014') + '</td><td class="p-md text-center">' + estadoBadge(p.estado) + '</td></tr>';
+      }).join('');
     } catch (err) { showToast('error', err.message); }
     finally { hideLoader(); }
   });
@@ -154,20 +197,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
 async function cargarMorosos() {
   try {
-    const data = await api.get('/reportes/socios-morosos');
-    const tbody = document.getElementById('tbody-morosos');
-    if (!data.data.length) { tbody.innerHTML = '<tr><td colspan="4" class="text-center py-4" style="color:var(--color-success);">✓ No hay socios en mora</td></tr>'; return; }
-    tbody.innerHTML = data.data.map((s, i) => `<tr><td>${i + 1}</td><td class="fw-semibold">${s.apellido}, ${s.nombre}</td><td>${s.dni}</td><td>${s.prestamos.map(p => `<div class="text-muted-sm">• ${p.material.titulo}</div>`).join('')}<span class="badge bg-danger bg-opacity-10 text-danger fw-semibold">${s.prestamos.length} en mora</span></td></tr>`).join('');
+    var data = await api.get('/reportes/socios-morosos');
+    var tbody = document.getElementById('tbody-morosos');
+    if (!data.data.length) { tbody.innerHTML = '<tr><td colspan="4" class="px-6 py-8 text-center font-body-md" style="color:var(--color-success);"><span class="material-symbols-outlined align-middle">check_circle</span> No hay socios en mora</td></tr>'; return; }
+    tbody.innerHTML = data.data.map(function(s, i) {
+      return '<tr class="border-b border-outline-variant hover:bg-surface-container transition-colors"><td class="p-md font-mono text-xs text-on-surface-variant">' + (i + 1) + '</td><td class="p-md"><span class="font-medium text-on-surface">' + s.apellido + ', ' + s.nombre + '</span></td><td class="p-md text-on-surface-variant">' + s.dni + '</td><td class="p-md"><div class="flex flex-wrap gap-1">' + s.prestamos.map(function(p) { return '<span class="px-2 py-0.5 bg-error-container/30 text-error rounded-full text-label-sm">' + p.material.titulo + '</span>'; }).join('') + '</div><span class="mt-1 inline-flex items-center gap-1 px-3 py-1 rounded-full text-label-sm font-semibold uppercase bg-error-container text-on-error-container"><span class="w-1.5 h-1.5 rounded-full bg-error"></span> ' + s.prestamos.length + ' en mora</span></td></tr>';
+    }).join('');
   } catch (err) { console.error(err); }
 }
 
 async function cargarPopulares() {
   try {
-    const data = await api.get('/reportes/materiales-populares');
-    const tbody = document.getElementById('tbody-populares');
-    if (!data.data.length) { tbody.innerHTML = '<tr><td colspan="4" class="text-center py-4 text-muted">Sin datos disponibles</td></tr>'; return; }
-    const medals = ['🥇', '🥈', '🥉'];
-    tbody.innerHTML = data.data.map((m, i) => `<tr><td><span style="font-size:20px;">${medals[i] || (i + 1)}</span></td><td class="fw-semibold">${m.titulo}</td><td><span class="badge bg-light text-dark">${m.tipo}</span></td><td><div class="d-flex align-items-center gap-2"><div class="progress flex-grow-1" style="height:6px;max-width:120px;"><div class="progress-bar" style="width:${Math.min(100, m._count.prestamos * 20)}%"></div></div><span class="fw-semibold">${m._count.prestamos}</span></div></td></tr>`).join('');
+    var data = await api.get('/reportes/materiales-populares');
+    var tbody = document.getElementById('tbody-populares');
+    if (!data.data.length) { tbody.innerHTML = '<tr><td colspan="4" class="px-6 py-8 text-center font-body-md text-outline">Sin datos disponibles</td></tr>'; return; }
+    var medals = ['\u{1F947}', '\u{1F948}', '\u{1F949}'];
+    tbody.innerHTML = data.data.map(function(m, i) {
+      var progress = Math.min(100, m._count.prestamos * 20);
+      return '<tr class="border-b border-outline-variant hover:bg-surface-container transition-colors"><td class="p-md"><span style="font-size:20px;">' + (medals[i] || (i + 1)) + '</span></td><td class="p-md font-medium text-on-surface group-hover:text-primary">' + m.titulo + '</td><td class="p-md"><span class="px-3 py-1 rounded-full bg-surface-variant text-on-surface-variant text-label-sm uppercase">' + m.tipo + '</span></td><td class="p-md text-right"><div class="flex items-center justify-end gap-3"><div class="w-24 h-1.5 rounded-full bg-surface-variant overflow-hidden"><div class="h-full rounded-full bg-primary transition-all" style="width:' + progress + '%"></div></div><span class="font-bold text-on-surface">' + m._count.prestamos + '</span></div></td></tr>';
+    }).join('');
   } catch (err) { console.error(err); }
 }
 </script>
+
+<style>
+.hidden { display: none; }
+</style>

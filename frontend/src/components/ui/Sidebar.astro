@@ -2,63 +2,71 @@
 const currentPath = Astro.url.pathname;
 
 const navItems = [
-  {
-    section: 'Principal',
-    links: [
-      { href: '/dashboard', icon: 'bi-grid-1x2', label: 'Dashboard' },
-    ]
-  },
-  {
-    section: 'Gestión',
-    links: [
-      { href: '/dashboard/socios', icon: 'bi-people', label: 'Socios' },
-      { href: '/dashboard/materiales', icon: 'bi-book', label: 'Materiales' },
-      { href: '/dashboard/prestamos', icon: 'bi-arrow-left-right', label: 'Préstamos' },
-      { href: '/dashboard/autores', icon: 'bi-person-badge', label: 'Autores' },
-      { href: '/dashboard/categorias', icon: 'bi-tags', label: 'Categorías' },
-    ]
-  },
-  {
-    section: 'Administración',
-    links: [
-      { href: '/dashboard/usuarios', icon: 'bi-person-gear', label: 'Usuarios', adminOnly: true },
-      { href: '/dashboard/reportes', icon: 'bi-bar-chart-line', label: 'Reportes' },
-    ]
-  }
+  { href: '/dashboard', icon: 'dashboard', label: 'Dashboard' },
+  { href: '/dashboard/materiales', icon: 'menu_book', label: 'Materiales' },
+  { href: '/dashboard/autores', icon: 'person_edit', label: 'Autores' },
+  { href: '/dashboard/categorias', icon: 'category', label: 'Categorías' },
+  { href: '/dashboard/socios', icon: 'group', label: 'Socios' },
+  { href: '/dashboard/prestamos', icon: 'auto_stories', label: 'Préstamos' },
+];
+
+const secondaryItems = [
+  { href: '/dashboard/usuarios', icon: 'admin_panel_settings', label: 'Usuarios', adminOnly: true },
+  { href: '/dashboard/reportes', icon: 'analytics', label: 'Reportes' },
 ];
 ---
 
-<aside class="sidebar" id="sidebar">
-  <div class="sidebar-brand">
-    <a href="/dashboard" class="brand-logo">
-      <div class="brand-icon">📚</div>
-      <div>
-        <div class="brand-name">La Palabra</div>
-        <div class="brand-subtitle">Sistema Bibliotecario</div>
+<aside id="sidebar" class="h-screen w-64 fixed left-0 top-0 bg-on-secondary-fixed flex flex-col py-md z-50 shadow-md mobile-sidebar">
+  <div class="px-lg mb-xl">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-lg bg-primary flex items-center justify-center flex-shrink-0">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+          <path d="M12 6v7"></path>
+          <path d="M9 9h6"></path>
+        </svg>
       </div>
-    </a>
+      <div>
+        <h1 class="font-headline-sm text-headline-sm text-surface-bright font-bold leading-tight">La Palabra</h1>
+        <p class="text-label-sm text-secondary-fixed-dim opacity-70">Admin System</p>
+      </div>
+    </div>
   </div>
 
-  <nav class="sidebar-nav">
-    {navItems.map(section => (
-      <div>
-        <div class="sidebar-section-title">{section.section}</div>
-        {section.links.map(link => (
-          <a href={link.href}
-            class={`sidebar-link ${currentPath === link.href || currentPath.startsWith(link.href + '/') ? 'active' : ''}`}
-            data-admin={link.adminOnly ? 'true' : undefined}>
-            <span class="link-icon bi {link.icon}"></span>
-            <span>{link.label}</span>
-          </a>
-        ))}
-      </div>
+  <nav class="flex-1 space-y-1 px-sm overflow-y-auto scrollbar-hide">
+    {navItems.map(item => (
+      <a href={item.href}
+        class={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
+          currentPath === item.href || currentPath.startsWith(item.href + '/')
+            ? 'bg-primary text-on-primary shadow-sm'
+            : 'text-secondary-fixed-dim hover:text-surface-bright hover:bg-on-secondary-fixed-variant'
+        }`}>
+        <span class="material-symbols-outlined text-[20px]">{item.icon}</span>
+        <span class="font-body-md text-body-md">{item.label}</span>
+      </a>
     ))}
   </nav>
 
-  <div style="padding: 16px 20px; border-top: 1px solid rgba(255,255,255,.07);">
-    <button id="btn-logout" class="sidebar-link w-100 border-0 bg-transparent text-start" style="color: var(--sidebar-text); cursor: pointer;" type="button">
-      <span class="link-icon bi bi-box-arrow-left"></span>
-      <span>Cerrar Sesión</span>
+  <div class="px-sm mt-4 space-y-1">
+    {secondaryItems.map(item => (
+      <a href={item.href}
+        data-admin={item.adminOnly ? 'true' : undefined}
+        class={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
+          currentPath === item.href
+            ? 'bg-primary text-on-primary shadow-sm'
+            : 'text-secondary-fixed-dim hover:text-surface-bright hover:bg-on-secondary-fixed-variant'
+        }`}>
+        <span class="material-symbols-outlined text-[20px]">{item.icon}</span>
+        <span class="font-body-md text-body-md">{item.label}</span>
+      </a>
+    ))}
+  </div>
+
+  <div class="mt-auto px-sm pt-md border-t border-on-secondary-fixed-variant">
+    <button id="btn-logout" class="w-full flex items-center gap-3 px-4 py-3 text-secondary-fixed-dim hover:text-surface-bright hover:bg-on-secondary-fixed-variant rounded-lg transition-all duration-200 cursor-pointer border-0 bg-transparent text-start">
+      <span class="material-symbols-outlined text-[20px]">logout</span>
+      <span class="font-body-md text-body-md">Cerrar Sesión</span>
     </button>
   </div>
 </aside>
@@ -69,13 +77,49 @@ const navItems = [
     if (user.role !== 'ADMIN') {
       document.querySelectorAll('[data-admin="true"]').forEach(el => el.style.display = 'none');
     }
+
+    // Sidebar backdrop on mobile
+    var sidebar = document.getElementById('sidebar');
+    var backdrop = document.createElement('div');
+    backdrop.className = 'fixed inset-0 bg-black/30 z-40 hidden lg:hidden';
+    backdrop.id = 'sidebar-backdrop';
+    document.body.appendChild(backdrop);
+
+    backdrop.addEventListener('click', function() {
+      sidebar.classList.remove('open');
+      backdrop.classList.add('hidden');
+      document.body.style.overflow = '';
+    });
+
+    var toggle = document.getElementById('sidebar-toggle');
+    if (toggle) {
+      toggle.addEventListener('click', function() {
+        var isOpen = sidebar.classList.toggle('open');
+        if (isOpen) {
+          backdrop.classList.remove('hidden');
+          document.body.style.overflow = 'hidden';
+        } else {
+          backdrop.classList.add('hidden');
+          document.body.style.overflow = '';
+        }
+      });
+    }
+
+    // Close sidebar on nav link click (mobile)
+    sidebar.querySelectorAll('a').forEach(function(link) {
+      link.addEventListener('click', function() {
+        sidebar.classList.remove('open');
+        backdrop.classList.add('hidden');
+        document.body.style.overflow = '';
+      });
+    });
+
     document.getElementById('btn-logout')?.addEventListener('click', function () {
       Swal.fire({
         title: '¿Cerrar sesión?',
-        text: 'Se cerrará tu sesión actual.',
         icon: 'question',
         showCancelButton: true,
-        confirmButtonColor: '#0f1729',
+        confirmButtonColor: '#2563eb',
         cancelButtonColor: '#6b7280',
         confirmButtonText: 'Sí, salir',
         cancelButtonText: 'Cancelar'
@@ -87,12 +131,6 @@ const navItems = [
           window.location.href = '/login';
         }
       });
-    });
-
-    document.getElementById('sidebar')?.addEventListener('click', function(e) {
-      if (window.innerWidth <= 992 && e.target.closest('.sidebar-link')) {
-        this.classList.remove('open');
-      }
     });
   });
 </script>
