@@ -1,78 +1,40 @@
-# 📚 Biblioteca Popular La Palabra
+# Biblioteca Popular La Palabra
 
-Sistema de gestión bibliotecaria full stack, desarrollado con tecnologías modernas, arquitectura MVC, JWT y Docker.
+Sistema de gestión bibliotecaria full stack con Node.js/Express, Astro y MySQL.
 
----
-
-## 🛠️ Stack Tecnológico
+## Stack
 
 | Capa | Tecnología |
 |------|-----------|
-| **Frontend** | Astro + Bootstrap 5 |
-| **Backend** | Node.js + Express |
-| **Base de Datos** | MySQL 8 |
-| **ORM** | Prisma |
-| **Auth** | JWT (Access + Refresh Token) |
+| **Frontend** | Astro + Bootstrap 5 + Tailwind CSS |
+| **Backend** | Node.js + Express (CommonJS) |
+| **Base de Datos** | MySQL 8 + Prisma ORM |
+| **Auth** | JWT (access + refresh token) |
 | **Contenedores** | Docker + Docker Compose |
-| **Arquitectura** | MVC con servicios desacoplados |
 
----
-
-## 🚀 Inicio Rápido con Docker
+## Inicio Rápido
 
 ```bash
-# 1. Clonar el repositorio
-git clone https://github.com/tu-usuario/biblioteca-la-palabra.git
-cd biblioteca-la-palabra
-
-# 2. Copiar variables de entorno
 cp .env.example .env
-
-# 3. Levantar todos los servicios
 docker-compose up --build -d
-
-# 4. Ver logs
-docker-compose logs -f backend
 ```
 
-El sistema estará disponible en:
-- **Frontend:** http://localhost:3000
-- **API:** http://localhost:4000/api
-- **Health check:** http://localhost:4000/health
+| Servicio | URL |
+|----------|-----|
+| Frontend | http://localhost:3000 |
+| API | http://localhost:4000/api |
+| phpMyAdmin | http://localhost:8080 |
 
----
+## Módulos
 
-## 🔑 Credenciales por Defecto
+Dashboard, Socios, Materiales, Préstamos, Autores, Categorías, Usuarios (ADMIN), Reportes.
 
-| Usuario | Email | Contraseña | Rol |
-|---------|-------|-----------|-----|
-| Administrador | admin@biblioteca.com | Admin2024! | ADMIN |
-| Bibliotecario | bibliotecario@biblioteca.com | Biblio2024! | BIBLIOTECARIO |
+## Documentación
 
----
-
-## 📋 Módulos del Sistema
-
-- **Dashboard** — estadísticas en tiempo real
-- **Socios** — CRUD completo con filtros y paginación
-- **Materiales** — catálogo con tipos y estados
-- **Préstamos** — registro y devolución con reglas de negocio
-- **Autores** — gestión con validación de dependencias
-- **Categorías** — organización del catálogo
-- **Usuarios** — solo ADMIN
-- **Reportes** — historial, morosos, materiales populares
-
----
-
-## ⚙️ Reglas de Negocio Implementadas
-
-- ✅ Máximo 3 préstamos activos por socio
-- ✅ Material no puede prestarse si está agotado
-- ✅ Préstamos superiores a 30 días → MORA automática
-- ✅ Socios en mora → no pueden realizar nuevos préstamos
-- ✅ No se puede eliminar un autor con materiales asociados
-- ✅ No se puede eliminar un socio con préstamos activos
-
----
-
-## 📁 Estructura del Proyecto
+| Documento | Descripción |
+|-----------|-------------|
+| [docs/architecture.md](docs/architecture.md) | Arquitectura, estructura del proyecto, flujo de requests |
+| [docs/database.md](docs/database.md) | Schema, modelos, seed, reglas de negocio |
+| [docs/frontend.md](docs/frontend.md) | Frontend: páginas, scripts, auth flow |
+| [AGENTS.md](AGENTS.md) | Documentación técnica para asistentes IA |
+| [CHANGELOG.md](CHANGELOG.md) | Historial de versiones |

@@ -1,43 +1,38 @@
-# Astro Starter Kit: Minimal
+# Frontend — Biblioteca La Palabra
 
-```sh
-npm create astro@latest -- --template minimal
+Frontend Astro con Bootstrap 5, Tailwind CSS y jQuery.
+
+## Comandos
+
+```bash
+npm run dev         # Servidor de desarrollo (puerto 3000)
+npm run build       # Build estático a dist/
+npm run css:build   # Compilar Tailwind CSS
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Estructura
 
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+```
+src/
+├── layouts/          # BaseLayout + DashboardLayout
+├── pages/            # Páginas (login, dashboard/*, etc.)
+├── scripts/          # JS del lado cliente (shared.js, api.js, módulos)
+├── components/ui/    # Componentes reutilizables (Sidebar.astro)
+└── styles/           # CSS (tailwind.src.css, global.css)
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## Dependencias CDN
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+- Bootstrap 5.3, jQuery, SweetAlert2, DataTables
+- Google Fonts (Inter), Material Symbols
+- Cargados en `BaseLayout.astro`
 
-Any static assets, like images, can be placed in the `public/` directory.
+## Variables de Entorno
 
-## 🧞 Commands
+| Variable | Default | Descripción |
+|----------|---------|-------------|
+| `PUBLIC_API_URL` | `http://localhost:4000/api` | URL base de la API |
 
-All commands are run from the root of the project, from a terminal:
+## Auth
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Los tokens JWT se almacenan en `localStorage`. El cliente `api.js` maneja auto-refresh automático.

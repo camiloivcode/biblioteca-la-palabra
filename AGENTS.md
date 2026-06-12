@@ -14,7 +14,7 @@ Full-stack library management system: Node.js/Express backend + Astro/Bootstrap 
   - API base from `window.API_URL` set in `BaseLayout.astro` from `PUBLIC_API_URL` env var, fallback `http://localhost:4000/api`
   - `src/scripts/shared.js` loads first — exposes `window.showToast`, `window.getHeaders`, `window.estadoBadge`, `window.formatDate`, `window.showLoader`, `window.hideLoader`
   - `src/scripts/api.js` loads second — exposes `window.api` client with auto-refresh on 401 (`api.get/post/put/patch/del`)
-  - External scripts (`auth.js`, `socios.js`, `materiales.js`, `prestamos.js`) use `window.api` and shared utilities
+  - External scripts (`auth.js`, `socios.js`, `materiales.js`, `prestamos.js`, `categorias.js`, `usuarios.js`, `forgot-password.js`, `reset-password.js`, `register.js`) use `window.api` and shared utilities
 - **Database**: MySQL 8 with Prisma ORM. Tables mapped to Spanish names via `@@map`.
 
 ## Docker Quick Start
@@ -32,8 +32,8 @@ Startup sequence: `npx prisma db push --accept-data-loss && node prisma/seed.js 
 - **Prisma**: Uses `db push` (not migrations). Migrations dir is gitignored. Run `npm run db:generate` after schema changes. VSCode setting: `prisma.pinToPrisma6: true`.
 - **No tests** exist — no test framework in any `package.json`.
 - **No linter/formatter** is configured.
-- **Seed credentials**: `admin@biblioteca.com` / `Admin2024!` (ADMIN), `bibliotecario@biblioteca.com` / `Biblio2024!` (BIBLIOTECARIO)
-- **Business rules** enforced server-side in services (max 3 active loans, no loans if MOROSO, auto-mora after 30 days, cascade material state).
+- **Seed credentials** (see [docs/database.md](docs/database.md)): `admin@biblioteca.com` / `Admin2024!` (ADMIN), `bibliotecario@biblioteca.com` / `Biblio2024!` (BIBLIOTECARIO)
+- **Business rules** enforced server-side in services (max 3 active loans, no loans if MOROSO, auto-mora after 30 days, cascade material state). Full details in [docs/database.md](docs/database.md).
 - **API response format**: `{ success: bool, message: string, data: ..., meta?: ... }` via `ApiResponse` helper. Errors via `AppError` class caught by `error.middleware.js` (also handles Prisma error codes P2002/P2025/P2003).
 
 ## Dev Commands (run inside `backend/` or `frontend/`)
@@ -52,6 +52,7 @@ Startup sequence: `npx prisma db push --accept-data-loss && node prisma/seed.js 
 
 - `backend/prisma/schema.prisma` — Data model (User, Socio, Autor, Categoria, Material, Prestamo)
 - `backend/src/config/database.js` — Prisma singleton with query logging in dev
+- `backend/src/config/mailer.js` — Nodemailer transporter for password reset & registration emails
 - `backend/src/middlewares/auth.middleware.js` — JWT verification, attaches `req.user`
 - `backend/src/middlewares/role.middleware.js` — `requireRole('ADMIN', ...)`
 - `docker-compose.yml` — Full stack orchestration
