@@ -1,8 +1,10 @@
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const prisma = require('../config/database');
 const jwtConfig = require('../config/jwt.config');
 const AppError = require('../utils/AppError');
+const { sendPasswordResetEmail, sendRegisterRequestEmail } = require('../config/mailer');
 
 class AuthService {
   async login(email, password) {
@@ -60,6 +62,61 @@ class AuthService {
       where: { id: userId },
       select: { id: true, nombre: true, email: true, role: true, createdAt: true },
     });
+  }
+
+  async forgotPassword(email) {
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) return;
+
+    const rawToken = crypto.randomBytes(32).toString('hex');
+    const hashedToken = crypto.createHash('sha256').update(rawToken).digest('hex');
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1000);
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        passwordResetToken: hashedToken,
+        passwordResetExpires: expiresAt,
+      },
+    });
+
+    try {
+      await sendPasswordResetEmail(user.email, user.nombre, rawToken);
+    } catch (emailError) {
+      console.error('Error al enviar email de recuperación:', emailError.message);
+    }
+  }
+
+  async resetPassword(token, newPassword) {
+    const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+
+    const user = await prisma.user.findFirst({
+      where: {
+        passwordResetToken: hashedToken,
+        passwordResetExpires: { gte: new Date() },
+      },
+    });
+
+    if (!user) throw new AppError('Token inválido o expirado', 400);
+
+    const hashedPassword = await bcrypt.hash(newPassword, 12);
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        password: hashedPassword,
+        passwordResetToken: null,
+        passwordResetExpires: null,
+      },
+    });
+  }
+
+  async registerRequest(data) {
+    try {
+      await sendRegisterRequestEmail(data);
+    } catch (emailError) {
+      console.error('Error al enviar solicitud de registro:', emailError.message);
+    }
   }
 }
 

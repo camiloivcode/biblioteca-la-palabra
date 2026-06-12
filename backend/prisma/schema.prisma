@@ -40,14 +40,16 @@ enum TipoMaterial {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  nombre    String   @db.VarChar(100)
-  email     String   @unique @db.VarChar(150)
-  password  String   @db.VarChar(255)
-  role      Role     @default(BIBLIOTECARIO)
-  activo    Boolean  @default(true)
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  id                   Int       @id @default(autoincrement())
+  nombre               String    @db.VarChar(100)
+  email                String    @unique @db.VarChar(150)
+  password             String    @db.VarChar(255)
+  role                 Role      @default(BIBLIOTECARIO)
+  activo               Boolean   @default(true)
+  passwordResetToken   String?   @map("password_reset_token") @db.VarChar(255)
+  passwordResetExpires DateTime? @map("password_reset_expires")
+  createdAt            DateTime  @default(now()) @map("created_at")
+  updatedAt            DateTime  @updatedAt @map("updated_at")
 
   @@map("users")
 }
@@ -79,6 +81,7 @@ model Autor {
   updatedAt   DateTime   @updatedAt @map("updated_at")
   materiales  Material[]
 
+  @@unique([nombre, apellido])
   @@map("autores")
 }
 
@@ -86,6 +89,7 @@ model Categoria {
   id          Int        @id @default(autoincrement())
   nombre      String     @unique @db.VarChar(100)
   descripcion String?    @db.Text
+  icono       String     @default("category") @db.VarChar(50)
   createdAt   DateTime   @default(now()) @map("created_at")
   materiales  Material[]
 

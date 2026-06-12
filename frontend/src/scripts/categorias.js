@@ -1,16 +1,24 @@
 var editingCatId = null;
 
-var catColors = [
-  { bg: 'from-primary-fixed/40 to-primary-container/20', icon: 'menu_book', border: 'border-primary/20' },
-  { bg: 'from-secondary-fixed/40 to-secondary-container/20', icon: 'history', border: 'border-secondary/20' },
-  { bg: 'from-tertiary-fixed/40 to-tertiary-container/20', icon: 'science', border: 'border-tertiary/20' },
-  { bg: 'from-error-container/40 to-error-fixed/20', icon: 'lightbulb', border: 'border-error/20' },
-  { bg: 'from-primary-fixed/30 to-tertiary-fixed/20', icon: 'palette', border: 'border-primary/15' },
-  { bg: 'from-secondary-fixed/40 to-tertiary-container/20', icon: 'computer', border: 'border-secondary/20' },
-  { bg: 'from-surface-container-low to-surface-variant', icon: 'calculate', border: 'border-outline-variant' },
-  { bg: 'from-tertiary-fixed/40 to-primary-container/20', icon: 'public', border: 'border-tertiary/20' },
-  { bg: 'from-primary-fixed/40 to-secondary-fixed/20', icon: 'music_note', border: 'border-primary/20' },
-  { bg: 'from-error-fixed/30 to-error-container/20', icon: 'emoji_events', border: 'border-error/15' },
+var catThemes = [
+  { bg: 'from-primary-fixed/40 to-primary-container/20', border: 'border-primary/20' },
+  { bg: 'from-secondary-fixed/40 to-secondary-container/20', border: 'border-secondary/20' },
+  { bg: 'from-tertiary-fixed/40 to-tertiary-container/20', border: 'border-tertiary/20' },
+  { bg: 'from-error-container/40 to-error-fixed/20', border: 'border-error/20' },
+  { bg: 'from-primary-fixed/30 to-tertiary-fixed/20', border: 'border-primary/15' },
+  { bg: 'from-secondary-fixed/40 to-tertiary-container/20', border: 'border-secondary/20' },
+  { bg: 'from-surface-container-low to-surface-variant', border: 'border-outline-variant' },
+  { bg: 'from-tertiary-fixed/40 to-primary-container/20', border: 'border-tertiary/20' },
+  { bg: 'from-primary-fixed/40 to-secondary-fixed/20', border: 'border-primary/20' },
+  { bg: 'from-error-fixed/30 to-error-container/20', border: 'border-error/15' },
+];
+
+var iconosDisponibles = [
+  'menu_book', 'history', 'science', 'lightbulb', 'palette', 'computer',
+  'calculate', 'public', 'music_note', 'emoji_events',
+  'book', 'biotech', 'architecture', 'psychology', 'sports_esports',
+  'language', 'travel_explore', 'newspaper', 'theater_comedy', 'pets',
+  'restaurant', 'sailing', 'stadium', 'volcano', 'forest', 'category',
 ];
 
 function openCatModal() {
@@ -18,6 +26,19 @@ function openCatModal() {
 }
 function closeCatModal() {
   document.getElementById('modalCatBackdrop').classList.add('modal-hidden');
+}
+
+function renderIconSelector(selected) {
+  var container = document.getElementById('icon-selector');
+  if (!container) return;
+  var html = '';
+  for (var i = 0; i < iconosDisponibles.length; i++) {
+    var icono = iconosDisponibles[i];
+    var activo = icono === selected ? ' ring-2 ring-primary bg-primary-fixed/30' : ' bg-white hover:bg-surface-variant';
+    html += '<button type="button" class="icon-option w-10 h-10 rounded-lg border border-outline-variant flex items-center justify-center transition-all cursor-pointer' + activo + '" data-icono="' + icono + '" title="' + icono + '">' +
+      '<span class="material-symbols-outlined text-on-surface-variant">' + icono + '</span></button>';
+  }
+  container.innerHTML = html;
 }
 
 async function cargarCategorias() {
@@ -43,14 +64,15 @@ async function cargarCategorias() {
     document.getElementById('stat-cat-mas').textContent = maxName;
 
     var html = '';
-    cats.forEach(function(c, i) {
-      var color = catColors[i % catColors.length];
+    cats.forEach(function(c) {
+      var theme = catThemes[c.id % catThemes.length];
       var count = c._count?.materiales || 0;
+      var icono = c.icono || 'category';
       html += '<div class="group">' +
-        '<div class="bg-white rounded-xl border ' + color.border + ' shadow-sm overflow-hidden transition-all hover:shadow-md h-full">' +
-        '<div class="bg-gradient-to-br ' + color.bg + ' p-lg pb-0 flex items-start justify-between">' +
+        '<div class="bg-white rounded-xl border ' + theme.border + ' shadow-sm overflow-hidden transition-all hover:shadow-md h-full">' +
+        '<div class="bg-gradient-to-br ' + theme.bg + ' p-lg pb-0 flex items-start justify-between">' +
         '<div class="w-12 h-12 rounded-xl bg-white/80 flex items-center justify-center shadow-sm">' +
-        '<span class="material-symbols-outlined text-primary">' + color.icon + '</span></div>' +
+        '<span class="material-symbols-outlined text-primary">' + icono + '</span></div>' +
         '<div class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">' +
         '<button class="w-8 h-8 rounded-lg bg-white/80 hover:bg-white flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors border-0 cursor-pointer" onclick="editarCat(' + c.id + ')" title="Editar"><span class="material-symbols-outlined text-[16px]">edit</span></button>' +
         '<button class="w-8 h-8 rounded-lg bg-white/80 hover:bg-white flex items-center justify-center text-on-surface-variant hover:text-error transition-colors border-0 cursor-pointer" onclick="eliminarCat(' + c.id + ',\'' + c.nombre.replace(/'/g, '') + '\')" title="Eliminar"><span class="material-symbols-outlined text-[16px]">delete</span></button>' +
@@ -83,6 +105,9 @@ window.editarCat = async function(id) {
     document.getElementById('cat-id').value = d.data.id;
     document.getElementById('cat-nombre').value = d.data.nombre;
     document.getElementById('cat-desc').value = d.data.descripcion || '';
+    var icono = d.data.icono || 'category';
+    document.getElementById('cat-icono').value = icono;
+    renderIconSelector(icono);
     document.getElementById('modal-title-cat').textContent = 'Editar Categor\u00eda';
     openCatModal();
   } catch (err) { showToast('error', err.message); }
@@ -120,9 +145,24 @@ document.addEventListener('DOMContentLoaded', function() {
       document.getElementById('cat-id').value = '';
       document.getElementById('cat-nombre').value = '';
       document.getElementById('cat-desc').value = '';
+      var defaultIcono = 'category';
+      document.getElementById('cat-icono').value = defaultIcono;
+      renderIconSelector(defaultIcono);
       document.getElementById('modal-title-cat').textContent = 'Nueva Categor\u00eda';
       openCatModal();
     }
+  });
+
+  document.getElementById('icon-selector')?.addEventListener('click', function(e) {
+    var btn = e.target.closest('.icon-option');
+    if (!btn) return;
+    document.querySelectorAll('.icon-option').forEach(function(el) {
+      el.classList.remove('ring-2', 'ring-primary', 'bg-primary-fixed/30');
+      el.classList.add('bg-white', 'hover:bg-surface-variant');
+    });
+    btn.classList.remove('bg-white', 'hover:bg-surface-variant');
+    btn.classList.add('ring-2', 'ring-primary', 'bg-primary-fixed/30');
+    document.getElementById('cat-icono').value = btn.getAttribute('data-icono');
   });
 
   document.getElementById('form-cat').addEventListener('submit', async function(e) {
@@ -134,7 +174,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     try {
       showLoader();
-      var body = { nombre: nombre, descripcion: document.getElementById('cat-desc').value.trim() || null };
+      var body = {
+        nombre: nombre,
+        descripcion: document.getElementById('cat-desc').value.trim() || null,
+        icono: document.getElementById('cat-icono').value || 'category',
+      };
       if (editingCatId) {
         await api.put('/categorias/' + editingCatId, body);
         showToast('success', 'Categor\u00eda actualizada');

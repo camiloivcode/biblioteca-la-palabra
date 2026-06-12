@@ -35,8 +35,37 @@ const authController = {
   },
 
   async logout(req, res) {
-    // Stateless JWT — el cliente elimina el token
     ApiResponse.success(res, null, 'Sesión cerrada correctamente');
+  },
+
+  async forgotPassword(req, res, next) {
+    try {
+      const { email } = req.body;
+      await authService.forgotPassword(email);
+      ApiResponse.success(res, null, 'Si el correo existe en el sistema, recibirás un enlace de recuperación');
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  async resetPassword(req, res, next) {
+    try {
+      const { token, password } = req.body;
+      await authService.resetPassword(token, password);
+      ApiResponse.success(res, null, 'Contraseña actualizada correctamente');
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  async registerRequest(req, res, next) {
+    try {
+      const { nombre, email, telefono, mensaje } = req.body;
+      await authService.registerRequest({ nombre, email, telefono, mensaje });
+      ApiResponse.success(res, null, 'Tu solicitud ha sido enviada. El administrador se comunicará contigo.');
+    } catch (error) {
+      next(error);
+    }
   },
 };
 

@@ -46,6 +46,7 @@ import DashboardLayout from '../../layouts/DashboardLayout.astro';
       </div>
       <form id="form-cat" class="p-xl space-y-lg">
         <input type="hidden" id="cat-id" />
+        <input type="hidden" id="cat-icono" value="category" />
         <div>
           <label class="block font-label-md text-label-md text-on-surface-variant mb-xs">Nombre <span class="text-error">*</span></label>
           <input type="text" id="cat-nombre" class="w-full p-md border border-outline-variant rounded-lg bg-white focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-md outline-none" placeholder="Ej: Literatura" required />
@@ -53,6 +54,10 @@ import DashboardLayout from '../../layouts/DashboardLayout.astro';
         <div>
           <label class="block font-label-md text-label-md text-on-surface-variant mb-xs">Descripción</label>
           <textarea id="cat-desc" class="w-full p-md border border-outline-variant rounded-lg bg-white focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-md outline-none resize-none" placeholder="Descripción breve..." rows="3"></textarea>
+        </div>
+        <div>
+          <label class="block font-label-md text-label-md text-on-surface-variant mb-xs">Icono</label>
+          <div class="flex flex-wrap gap-2" id="icon-selector"></div>
         </div>
         <div class="flex justify-end gap-md pt-lg border-t border-outline-variant">
           <button type="button" class="px-lg py-sm border border-secondary text-secondary rounded-lg font-title-lg hover:bg-secondary-container/10 transition-all modal-close-cat">Cancelar</button>
