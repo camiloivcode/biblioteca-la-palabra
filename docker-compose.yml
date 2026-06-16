@@ -14,7 +14,7 @@ services:
       - db_data:/var/lib/mysql
       - ./backend/prisma/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p${MYSQL_ROOT_PASSWORD}"]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -40,7 +40,7 @@ services:
       - /app/node_modules
     networks:
       - biblioteca_net
-    command: sh -c "npx prisma db push --accept-data-loss && node prisma/seed.js && npm run dev"
+    command: sh -c "node wait-for-mysql.js && npx prisma db push --accept-data-loss && node prisma/seed.js && npm run dev"
 
   frontend:
     build:
